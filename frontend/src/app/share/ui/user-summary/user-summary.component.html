@@ -1,0 +1,9 @@
+@if (allowDetails) {
+  <p class="mb-1 small text-underline primary cursor-pointer fw-bold" (click)="viewUserDetails()">
+    {{ userData?.username }}
+  </p>
+} @else {
+  <p class="mb-1 small">
+    {{ userData?.username ?? '-' }}
+  </p>
+}

@@ -1,0 +1,12 @@
+<app-list-container
+  [fetchFn]="adminCommercialService.getSamples.bind(adminCommercialService)"
+  [displayFilter]="[]"
+  [pageSize]="20"
+  [emptyMessage]="'No sample requests found. Check back later.'"
+  [listingType]="'samples'"
+  [useFilter]="false"
+>
+  <ng-template let-item>
+    <app-samples-listing-item [item]="item"></app-samples-listing-item>
+  </ng-template>
+</app-list-container>

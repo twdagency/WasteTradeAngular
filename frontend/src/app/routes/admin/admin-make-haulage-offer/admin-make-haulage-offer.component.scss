@@ -1,0 +1,20 @@
+.buyer-side {
+  background-color: #f6f6f6;
+}
+
+.button-wrapper {
+  height: 42px;
+  width: 120px;
+}
+
+@media (max-width: 766px) {
+  .rounded-sm-start-4 {
+    border-bottom-left-radius: 16px !important;
+  }
+}
+
+@media (min-width: 7667px) {
+  .rounded-sm-start-4 {
+    border-bottom-left-radius: 0;
+  }
+}

@@ -1,0 +1,30 @@
+@if (showMaterialDescriptionLabel) {
+  <div class="rounded-4 border-thin background-on-primary fw-500 px-4 py-2 mb-2 rounded-4 fs-24">
+    {{ 'Material Description' | translate }}
+  </div>
+}
+
+<div class="grid-content rounded-4 border-thin px-md-5 px-3 py-md-3 py-2 d-flex justify-content-between flex-wrap gap-3">
+  @for (item of items; track item.label) {
+    <div class="item d-flex gap-4 align-items-center mb-4">
+      @if (item.icon) {
+        <app-icon backgroundColor="#E5F6F0" iconClassName="primary" [iconName]="item.icon" />
+      } @else if (item.customIcon) {
+        <img [src]="item.customIcon" />
+      }
+
+      <div class="">
+        <div class="fw-bold mb-0 label fs-18">{{ item.label | translate }}</div>
+        @if (item.label == 'Status') {
+          <div class="mb-0 value fs-18 {{ item.class ?? '' }}" [style.color]="item.color">
+            {{ mapStatusValueToLabel(item.value) | translate | titlecase }}
+          </div>
+        } @else {
+          <div class="mb-0 value fs-18 {{ item.class ?? '' }}" [style.color]="item.color">{{ transformValue(item.value) }}</div>
+        }
+      </div>
+    </div>
+  }
+
+  <ng-content></ng-content>
+</div>

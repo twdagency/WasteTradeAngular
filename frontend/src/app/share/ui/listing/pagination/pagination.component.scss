@@ -1,0 +1,11 @@
+.navigation-button {
+  @media screen and (max-width: 767px) {
+    width: 40px;
+    padding: 0;
+    min-width: unset;
+
+    &.prev-button mat-icon {
+      margin-right: 0 !important;
+    }
+  }
+}

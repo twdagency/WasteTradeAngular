@@ -1,0 +1,144 @@
+@import 'variables';
+
+$lg-break-point: 1400px;
+
+.sidebar-wrapper {
+  position: fixed;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  z-index: 20;
+  transform: translateX(-100%);
+  transition: 0.2s ease-in-out;
+  display: flex;
+
+  &::before {
+    display: block;
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(#000, 0.5);
+  }
+
+  &.open {
+    transform: translateX(0);
+  }
+
+  @media screen and (min-width: $lg-break-point) {
+    transform: translateX(0) !important;
+    position: static;
+    min-height: 60vh;
+
+    &::before {
+      display: none;
+    }
+  }
+}
+
+.close-button {
+  position: absolute;
+  right: 17px;
+  top: 13px;
+  background-color: $primary;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  color: #fff;
+
+  @media screen and (min-width: $lg-break-point) {
+    display: none;
+  }
+}
+
+.sidebar {
+  background-color: #f6f6f6;
+  position: absolute;
+  width: 250px;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  overflow: auto;
+  z-index: 20;
+
+  @media screen and (min-width: $lg-break-point) {
+    position: static;
+    height: 100%;
+    padding-bottom: 60px;
+  }
+}
+
+.menu-item {
+  position: relative;
+  padding: 10px 16px;
+  color: $black;
+  text-decoration: none;
+  cursor: pointer;
+  height: 58px;
+
+  &::after {
+    content: '';
+    display: block;
+    position: absolute;
+    bottom: 0px;
+    left: 16px;
+    right: 16px;
+    border: 1px solid #a6a6a6;
+  }
+
+  &.dashboard {
+    margin: 0;
+
+    &::after {
+      display: none;
+    }
+  }
+
+  &.more {
+    &::after {
+      display: none;
+    }
+  }
+
+  &.active-link {
+    border-left: 2.5px solid $primary;
+    background-color: #ebfff7;
+  }
+
+  @media screen and (min-width: 992px) {
+    padding-left: 44px;
+    margin: 8px 0;
+    &::after {
+      display: none;
+    }
+  }
+}
+
+.admin-menu-item {
+  padding-left: 24px;
+}
+
+.child-menu-item {
+  margin-bottom: 0;
+  margin-top: 0;
+  padding-left: 70px;
+
+  &.disabled {
+    cursor: not-allowed;
+    opacity: 0.6;
+  }
+}
+
+.more-icon {
+  margin-left: -8px;
+}
+
+.logo-wrapper {
+  padding: 36px 44px 51px;
+}

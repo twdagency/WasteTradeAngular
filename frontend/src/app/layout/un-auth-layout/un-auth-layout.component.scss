@@ -1,0 +1,39 @@
+:host {
+  display: block;
+  width: 100%;
+  position: relative;
+  background-color: #f6f6f6;
+}
+
+.header-container {
+  padding: 20px 0 40px;
+
+  @media screen and (min-width: 768px) {
+    padding: 40px 0 60px;
+  }
+}
+
+.language-selector {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  z-index: 1000;
+
+  @media screen and (max-width: 768px) {
+    top: 8px;
+    right: 8px;
+  }
+}
+
+app-language-selector {
+  @media screen and (max-width: 639px) {
+    top: -18px !important;
+    right: 0 !important;
+  }
+
+  display: block;
+  position: absolute;
+  right: 0;
+  top: 50% !important;
+  transform: translateY(-50%);
+}

@@ -1,0 +1,23 @@
+<h4 class="fw-bold title">{{ 'Incoming Requests' | translate }}</h4>
+<p class="fw-bold mt-4 mb-4">{{ items().length }} {{ 'RESULTS OF' | translate }} {{ totalCount() }}</p>
+@if (isLoading()) {
+  <div class="d-flex justify-content-center align-items-center flex-grow-1">
+    <app-spinner></app-spinner>
+  </div>
+} @else {
+  @if (items().length === 0) {
+    <div class="fs-24 empty-message-container">
+      <p class="text-muted text-center">
+        {{ invalidPage() ? ('Cannot load incomming request.' | translate) : noResults() ? ('No Incoming Requests.' | translate) : '' }}
+      </p>
+    </div>
+  } @else {
+    @for (item of items(); track $index) {
+      <app-incoming-row [items]="item" (approve)="onApprove(item)" (reject)="onReject(item)" [submitting]="submitting()">
+      </app-incoming-row>
+    }
+
+    <app-pagination [pageNumber]="page()" [size]="pageSize" [totalCount]="totalCount()" (pageChange)="onPageChange($event)">
+    </app-pagination>
+  }
+}

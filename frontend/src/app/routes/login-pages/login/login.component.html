@@ -1,0 +1,52 @@
+<div class="page-wrapper mx-auto">
+  <div class="border border-radius fs-3 p-3 background-primary border-radius text-white text-center mb-4">
+    <span>{{ 'Need a WasteTrade account?' | translate }} </span>
+    <a class="text-white fw-bold text-decoration-underline" (click)="openCreateAccountModal()">{{ 'Create an account' | translate }}</a>
+  </div>
+
+  <div class="border border-black rounded-4 form-container py-3 px-4 px-sm-5 py-md-4 bg-white box-shadow">
+    <h4 class="fw-bold fs-1 mb-3">{{ 'Login' | translate }}</h4>
+    <h6 class="primary mb-4 fw-bold">{{ 'Welcome Back!' | translate }}</h6>
+
+    <form [formGroup]="formGroup">
+      <div class="col-12 mb-4">
+        <mat-label class="fw-bold mb-1">{{ 'EMAIL ADDRESS' | translate }}</mat-label>
+        <mat-form-field appearance="outline" class="w-100">
+          <input matInput placeholder="{{ 'ex. sample@gmail.com' | translate }}" type="text" formControlName="email" />
+        </mat-form-field>
+        @if (formGroup.get('email')?.hasError('required') && formGroup.get('email')?.touched) {
+          <mat-error>{{ 'This is a required field.' | translate }}</mat-error>
+        }
+        @if (formGroup.get('email')?.hasError('email')) {
+          <mat-error>{{ 'Please enter a valid email address.' | translate }}</mat-error>
+        }
+      </div>
+
+      <div class="col-12 mb-3">
+        <mat-label class="fw-bold mb-1">{{ 'PASSWORD' | translate }}</mat-label>
+        <mat-form-field appearance="outline" class="w-100">
+          <input matInput type="password" placeholder="******" formControlName="password" />
+        </mat-form-field>
+        @if (formGroup.get('password')?.hasError('required') && formGroup.get('password')?.touched) {
+          <mat-error>{{ 'This is a required field.' | translate }}</mat-error>
+        }
+        @if (serverError()) {
+          <mat-error>{{ 'Invalid email address and/or password.' | translate }}</mat-error>
+        }
+      </div>
+
+      <button
+        type="submit"
+        class="text-white w-100 text-center background-primary rounded border p-3 mt-4 fw-bold"
+        [class.overlay-spinner]="submitting()"
+        (click)="send()"
+      >
+        {{ 'LOGIN' | translate }}
+      </button>
+
+      <div class="text-center mt-4 pb-2 fw-bold">
+        <a href="/login?lost_pass=1" class="text-decoration-underline text-success"> {{ 'LOST YOUR PASSWORD?' | translate }} </a>
+      </div>
+    </form>
+  </div>
+</div>

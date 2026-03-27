@@ -1,0 +1,9 @@
+@if (allowDetailsModal) {
+  <p class="mb-1 small primary cursor-pointer fw-bold text-underline" (click)="getLocationDetails()">
+    {{ address }}
+  </p>
+} @else {
+  <p class="mb-1 small">
+    {{ address ?? '-' }}
+  </p>
+}

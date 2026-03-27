@@ -1,0 +1,13 @@
+<app-list-container
+  [fetchFn]="adminUser.getMembers.bind(adminUser)"
+  [displayFilter]="['registrationRange', 'accountType', 'overallStatus', 'registrationStatus', 'onboardingStatus']"
+  [pageSize]="20"
+  [emptyMessage]="'No user are currently available for display.'"
+  [pageType]="'wanted'"
+  listingType="user"
+  [fetchCountFn]="adminUser.getCounts.bind(adminUser)"
+>
+  <ng-template class="" let-user>
+    <app-member-row [user]="user" />
+  </ng-template>
+</app-list-container>

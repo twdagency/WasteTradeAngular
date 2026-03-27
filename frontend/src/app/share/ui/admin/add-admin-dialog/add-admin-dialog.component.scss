@@ -1,0 +1,92 @@
+.add-admin-dialog {
+  padding: 16px;
+  max-width: 960px;
+  width: 100%;
+
+  .dialog-title {
+    font-size: 2rem;
+    font-weight: 700;
+    color: #1d1d1b;
+  }
+
+  .btn-close {
+    background: none;
+    border: none;
+    font-size: 1.25rem;
+    color: #6c757d;
+    cursor: pointer;
+    padding: 0;
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    &:hover {
+      color: #000;
+    }
+
+    &:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+  }
+
+  .add-admin-form {
+    mat-label {
+      font-weight: bold;
+      font-size: 1rem;
+      text-transform: uppercase;
+      margin-bottom: 4px;
+      display: block;
+      color: #1d1d1b;
+      margin-bottom: 8px;
+    }
+
+    mat-form-field {
+      &.w-100 {
+        width: 100%;
+      }
+
+      &[appearance='outline'] {
+        .mat-mdc-input-element {
+          font-size: 1rem;
+
+          &::placeholder {
+            color: #9ca3af;
+            opacity: 1;
+          }
+        }
+      }
+    }
+
+    .col-md-6,
+    .col-md-12,
+    .col-12 {
+      padding-left: 0;
+      padding-right: 0;
+    }
+
+    .row.g-3 {
+      margin-left: -12px;
+      margin-right: -12px;
+
+      > .col-md-6 {
+        padding-left: 12px;
+        padding-right: 12px;
+      }
+    }
+  }
+
+  .dialog-actions {
+    margin-top: 2rem;
+  }
+}
+
+:host::ng-deep app-telephone-form-control mat-label {
+  margin-bottom: 8px;
+}
+
+.action-button {
+  height: 60px;
+}

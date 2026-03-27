@@ -1,0 +1,65 @@
+<h4 class="fw-bold title">{{ 'Members' | translate }}</h4>
+@if (actualTotalCount() !== 1) {
+  <div class="row mb-4">
+    <div class="col-8 col-md-9">
+      <mat-form-field appearance="outline" class="w-100">
+        <input
+          #searchInput
+          matInput
+          type="text"
+          maxlength="50"
+          [placeholder]="'What are you looking for?' | translate"
+          (keydown.enter)="search(); $event.preventDefault()"
+        />
+      </mat-form-field>
+    </div>
+    <div class="col-4 col-md-3" style="padding-left: 0">
+      <button mat-flat-button class="background-primary w-100 h-100 fs-16" (click)="search()">
+        <mat-icon class="d-none d-md-block">search</mat-icon>
+        {{ 'SEARCH' | translate }}
+      </button>
+    </div>
+  </div>
+
+  <div style="margin-bottom: 60px">
+    <app-filter
+      [onlyFilter]="true"
+      [displayFilter]="[isHaulierCompany() ? 'haulierCompanyMemberRole' : 'companyMemberRole', 'companyMemberStatus']"
+      (filterChanged)="onFilterChanged($event)"
+    ></app-filter>
+  </div>
+}
+
+@if (isLoading()) {
+  <div class="d-flex justify-content-center align-items-center flex-grow-1">
+    <app-spinner></app-spinner>
+  </div>
+} @else {
+  @if (actualTotalCount() === 1) {
+    <div class="fs-24 empty-message-container">
+      <p class="text-muted text-center">
+        {{ 'Currently you are the only user associated with this company.' | translate }}
+      </p>
+    </div>
+  } @else if (items().length === 0) {
+    <div class="fs-24 empty-message-container">
+      <p class="text-muted text-center">
+        {{ invalidPage() ? ('Cannot load members list.' | translate) : noResults() ? ('No members available.' | translate) : '' }}
+      </p>
+    </div>
+  } @else {
+    <p class="fw-bold">{{ items().length }} {{ 'RESULTS OF' | translate }} {{ totalCount() }}</p>
+    @for (item of items(); track $index) {
+      <app-members-row
+        [member]="item"
+        [members]="items()"
+        [isHaulierCompany]="isHaulierCompany()"
+        (roleUpdated)="refetchMembers()"
+        (refresh)="refetchMembers()"
+      >
+      </app-members-row>
+    }
+    <app-pagination [pageNumber]="page()" [size]="pageSize" [totalCount]="totalCount()" (pageChange)="onPageChange($event)">
+    </app-pagination>
+  }
+}

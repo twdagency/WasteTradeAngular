@@ -1,0 +1,150 @@
+<ng-template #document let-type="type" let-items="items">
+  <div class="w-100">
+    <p class="fw-bold mb-3">{{ type }}</p>
+    @if (items.length == 0) {
+      <div class="d-flex justify-content-center align-items-center fs-24 mt-3">
+        <p class="text-muted">{{ 'No document found.' | translate }}</p>
+      </div>
+    } @else {
+      @for (item of items; track $index) {
+        <div class="d-flex justify-content-lg-between gap-2 flex-wrap flex-lg-nowrap mb-3">
+          <div
+            class="d-flex flex-column flex-md-row gap-3 align-items-stretch align-items-md-center w-100 cursor-pointer"
+            matTooltip="View document"
+          >
+            <div class="w-100 rounded border d-flex h-100">
+              <div class="col-md-1 col-2 background-grey d-flex justify-content-center align-items-center p-2 left-side">
+                <mat-icon class="me-1">file_copy</mat-icon>
+              </div>
+              <div class="d-md-flex flex-md-row flex-column align-items-center px-3 py-2 right-side w-100 text-break">
+                <div class="flex-column col-md-10">
+                  <div class="fw-bold">
+                    {{ item.documentName }}
+                  </div>
+                  <div>
+                    <span class="fw-bold">{{ 'Expiry Date' | translate }}: </span>
+                    <span>{{ item.expiryDate | expiryDate }}</span>
+                  </div>
+                </div>
+                <div class="col-md-2 d-flex align-items-center justify-content-md-end justify-content-start mt-md-0 mt-3">
+                  <mat-icon [style.color]="getStatusColor(item.status)" [style]="{ minWidth: '27px' }">fiber_manual_record</mat-icon>
+                  <div class="fw-500 text-nowrap" [style.color]="getDocumentStatusColor(item.status)">
+                    {{ getDocumentStatusText(item.status) || '-' | translate }}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div
+            mat-stroked-button
+            class="d-flex rounded gap-1 px-4 align-items-center border border-primary primary text-uppercase fw-bold custom-button"
+            (click)="viewDocument(item)"
+          >
+            {{ 'Preview' | translate }}
+            <mat-icon>preview</mat-icon>
+          </div>
+
+          <div
+            mat-stroked-button
+            class="d-flex rounded gap-1 px-4 align-items-center border border-primary primary text-uppercase fw-bold custom-button"
+            (click)="download(item.documentUrl)"
+          >
+            {{ 'Download' | translate }}
+            <svg width="25" height="25" viewBox="0 0 25 25" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <g clip-path="url(#clip0_19766_20097)">
+                <path
+                  d="M19.5 9.25H15.5V3.25H9.5V9.25H5.5L12.5 16.25L19.5 9.25ZM11.5 11.25V5.25H13.5V11.25H14.67L12.5 13.42L10.33 11.25H11.5ZM5.5 18.25H19.5V20.25H5.5V18.25Z"
+                  fill="#03985C"
+                />
+              </g>
+              <defs>
+                <clipPath id="clip0_19766_20097">
+                  <rect width="24" height="24" fill="white" transform="translate(0.5 0.25)" />
+                </clipPath>
+              </defs>
+            </svg>
+          </div>
+        </div>
+      }
+    }
+  </div>
+</ng-template>
+
+<div class="col-12 overflow-hidden">
+  <h4 class="fw-bold mb-4">{{ 'Company Documents' | translate }}</h4>
+  <div class="d-flex flex-column flex-lg-row gap-4">
+    <div
+      class="border-thin rounded-4 p-3 p-md-4 p-lg-5 d-flex flex-column flex-md-row justify-content-between col-12 overflow-hidden gap-4"
+    >
+      <div class="col-12 col-md-8 col-lg-9 d-flex flex-column justify-content-between overflow-hidden flex-grow-1 min-w-0">
+        <div class="row g-3 mb-4 mx-0">
+          <div class="col-12 px-2">
+            <div class="mb-2">
+              <div class="fw-bold mb-3">{{ 'WHICH PERMIT / LICENCE DO YOU HAVE?*' | translate }}</div>
+              @if (documentTypeUploaded.length > 0) {
+                <div>{{ documentTypeUploaded }}</div>
+              } @else {
+                <div class="d-flex justify-content-center align-items-center fs-24 mt-3">
+                  <p class="text-muted">{{ 'No document found.' | translate }}</p>
+                </div>
+              }
+            </div>
+          </div>
+          @if (environmentPermitDocuments.length > 0) {
+            <ng-container
+              *ngTemplateOutlet="
+                document;
+                context: {
+                  items: environmentPermitDocuments,
+                  type: 'ENVIRONMENTAL PERMIT UPLOAD' | translate,
+                }
+              "
+            ></ng-container>
+          }
+
+          @if (wasteExemptionDocuments.length > 0) {
+            <ng-container
+              *ngTemplateOutlet="
+                document;
+                context: {
+                  items: wasteExemptionDocuments,
+                  type: 'WASTE EXEMPTIONS UPLOAD' | translate,
+                }
+              "
+            ></ng-container>
+          }
+
+          @if (otherDocuments.length > 0) {
+            <ng-container
+              *ngTemplateOutlet="
+                document;
+                context: {
+                  items: otherDocuments,
+                  type: 'OTHER DOCUMENT UPLOAD' | translate,
+                }
+              "
+            ></ng-container>
+          }
+          <div class="mb-1 mt-3">
+            <p class="fw-bold mb-3">{{ 'DO YOU HAVE A WASTE CARRIER LICENCE?' | translate }}</p>
+            <div class="d-flex justify-content-between col-12 col-md-6" name="wasteLicence" style="pointer-events: none">
+              {{ wasteCarrierLicenseDocuments.length > 0 ? 'Yes' : 'Not Applicable' }}
+            </div>
+          </div>
+          @if (wasteCarrierLicenseDocuments.length > 0) {
+            <ng-container
+              *ngTemplateOutlet="
+                document;
+                context: {
+                  items: wasteCarrierLicenseDocuments,
+                  type: 'WASTE CARRIER LICENCE UPLOAD' | translate,
+                }
+              "
+            ></ng-container>
+          }
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,105 @@
+<button mat-icon-button class="common-modal-close-btn" (click)="handleClose()">
+  <mat-icon>close</mat-icon>
+</button>
+
+<div class="container merge-modal d-flex flex-column">
+  <h2 class="title">{{ 'Merge Company' | translate }}</h2>
+
+  <!-- Company to merge with section -->
+  <div class="company-search-section mb-4">
+    <h3 class="section-title mb-2">{{ 'Company to merge with' | translate }} <span class="text-danger">*</span></h3>
+    <p class="search-description mb-3">
+      {{ 'Enter the VAT or name of the company you want to merge into this one.' | translate }}
+    </p>
+
+    <!-- Company search select -->
+    <mat-form-field appearance="outline" class="w-100 company-search-field">
+      <mat-select
+        [formControl]="selectControl"
+        [placeholder]="'Search' | translate"
+        panelClass="company-search-panel"
+        (openedChange)="onSelectOpened($event)"
+      >
+        <mat-select-trigger>
+          @if (selectControl.value) {
+            {{ selectControl.value.name }} {{ selectControl.value.vatNumber }}
+          }
+        </mat-select-trigger>
+
+        <div class="search-box">
+          <mat-icon class="search-icon">search</mat-icon>
+          <input
+            #searchInput
+            type="text"
+            [formControl]="searchControl"
+            [placeholder]="'Search company name or VAT number...' | translate"
+            (keydown)="$event.stopPropagation()"
+          />
+        </div>
+
+        <div class="search-result">
+          @if (loading()) {
+            <div class="d-flex justify-content-center align-items-center flex-grow-1">
+              <app-spinner></app-spinner>
+            </div>
+          } @else {
+            @for (company of searchResults(); track company.id) {
+              <mat-option [value]="company" class="company-option">
+                <span class="fw-bold company-name">{{ company.name }}</span>
+                <span class="company-details"> VAT number: {{ company.vatNumber || 'N/A' }} </span>
+              </mat-option>
+            }
+            @if (searchResults().length === 0) {
+              <mat-option disabled>
+                {{ 'No company found' | translate }}
+              </mat-option>
+            }
+          }
+        </div>
+      </mat-select>
+      <!-- <mat-icon matSuffix>arrow_drop_down</mat-icon> -->
+    </mat-form-field>
+  </div>
+
+  <!-- Choose master section -->
+  @if (selectedCompany()) {
+    <div class="choose-master-section mb-4">
+      <h3 class="section-title">{{ 'Choose master' | translate }} <span class="text-danger">*</span></h3>
+
+      <mat-radio-group [formControl]="masterChoiceControl" class="master-radio-group">
+        <mat-radio-button value="target" class="master-radio-option">
+          <span class="radio-label"
+            >{{ 'Make source {{currentCompanyName}} the Master' | translate: {currentCompanyName: data.company.name} }}</span
+          >
+        </mat-radio-button>
+
+        <mat-radio-button value="source" class="master-radio-option">
+          <span class="radio-label"
+            >{{ 'Make source {{selectedCompanyName}} the Master' | translate: {selectedCompanyName: selectedCompany()?.name} }}</span
+          >
+        </mat-radio-button>
+      </mat-radio-group>
+
+      <p class="master-description">
+        {{ "Where companies have different details, the Master company's profile absorbs the other." | translate }}
+      </p>
+    </div>
+  }
+
+  <!-- Dialog actions -->
+  <div class="dialog-actions mt-4 d-flex gap-3">
+    <button mat-stroked-button color="primary" class="outlined-button text-uppercase dialog-btn fw-bold flex-1" (click)="onCancel()">
+      {{ 'Cancel' | translate }}
+    </button>
+
+    <button
+      mat-flat-button
+      color="primary"
+      class="primary-btn text-uppercase dialog-btn fw-bold flex-1"
+      [disabled]="!canContinue"
+      (click)="onContinue()"
+    >
+      {{ 'Continue' | translate }}
+    </button>
+  </div>
+</div>

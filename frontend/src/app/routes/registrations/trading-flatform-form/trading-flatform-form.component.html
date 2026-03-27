@@ -1,0 +1,278 @@
+<app-un-auth-layout>
+  <div class="col-md-6 mx-auto">
+    <div class="fs-24 box-shadow p-3 background-primary border-radius text-white text-center mt-3 mb-5">
+      {{ 'Do you have a WasteTrade account ?' | translate }}
+      <span (click)="goLogin()" class="text-white fw-bold text-decoration-underline fs-24">
+        {{ 'Login' | translate }}
+      </span>
+    </div>
+    <div class="border border-radius border-1 border-dark p-4 bg-white">
+      <div class="mb-4 fw-bold fs-48">{{ 'Register' | translate }}</div>
+      <h6 class="mb-4 mt-5 primary fw-bold">{{ 'BASIC DETAILS' | translate }}</h6>
+      <form [formGroup]="formGroup">
+        <div class="row g-3 mb-4">
+          <div class="col-md-2">
+            <mat-label class="fw-bold mb-1">{{ 'PREFIX' | translate }} <span class="asterisk">*</span></mat-label>
+            <mat-form-field appearance="outline" class="w-100">
+              <mat-select formControlName="prefix" placeholder="{{ 'Please Select' | translate }}">
+                <mat-option value="dr">{{ ' Dr.' | translate }}</mat-option>
+                <mat-option value="miss">{{ 'Miss.' | translate }}</mat-option>
+                <mat-option value="mr">{{ 'Mr.' | translate }}</mat-option>
+                <mat-option value="mrs">{{ 'Mrs.' | translate }}</mat-option>
+                <mat-option value="ms">{{ 'Ms.' | translate }}</mat-option>
+                <mat-option value="mx">{{ 'Mx.' | translate }}</mat-option>
+                <mat-option value="prof">{{ 'Prof.' | translate }}</mat-option>
+                <mat-option value="rev">{{ 'Rev.' | translate }}</mat-option>
+              </mat-select>
+              @if (formGroup.get('prefix')?.hasError('required')) {
+                <mat-error>{{ 'This field is required' | translate }} </mat-error>
+              }
+            </mat-form-field>
+          </div>
+          <div class="col-md-5">
+            <mat-label class="fw-bold mb-1">{{ 'FIRST NAME' | translate }} <span class="asterisk">*</span></mat-label>
+            <mat-form-field appearance="outline" class="w-100">
+              <input matInput placeholder="{{ 'e.g.Mark' | translate }}" type="text" formControlName="firstName" />
+              @if (formGroup.get('firstName')?.hasError('required')) {
+                <mat-error>{{ 'First Name is required' | translate }} </mat-error>
+              }
+              @if (formGroup.get('firstName')?.hasError('maxlength')) {
+                <mat-error>{{ 'First Name cannot exceed 50 characters' | translate }}</mat-error>
+              }
+            </mat-form-field>
+          </div>
+          <div class="col-md-5">
+            <label class="fw-bold">{{ 'LAST NAME' | translate }} <span class="asterisk">*</span></label>
+            <mat-form-field appearance="outline" class="w-100">
+              <input matInput placeholder="{{ 'e.g.Smith' | translate }}" type="text" formControlName="lastName" />
+              @if (formGroup.get('lastName')?.hasError('required')) {
+                <mat-error>{{ 'Last Name is required' | translate }} </mat-error>
+              }
+              @if (formGroup.get('lastName')?.hasError('maxlength')) {
+                <mat-error>{{ 'Last Name cannot exceed 50 characters' | translate }}</mat-error>
+              }
+            </mat-form-field>
+          </div>
+        </div>
+        <div class="col-12 mb-4">
+          <mat-label class="fw-bold mb-1">{{ 'JOB TITLE' | translate }} <span class="asterisk">*</span></mat-label>
+          <mat-form-field appearance="outline" class="w-100">
+            <input matInput placeholder="{{ 'Type here' | translate }}" type="text" formControlName="jobTitle" />
+            @if (formGroup.get('jobTitle')?.hasError('required')) {
+              <mat-error>{{ 'This field is required' | translate }} </mat-error>
+            }
+            @if (formGroup.get('jobTitle')?.hasError('maxlength')) {
+              <mat-error>{{ 'Job Title cannot exceed 50 characters ' | translate }}</mat-error>
+            }
+          </mat-form-field>
+        </div>
+        <div class="row mb-4">
+          <app-telephone-form-control formControlName="phoneNumber" [isRequired]="true"></app-telephone-form-control>
+        </div>
+        <div class="row mb-4">
+          <app-input-with-confirm-control
+            #emailComponent
+            valueLabel="{{ 'ENTER EMAIL' | translate }}"
+            confirmLabel="{{ 'CONFIRM EMAIL' | translate }}"
+            valueErrorLabel="{{ 'Email' | translate }}"
+            valueErrorLabel="{{ 'Confirm Email' | translate }}"
+            placeholder="{{ 'Enter Email' | translate }}"
+            formControlName="email"
+            [type]="'text'"
+            [isRequired]="true"
+            [isEmail]="true"
+          >
+          </app-input-with-confirm-control>
+        </div>
+        <div class="row mb-4">
+          <app-input-with-confirm-control
+            #passwordComponent
+            valueLabel="{{ 'PASSWORD' | translate }}"
+            confirmLabel="{{ 'CONFIRM PASSWORD' | translate }}"
+            placeholder="{{ 'Type here' | translate }}"
+            [type]="'password'"
+            formControlName="password"
+            [isRequired]="true"
+          >
+          </app-input-with-confirm-control>
+          @if (formGroup.get('password')?.hasError('pwdStrengthInvalid')) {
+            <div class="col-12">
+              <mat-error>
+                {{
+                  'Invalid password strength. Password must contain at least 8 characters includes numbers and letters, contain at least 1 special character.'
+                    | translate
+                }}
+              </mat-error>
+            </div>
+          }
+          @if (pwdStrength(); as pwdStrength) {
+            <div class="fw-500 col-12">
+              {{ 'Strength:' | translate }}
+              <span
+                [class.primary]="pwdStrength == 'strong'"
+                [class.error]="pwdStrength == 'weak'"
+                [class.secondary]="pwdStrength == 'medium'"
+                >{{ pwdStrength | titlecase | translate }}</span
+              >
+            </div>
+          }
+        </div>
+
+        <h6 class="mb-4 mt-5 primary fw-bold">{{ 'COMPANY DETAILS' | translate }}</h6>
+
+        <div class="col-12 mb-4">
+          <mat-label class="fw-bold mb-1">{{ 'COMPANY NAME' | translate }} <span class="asterisk">*</span></mat-label>
+          <mat-form-field appearance="outline" class="w-100">
+            <input matInput placeholder="{{ 'ex. WasteTrade' | translate }}" type="text" formControlName="companyName" />
+            @if (formGroup.get('companyName')?.hasError('required')) {
+              <mat-error>{{ 'This field is required' | translate }} </mat-error>
+            }
+            @if (formGroup.get('companyName')?.hasError('maxlength')) {
+              <mat-error>{{ 'Company Name cannot exceed 100 characters' | translate }}</mat-error>
+            }
+          </mat-form-field>
+        </div>
+        <div class="col-12 mb-4">
+          <mat-label class="mb-0 fw-bold"> {{ 'COMPANY INTEREST' | translate }} <span class="asterisk">*</span> </mat-label>
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-select placeholder="{{ 'Please Select' | translate }}" formControlName="companyInterest">
+              <mat-option value="both">{{ ' Both' | translate }}</mat-option>
+              <mat-option value="seller">{{ 'Seller' | translate }}</mat-option>
+              <mat-option value="buyer">{{ 'Buyer' | translate }}</mat-option>
+            </mat-select>
+          </mat-form-field>
+          @if (formGroup.get('companyInterest')?.hasError('required') && formGroup.get('companyInterest')?.touched) {
+            <mat-error class="mt-0 mat-error">{{ 'This field is required' | translate }}</mat-error>
+          }
+        </div>
+        <h6 class="mb-4 mt-5 primary">
+          <span class="fw-bold">{{ 'MATERIALS ACCEPTED' | translate }}</span> {{ '(MULTIPLE SELECTION)' | translate }}
+        </h6>
+        <div class="col-12 mb-3">
+          <mat-checkbox
+            class="tri-state-checkbox bold-label"
+            color="primary"
+            [checked]="selectAllMaterial()"
+            (change)="toggleSelectAllMaterials()"
+          >
+            {{ (selectAllMaterial() ? 'Deselect All' : 'Select All') | translate }}
+          </mat-checkbox>
+        </div>
+        @for (material of materialsAccept; track $index) {
+          @if (material.materials.length > 0) {
+            <div class="mb-3">
+              <mat-expansion-panel
+                [expanded]="expandAllMaterials() || expandedMaterialGroup() === material.name"
+                (expandedChange)="onMaterialPanelToggle(material.name, $event)"
+              >
+                <mat-expansion-panel-header>
+                  <mat-panel-title>
+                    <div class="fw-bold">{{ material.name | uppercase | translate }}</div>
+                  </mat-panel-title>
+                </mat-expansion-panel-header>
+                <div class="row align-items-center">
+                  @for (item of material.materials; track $index; let i = $index) {
+                    <div class="col-12 col-md-4 mb-2">
+                      <mat-checkbox
+                        class="bold-label"
+                        color="primary"
+                        (change)="onSelectedMaterial($event, item.code)"
+                        [checked]="materials.value.includes(item.code)"
+                      >
+                        {{ item.name | translate }}
+                      </mat-checkbox>
+                    </div>
+                  }
+                </div>
+              </mat-expansion-panel>
+            </div>
+          }
+        }
+        <div class="mb-3">
+          <mat-expansion-panel [expanded]="showOtherMaterial()" (expandedChange)="showOtherMaterial.set($event)">
+            <mat-expansion-panel-header>
+              <mat-panel-title>
+                <div class="fw-bold">
+                  <mat-checkbox
+                    color="primary checkbox-pl0"
+                    (change)="showOtherMaterial.set($event.checked)"
+                    [checked]="showOtherMaterial()"
+                  >
+                    <span class="text-wrap fw-bold fs-16">{{ 'Other' | translate }}</span>
+                  </mat-checkbox>
+                </div>
+              </mat-panel-title>
+            </mat-expansion-panel-header>
+            <div class="col-12">
+              <mat-label class="fw-bold">{{ 'OTHER MATERIAL' | translate }} <span class="asterisk">*</span></mat-label>
+              <mat-form-field appearance="outline" class="w-100">
+                <input matInput placeholder="{{ 'Type here' | translate }}" type="text" formControlName="otherMaterial" />
+                @if (formGroup.get('otherMaterial')?.hasError('required') && formGroup.get('otherMaterial')?.touched) {
+                  <mat-error>{{ 'This field is required' | translate }}</mat-error>
+                }
+                @if (formGroup.get('otherMaterial')?.hasError('maxlength')) {
+                  <mat-error>{{ 'Other Material cannot exceed 100 characters' | translate }}</mat-error>
+                }
+              </mat-form-field>
+            </div>
+          </mat-expansion-panel>
+        </div>
+
+        @if (materials.hasError('required') && materials.touched) {
+          <mat-error class="mat-error">{{ 'This field is required' | translate }}</mat-error>
+        }
+        <hr />
+        <!-- <h6 class="mb-4 mt-5 primary" >DECLARATION</h6> -->
+        <div class="col-12 mb-4">
+          <mat-label class="fw-bold mb-1">{{ 'WHERE DID YOU HEAR ABOUT US ?' | translate }} <span class="asterisk">*</span></mat-label>
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-select class="fw-bold" placeholder="{{ 'Please select' | translate }}" formControlName="whereDidYouHearAboutUs">
+              <mat-option class="option-bold-label" value="google_search">{{ 'Google Search' | translate }}</mat-option>
+              <mat-option class="option-bold-label" value="prse_trade_show">{{ 'PRSE Trade Show' | translate }}</mat-option>
+              <mat-option class="option-bold-label" value="plastics_live_trade_show">{{
+                'Plastics Live Trade Show' | translate
+              }}</mat-option>
+              <mat-option class="option-bold-label" value="sustainability_show">{{ 'Sustainability show' | translate }}</mat-option>
+              <mat-option class="option-bold-label" value="k_show"> {{ 'K-Show' | translate }}</mat-option>
+              <mat-option class="option-bold-label" value="interpack">{{ 'Interpack' | translate }}</mat-option>
+              <mat-option class="option-bold-label" value="plast_2023">{{ 'Plast 2023' | translate }}</mat-option>
+              <mat-option class="option-bold-label" value="word_of_mouth">{{ 'Word of mouth' | translate }}</mat-option>
+            </mat-select>
+            @if (formGroup.get('whereDidYouHearAboutUs')?.hasError('required')) {
+              <mat-error>{{ 'This field is required' | translate }} </mat-error>
+            }
+          </mat-form-field>
+        </div>
+        <div class="col-12 mt-3">
+          <mat-checkbox color="primary" formControlName="acceptTerm"
+            >{{ 'I accept the' | translate }}
+            <a class="fw-bold text-dark text-underline" href="/termsandconditions" target="_blank">{{
+              'Terms and Conditions' | translate
+            }}</a>
+            {{ 'and' | translate }}
+            <a class="fw-bold text-dark text-underline" href="/privacy-policy" target="_blank">{{ 'Privacy Policy' | translate }}</a>
+            {{ 'by joining WasteTrade. ' | translate }} <span class="asterisk">*</span>
+          </mat-checkbox>
+          @if (formGroup.get('acceptTerm')?.invalid && formGroup.get('acceptTerm')?.touched) {
+            <mat-error class="mt-0 mat-error">
+              {{ 'You must accept the Terms and Conditions and Privacy Policy to proceed.' | translate }}
+            </mat-error>
+          }
+        </div>
+        <div class="col-12 mt-3">
+          <button
+            type="submit"
+            color="primary"
+            mat-flat-button
+            class="w-100 big-btn fw-bold"
+            [class.overlay-spinner]="submitting()"
+            [disabled]="formGroup.invalid"
+            (click)="send()"
+          >
+            {{ 'CREATE ACCOUNT' | translate }}
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</app-un-auth-layout>

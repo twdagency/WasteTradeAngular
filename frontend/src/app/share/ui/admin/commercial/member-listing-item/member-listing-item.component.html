@@ -1,0 +1,46 @@
+@if (member(); as member) {
+  <div class="w-100">
+    <div class="cursor-pointer border-thin rounded-4 p-3 p-md-4 mb-3" (click)="onViewDetail()">
+      <div class="row gy-4">
+        <div class="col-12 col-md-6 col-lg-2">
+          <div class="fw-bold mb-3">{{ getCompanyType(member.user.companyType) | translate }}</div>
+          <p class="mb-1 fw-500">{{ member.user.name | titlecase }}</p>
+          <p class="mb-1 fw-500">{{ member.user.companyName | titlecase }}</p>
+          <p class="mb-1 fw-500">{{ mapCountryCodeToName[member.user.companyCountry] }}</p>
+        </div>
+
+        <div class="col-12 col-md-6 col-lg-2">
+          <div class="fw-bold text-uppercase mb-3">{{ 'DATE OF REGISTRATION' | translate }}</div>
+          <p class="mb-1 fw-500">{{ member.user.registrationDate | date: 'dd/MM/YYYY' }}</p>
+        </div>
+
+        <div class="col-12 col-md-6 col-lg-2">
+          <div class="fw-bold text-uppercase mb-3">{{ 'OVERALL STATUS' | translate }}</div>
+          <p class="mb-1 fw-500" [style.color]="MapUserStatusToColor[member.overallStatus]">
+            {{ MapOverallStatusToLabel[member.overallStatus] | translate | titlecase }}
+          </p>
+        </div>
+
+        <div class="col-12 col-md-6 col-lg-2">
+          <div class="fw-bold text-uppercase mb-3">{{ 'Registration Status' | translate }}</div>
+          <p class="mb-1 fw-500" [style.color]="MapUserStatusToColor[member.registrationStatus]">
+            {{ MapRegistrationStatusToLabel[member.registrationStatus] | translate | titlecase }}
+          </p>
+        </div>
+
+        <div class="col-12 col-md-6 col-lg-2">
+          <div class="fw-bold text-uppercase mb-3">{{ 'ONBOARDING STATUS' | translate }}</div>
+          <p class="mb-1 fw-500" [style.color]="MapOnboardingStatusToColor[member.onboardingStatus]">
+            {{ MapOnboardingStatusToLabel[member.onboardingStatus] | translate | titlecase }}
+          </p>
+        </div>
+
+        <div class="col-12 col-lg-2 d-flex align-items-center justify-content-center justify-content-lg-end">
+          <button mat-stroked-button class="border-primary primary fw-bold" [style]="{ height: '62px' }">
+            {{ 'VIEW DETAILS' | translate }}
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+}

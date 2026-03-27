@@ -1,0 +1,67 @@
+<div class="col-12 overflow-hidden mt-5">
+  <h4 class="fw-bold mt-3 mb-5">{{ 'User Information' | translate }}</h4>
+
+  <div class="d-flex flex-column flex-lg-row gap-4 overflow-hidden">
+    <div class="info-box rounded-4 p-md-4 d-flex flex-column flex-md-row justify-content-between col-12 col-lg-10 overflow-hidden gap-4">
+      <div class="col-12 col-md-8 col-lg-9 d-flex flex-column justify-content-between overflow-hidden flex-grow-1 min-w-0">
+        <div class="row g-3 mb-4 mx-0">
+          <div class="col-3 px-2">
+            <div class="fw-bold text-uppercase small mb-1">{{ 'FIRST NAME' | translate }}</div>
+            <div class="text-truncate fw-500">{{ adminData?.firstName }}</div>
+          </div>
+          <div class="col-3 px-2">
+            <div class="fw-bold text-uppercase small mb-1">{{ 'LAST NAME' | translate }}</div>
+            <div class="text-truncate fw-500">{{ adminData?.lastName }}</div>
+          </div>
+          <div class="col-3 px-2">
+            <div class="fw-bold text-uppercase small mb-1">{{ 'EMAIL ADDRESS' | translate }}</div>
+            <div class="text-truncate fw-500">{{ adminData?.emailAddress }}</div>
+          </div>
+          <div class="col-3 px-2">
+            <div class="fw-bold text-uppercase small mb-1">{{ 'PHONE NUMBER' | translate }}</div>
+            <div class="text-truncate fw-500">{{ adminData?.phone }}</div>
+          </div>
+        </div>
+        <div class="row g-3 mx-0">
+          <div class="col-3 px-2">
+            <div class="fw-bold text-uppercase small mb-1">{{ 'ROLE' | translate }}</div>
+            <div class="text-truncate text-capitalize fw-500">{{ MapRoleToName[adminData?.role] }}</div>
+          </div>
+          <div class="col-3 px-2">
+            <div class="fw-bold text-uppercase small mb-1">{{ 'STATUS' | translate }}</div>
+            <div
+              class="text-truncate text-capitalize fw-500"
+              [ngStyle]="{
+                color: adminData?.status === 'active' ? '#03985C' : adminData?.status === 'achieved' ? '#B1B1AA' : 'inherit',
+              }"
+            >
+              {{ adminData?.status }}
+            </div>
+          </div>
+          <div class="col-3 px-2">
+            <div class="fw-bold text-uppercase small mb-1">{{ 'LAST APP ACCESS' | translate }}</div>
+            <div class="text-truncate fw-500">{{ adminData?.lastLogin }}</div>
+          </div>
+          <div class="col-3 px-2"></div>
+        </div>
+      </div>
+    </div>
+    <div class="d-flex justify-content-center justify-content-lg-start align-items-start">
+      <button
+        mat-stroked-button
+        class="d-flex align-items-center cus-btn justify-content-center"
+        style="max-width: 200px"
+        (click)="onEditProfile()"
+      >
+        <img
+          src="assets/images/edit_24px.svg"
+          appFallbackImage
+          loading="lazy"
+          alt="Edit icon"
+          style="height: 1em; width: auto; vertical-align: baseline; margin-right: 5px"
+        />
+        <span class="fw-bold fs-16">{{ 'EDIT' | translate }}</span>
+      </button>
+    </div>
+  </div>
+</div>

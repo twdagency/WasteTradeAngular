@@ -1,0 +1,453 @@
+<app-haulier-layout [title]="'Current Offers Details' | translate">
+  @if (loading()) {
+    <app-spinner></app-spinner>
+  } @else {
+    @if (offerDetails(); as offerDetails) {
+      <div
+        mat-button
+        class="d-inline-flex align-items-center py-1 px-5 fw-bold rounded background-primary text-white text-uppercase cursor-pointer button-wrapper mb-4"
+        (click)="onBack()"
+      >
+        <mat-icon class="icon me-2">west</mat-icon>
+        <span>{{ 'go back' | translate }}</span>
+      </div>
+
+      <div
+        class="d-flex justify-content-center align-items-center col-md-9 border py-4 rounded-4 mb-5"
+        [style.background-color]="getStatusColor(offerDetails.status)"
+      >
+        <div class="flex-column align-items-center justify-content-center text-center text-white">
+          <div class="text-uppercase fw-medium">{{ 'Haulage Total' | translate }}</div>
+          <div class="fw-bold fs-5">{{ currencySymbol() }}{{ offerDetails.haulageTotal | number }}</div>
+        </div>
+      </div>
+
+      <div class="d-flex gap-4">
+        <div class="col-md-9 border border-primary rounded-4 mb-3 py-4 ps-5">
+          <div class="primary fw-bold fs-4 mb-4">{{ 'Haulier' | translate }}</div>
+
+          <div class="d-flex align-items-center justify-content-center mb-4">
+            <div class="d-flex justify-content-between align-items-center col-md-12">
+              <div class="flex-column col-md-4">
+                <div class="fw-bold text-dark text-uppercase">{{ 'Bid state status' | translate }}</div>
+                <div class="fw-bold" [style.color]="getStatusColor(offerDetails.status)">
+                  {{ mapCodeToStatus[offerDetails.status] }}
+                </div>
+              </div>
+              <div class="flex-column col-md-4">
+                <div class="fw-bold text-dark text-uppercase">{{ 'Container Type' | translate }}</div>
+                <div class="">{{ mapContainerCodeToName[offerDetails.trailerContainerType] | translate }}</div>
+              </div>
+              <div class="flex-column col-md-4 position-relative">
+                <div class="fw-bold text-dark text-uppercase">{{ 'Customs Clearance' | translate }}</div>
+                <div class="">{{ offerDetails.completingCustomsClearance ? (' Yes' | translate) : ('No' | translate) }}</div>
+                <span
+                  class="position-absolute"
+                  style="top: 0; left: -30px"
+                  matTooltip="{{
+                    'If No, WasteTrade will handle Customs Clearance for a fixed fee of £200. This will be added to the Haulage Total.'
+                      | translate
+                  }}"
+                >
+                  <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path
+                      fill-rule="evenodd"
+                      clip-rule="evenodd"
+                      d="M10 18.75C12.3206 18.75 14.5462 17.8281 16.1872 16.1872C17.8281 14.5462 18.75 12.3206 18.75 10C18.75 7.67936 17.8281 5.45376 16.1872 3.81282C14.5462 2.17187 12.3206 1.25 10 1.25C7.67936 1.25 5.45376 2.17187 3.81282 3.81282C2.17187 5.45376 1.25 7.67936 1.25 10C1.25 12.3206 2.17187 14.5462 3.81282 16.1872C5.45376 17.8281 7.67936 18.75 10 18.75ZM10 20C12.6522 20 15.1957 18.9464 17.0711 17.0711C18.9464 15.1957 20 12.6522 20 10C20 7.34784 18.9464 4.8043 17.0711 2.92893C15.1957 1.05357 12.6522 0 10 0C7.34784 0 4.8043 1.05357 2.92893 2.92893C1.05357 4.8043 0 7.34784 0 10C0 12.6522 1.05357 15.1957 2.92893 17.0711C4.8043 18.9464 7.34784 20 10 20Z"
+                      fill="#8E8E8D"
+                    />
+                    <path
+                      d="M11.1624 8.23633L8.29994 8.59508L8.19744 9.07008L8.75994 9.17383C9.12744 9.26133 9.19994 9.39383 9.11994 9.76008L8.19744 14.0951C7.95494 15.2163 8.32869 15.7438 9.20744 15.7438C9.88869 15.7438 10.6799 15.4288 11.0387 14.9963L11.1487 14.4763C10.8987 14.6963 10.5337 14.7838 10.2912 14.7838C9.94744 14.7838 9.82244 14.5426 9.91119 14.1176L11.1624 8.23633Z"
+                      fill="#8E8E8D"
+                    />
+                    <path
+                      d="M10 6.875C10.6904 6.875 11.25 6.31536 11.25 5.625C11.25 4.93464 10.6904 4.375 10 4.375C9.30964 4.375 8.75 4.93464 8.75 5.625C8.75 6.31536 9.30964 6.875 10 6.875Z"
+                      fill="#8E8E8D"
+                    />
+                  </svg>
+                </span>
+              </div>
+            </div>
+          </div>
+
+          <div class="d-flex align-items-center justify-content-center mb-4">
+            <div class="d-flex justify-content-between align-items-center col-md-12">
+              <div class="flex-column col-md-4">
+                <div class="fw-bold text-dark text-uppercase">{{ 'Currency' | translate }}</div>
+                <div class="text-uppercase">{{ offerDetails.currency | translate }}</div>
+              </div>
+              <div class="flex-column col-md-4">
+                <div class="fw-bold text-dark text-uppercase">{{ 'Number of loads' | translate }}</div>
+                <div class="">{{ offerDetails.numberOfLoads | number: '1.0-0' }}</div>
+              </div>
+              <div class="flex-column col-md-4">
+                <div class="fw-bold text-dark text-uppercase">{{ 'Quantity per load (MT)' | translate }}</div>
+                <div class="">{{ offerDetails.quantityPerLoad | number }}</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="d-flex align-items-center justify-content-center mb-4">
+            <div class="d-flex justify-content-between align-items-center col-md-12">
+              <div class="flex-column col-md-4 position-relative">
+                <div class="fw-bold text-dark text-uppercase">{{ 'Haulage Cost Per Load' | translate }}</div>
+                <div class="">{{ currencySymbol() }} {{ offerDetails.haulageCostPerLoad | number }}</div>
+                <span
+                  class="position-absolute"
+                  style="top: 0; left: -30px"
+                  matTooltip="{{ 'Please include the Weighbridge price if required.' | translate }}"
+                >
+                  <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path
+                      fill-rule="evenodd"
+                      clip-rule="evenodd"
+                      d="M10 18.75C12.3206 18.75 14.5462 17.8281 16.1872 16.1872C17.8281 14.5462 18.75 12.3206 18.75 10C18.75 7.67936 17.8281 5.45376 16.1872 3.81282C14.5462 2.17187 12.3206 1.25 10 1.25C7.67936 1.25 5.45376 2.17187 3.81282 3.81282C2.17187 5.45376 1.25 7.67936 1.25 10C1.25 12.3206 2.17187 14.5462 3.81282 16.1872C5.45376 17.8281 7.67936 18.75 10 18.75ZM10 20C12.6522 20 15.1957 18.9464 17.0711 17.0711C18.9464 15.1957 20 12.6522 20 10C20 7.34784 18.9464 4.8043 17.0711 2.92893C15.1957 1.05357 12.6522 0 10 0C7.34784 0 4.8043 1.05357 2.92893 2.92893C1.05357 4.8043 0 7.34784 0 10C0 12.6522 1.05357 15.1957 2.92893 17.0711C4.8043 18.9464 7.34784 20 10 20Z"
+                      fill="#8E8E8D"
+                    />
+                    <path
+                      d="M11.1624 8.23633L8.29994 8.59508L8.19744 9.07008L8.75994 9.17383C9.12744 9.26133 9.19994 9.39383 9.11994 9.76008L8.19744 14.0951C7.95494 15.2163 8.32869 15.7438 9.20744 15.7438C9.88869 15.7438 10.6799 15.4288 11.0387 14.9963L11.1487 14.4763C10.8987 14.6963 10.5337 14.7838 10.2912 14.7838C9.94744 14.7838 9.82244 14.5426 9.91119 14.1176L11.1624 8.23633Z"
+                      fill="#8E8E8D"
+                    />
+                    <path
+                      d="M10 6.875C10.6904 6.875 11.25 6.31536 11.25 5.625C11.25 4.93464 10.6904 4.375 10 4.375C9.30964 4.375 8.75 4.93464 8.75 5.625C8.75 6.31536 9.30964 6.875 10 6.875Z"
+                      fill="#8E8E8D"
+                    />
+                  </svg>
+                </span>
+              </div>
+              <div class="flex-column col-md-4">
+                <div class="fw-bold text-dark text-uppercase">{{ 'Transport Provider' | translate }}</div>
+                <div class="">{{ transportProviderMap[offerDetails.transportProvider] | translate }}</div>
+              </div>
+              <div class="flex-column col-md-4">
+                <div class="fw-bold text-dark text-uppercase">{{ 'Suggested Collection Date ' | translate }}</div>
+                <div class="">{{ offerDetails.suggestedCollectionDate | date: 'dd/MM/yyyy' }}</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="d-flex align-items-center justify-content-center mb-4">
+            <div class="d-flex justify-content-between align-items-center col-md-12">
+              <div class="flex-column col-md-4">
+                <div class="fw-bold text-dark text-uppercase">{{ 'Expected Transit Time' | translate }}</div>
+                <div class="">{{ offerDetails.expectedTransitTime }}</div>
+              </div>
+              <div class="flex-column col-md-4">
+                <div class="fw-bold text-dark text-uppercase">{{ 'Demurrage At Destination (Days)' | translate }}</div>
+                <div class="">{{ offerDetails.demurrageAtDestination }}</div>
+              </div>
+              <div class="flex-column col-md-4">
+                <div class="fw-bold text-dark text-uppercase">{{ 'Notes' | translate }}</div>
+                <div class="text-truncate" [matTooltip]="offerDetails.notes">{{ offerDetails.notes ?? '-' }}</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <span
+          class="col-md-1 h-auto"
+          [matTooltip]="
+            'This offer cannot be edited because it has been approved. If you need to edit this offer, please contact support@wastetrade.com.'
+              | translate
+          "
+          [matTooltipPosition]="'above'"
+          [matTooltipDisabled]="!isAcceptedOffer()"
+        >
+          <button
+            mat-stroked-button
+            class="d-flex flex-nowrap align-items-center justify-content-center col-md-12 p-0"
+            (click)="edit()"
+            [disabled]="isAcceptedOffer()"
+          >
+            <img
+              src="assets/images/edit_24px.svg"
+              appFallbackImage
+              loading="lazy"
+              alt="Edit icon"
+              style="height: 1em; width: auto; vertical-align: baseline; margin-right: 5px"
+              [class.img-disabled]="isAcceptedOffer()"
+            />
+            <span class="fw-bold fs-16">{{ 'EDIT' | translate }}</span>
+          </button>
+        </span>
+      </div>
+
+      @if (offerDetails.status !== HaulageOfferStatus.WITHDRAWN) {
+        <div
+          class="col-md-2 mb-5"
+          [matTooltip]="
+            'You cannot withdraw an offer that has already been accepted. If you have an issue, please contact support@wastetrade.com.'
+              | translate
+          "
+          [matTooltipDisabled]="!isAcceptedOffer()"
+        >
+          <button
+            mat-flat-button
+            class="fw-bold fs-16 text-uppercase background-error"
+            [disabled]="isAcceptedOffer()"
+            [class.button-disabled]="isAcceptedOffer()"
+            [class.text-white]="isAcceptedOffer()"
+            (click)="withdrawOffer()"
+          >
+            {{ 'Withdraw Offer' | translate }}
+          </button>
+        </div>
+      }
+
+      <div class="col-md-9 border border-primary d-flex justify-content-between align-items-stretch rounded-4">
+        @if (seller(); as seller) {
+          <!-- seller -->
+          <div class="col-md-6 seller-side rounded-start-4 d-flex flex-column">
+            <div class="px-4 pt-4 flex-grow-1">
+              <div class="d-flex flex-column mb-3">
+                <div class="w-100 primary fs-3 fw-bold">{{ 'Seller' | translate }}</div>
+              </div>
+
+              <div class="d-flex justify-content-between mb-4">
+                <div class="d-flex flex-column col-md-6">
+                  <div class="text-uppercase fw-bold">{{ 'Seller user id' | translate }}</div>
+                  <div>{{ seller?.username }}</div>
+                </div>
+                <div class="d-flex flex-column col-md-6">
+                  <div class="text-uppercase fw-bold">{{ 'Location' | translate }}</div>
+                  <div>
+                    {{ seller.location.city }},
+                    {{ mapCountryCodeToName[seller?.location?.country ?? ''] }}
+                  </div>
+                </div>
+              </div>
+
+              <div class="d-flex justify-content-between mb-4">
+                <div class="d-flex flex-column col-md-6">
+                  <div class="text-uppercase fw-bold">{{ 'Loading Times' | translate }}</div>
+                  <div>{{ seller?.loadingTimes?.openTime | slice: 0 : 5 }} - {{ seller?.loadingTimes?.closeTime | slice: 0 : 5 }}</div>
+                </div>
+                <div class="d-flex flex-column col-md-6">
+                  <div class="text-uppercase fw-bold">{{ 'Container Type' | translate }}</div>
+                  @for (item of seller?.location?.containerType; track $index) {
+                    <div>{{ mapLocationContainerCodeToName[item] }}</div>
+                  }
+                </div>
+              </div>
+
+              <div class="d-flex justify-content-between mb-4">
+                <div class="d-flex flex-column col-md-6">
+                  <div class="text-uppercase fw-bold">{{ 'Site Restrictions' | translate }}</div>
+                  <div>{{ seller?.siteRestrictions == 'N/a' ? 'No' : seller?.siteRestrictions }}</div>
+                </div>
+                <div class="d-flex flex-column col-md-6">
+                  <div class="text-uppercase fw-bold">{{ 'Material Name' | translate }}</div>
+                  <div>{{ materialInfo()?.materialName | titlecase }}</div>
+                </div>
+              </div>
+
+              <div class="d-flex justify-content-between mb-4">
+                <div class="d-flex flex-column col-md-6">
+                  <div class="text-uppercase fw-bold">{{ 'Material Types' | translate }}</div>
+                  <div>{{ offerDetails?.material?.type | titlecase }}</div>
+                </div>
+                <div class="d-flex flex-column col-md-6">
+                  <div class="text-uppercase fw-bold">{{ 'Material Item' | translate }}</div>
+                  <div>{{ materialInfo()?.materialItem | titlecase }}</div>
+                </div>
+              </div>
+
+              <div class="d-flex justify-content-between mb-4">
+                <div class="d-flex flex-column col-md-6">
+                  <div class="text-uppercase fw-bold">{{ 'Packaging' | translate }}</div>
+                  <div>{{ materialInfo()?.materialPackaging | titlecase }}</div>
+                </div>
+                <div class="d-flex flex-column col-md-6">
+                  <div class="text-uppercase fw-bold">{{ 'Incoterms' | translate }}</div>
+                  <div>{{ offerDetails?.offer?.incoterms }}</div>
+                </div>
+              </div>
+
+              <div class="d-flex justify-content-between mb-4">
+                <div class="d-flex flex-column col-md-7">
+                  <div class="text-uppercase fw-bold">{{ 'Average Weight Per Load (MT)' | translate }}</div>
+                  <div>{{ offerDetails.quantityPerLoad }}</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        }
+
+        @if (buyer(); as buyer) {
+          <!-- buyer -->
+          <div class="col-md-6 buyer-side rounded-end-4 d-flex flex-column">
+            <div class="px-4 pt-4 flex-grow-1">
+              <div class="d-flex flex-column mb-3">
+                <div class="w-100 primary fs-3 fw-bold">{{ 'Buyer' | translate }}</div>
+              </div>
+
+              <div class="d-flex justify-content-between mb-4">
+                <div class="d-flex flex-column col-md-6">
+                  <div class="text-uppercase fw-bold">{{ 'Buyer user id' | translate }}</div>
+                  <div>{{ buyer?.username }}</div>
+                </div>
+                <div class="d-flex flex-column col-md-6">
+                  <div class="text-uppercase fw-bold">{{ 'Location' | translate }}</div>
+                  <div>
+                    {{ buyer?.location?.city }},
+                    {{ mapCountryCodeToName[buyer?.location?.country ?? ''] }}
+                  </div>
+                </div>
+              </div>
+
+              <div class="d-flex justify-content-between mb-4">
+                <div class="d-flex flex-column col-md-6">
+                  <div class="text-uppercase fw-bold">{{ 'Loading Times' | translate }}</div>
+                  <div>{{ buyer?.loadingTimes?.openTime | slice: 0 : 5 }} - {{ buyer?.loadingTimes?.closeTime | slice: 0 : 5 }}</div>
+                </div>
+                <div class="d-flex flex-column col-md-6">
+                  <div class="text-uppercase fw-bold">{{ 'Container Types' | translate }}</div>
+                  @for (item of buyer?.location?.containerType; track $index) {
+                    <div>{{ mapLocationContainerCodeToName[item] }}</div>
+                  }
+                </div>
+              </div>
+
+              <div class="d-flex justify-content-between mb-4">
+                <div class="d-flex flex-column col-md-6">
+                  <div class="text-uppercase fw-bold">{{ 'Site Restrictions' | translate }}</div>
+                  <div>{{ buyer?.siteRestrictions == 'N/a' ? 'No' : buyer?.siteRestrictions }}</div>
+                </div>
+                <div class="d-flex flex-column col-md-6">
+                  <div class="text-uppercase fw-bold">{{ 'Desired Delivery Window' | translate }}</div>
+                  <div>
+                    <span class="d-block">
+                      {{ offerDetails.offer.earliestDeliveryDate | date: 'dd/MM/yyyy' }}
+                    </span>
+                    <span class="d-block">
+                      {{ offerDetails.offer.latestDeliveryDate | date: 'dd/MM/yyyy' }}
+                    </span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="d-flex justify-content-between mb-4">
+                <div class="d-flex flex-column col-md-6">
+                  <div class="text-uppercase fw-bold">{{ 'Num of Load Bid on' | translate }}</div>
+                  <div>{{ offerDetails.numOfLoadBidOn | number: '1.0-0' }}</div>
+                </div>
+                <div class="d-flex flex-column col-md-6">
+                  <div class="text-uppercase fw-bold">{{ 'Incoterms' | translate }}</div>
+                  <div>{{ offerDetails?.offer?.incoterms }}</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        }
+      </div>
+
+      @if (
+        offerDetails.status === HaulageOfferStatus.ACCEPTED ||
+        offerDetails.status === HaulageOfferStatus.PARTIALLY_SHIPPED ||
+        offerDetails.status === HaulageOfferStatus.SHIPPED
+      ) {
+        <div class="fs-2 fw-bold my-4">{{ 'Load Details' | translate }}</div>
+        @if (loadsLoading()) {
+          <app-spinner></app-spinner>
+        } @else if (loads().length === 0) {
+          <div class="text-muted">{{ 'No loads found' | translate }}</div>
+        } @else {
+          @for (load of loads(); track load.id) {
+            <ng-container *ngTemplateOutlet="loadCard; context: { $implicit: load }"></ng-container>
+          }
+        }
+      }
+    }
+  }
+  <ng-template #loadCard let-item>
+    <div class="d-flex flex-column col-md-9 py-4 ps-5 border border-primary rounded-4 mb-4">
+      <div class="row g-3">
+        <div class="col d-flex flex-column">
+          <div class="text-uppercase fw-bold text-nowrap small mb-1">
+            {{ 'Load Number' | translate }}
+          </div>
+          <div class="primary fw-bold">
+            @if (item.loadNumber) {
+              {{ item.loadNumber }}
+            } @else {
+              -
+            }
+          </div>
+        </div>
+
+        <div class="col d-flex flex-column">
+          <div class="text-uppercase fw-bold text-nowrap small mb-1">
+            {{ 'Collection Date' | translate }}
+          </div>
+          <div>
+            @if (item.collectionDate) {
+              {{ item.collectionDate | date: 'dd/MM/yyyy' }}
+            } @else {
+              -
+            }
+          </div>
+        </div>
+
+        <div class="col d-flex flex-column">
+          <div class="text-uppercase fw-bold text-nowrap small mb-1">
+            {{ 'Shipped Date' | translate }}
+          </div>
+          <div>
+            @if (item.shippedDate) {
+              {{ item.shippedDate | date: 'dd/MM/yyyy' }}
+            } @else {
+              -
+            }
+          </div>
+        </div>
+
+        <div class="col d-flex flex-column">
+          <div class="text-uppercase fw-bold text-nowrap small mb-1">
+            {{ 'Gross Weight' | translate }}
+          </div>
+          <div>
+            @if (item.grossWeight) {
+              {{ +item.grossWeight | number: '1.0-2' }}MT
+            } @else {
+              -
+            }
+          </div>
+        </div>
+
+        <div class="col d-flex flex-column">
+          <div class="text-uppercase fw-bold text-nowrap small mb-1">
+            {{ 'Pallet Weight' | translate }}
+          </div>
+          <div>
+            @if (item.palletWeight) {
+              {{ +item.palletWeight | number: '1.0-2' }}MT
+            } @else {
+              -
+            }
+          </div>
+        </div>
+
+        @if (!authService.isHaulierUser) {
+          <div class="col d-flex align-items-center justify-content-center">
+            @if (!item.shippedDate && item.loadStatus?.toLowerCase() !== 'delivered') {
+              <button
+                mat-flat-button
+                class="border-primary fw-bold fs-16 shipped-button"
+                [style]="{ height: '59px' }"
+                [disabled]="marking()"
+                [class.overlay-spinner]="marking()"
+                (click)="markAsShipped(item)"
+              >
+                {{ 'MARK AS SHIPPED' | translate }}
+              </button>
+            } @else {
+              <div class="text-success fw-bold fs-16 text-uppercase text-center w-100">
+                {{ 'Shipped' | translate }}
+              </div>
+            }
+          </div>
+        }
+      </div>
+    </div>
+  </ng-template>
+</app-haulier-layout>

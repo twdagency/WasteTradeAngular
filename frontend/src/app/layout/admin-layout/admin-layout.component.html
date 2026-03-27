@@ -1,0 +1,29 @@
+<div class="wrapper">
+  <app-header></app-header>
+
+  <div class="d-flex w-100 flex-column justify-content-between min-vh-100 content-container">
+    <div class="py-4">
+      <div class="d-flex align-items-center justify-content-between">
+        <p class="fw-bold title mb-0">{{ title }}</p>
+
+        <div class="header-desktop align-items-center right-box pointer">
+          <div class="d-flex align-items-center gap-2">
+            <app-icon iconName="question_mark"></app-icon>
+            <p class="mb-0">{{ 'Support Center' | translate }}</p>
+          </div>
+
+          <app-avatar></app-avatar>
+
+          <app-notification></app-notification>
+
+          <app-language-selector></app-language-selector>
+        </div>
+      </div>
+
+      <div class="content-wrapper">
+        <ng-content></ng-content>
+      </div>
+    </div>
+  </div>
+</div>
+<app-footer></app-footer>

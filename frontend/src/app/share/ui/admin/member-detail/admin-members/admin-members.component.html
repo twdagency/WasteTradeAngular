@@ -1,0 +1,14 @@
+<div class="d-flex justify-content-between">
+  <h4 class="fw-bold title">{{ 'Members' | translate }}</h4>
+
+  <button mat-flat-button class="primary-button fs-16 fw-bold text-uppercase merge-btn" (click)="onMergeCompany()">
+    {{ 'Merge with Other Company' | translate }}
+  </button>
+</div>
+<p class="fw-bold mt-4 mb-4">{{ items().length }} {{ 'RESULTS OF' | translate }} {{ totalCount() }}</p>
+
+@for (item of items(); track $index) {
+  <app-admin-members-row [member]="item" (roleUpdated)="refetchMembers()" (refresh)="refetchMembers()" [companyId]="user().companyId" />
+}
+
+<app-pagination [pageNumber]="page()" [size]="pageSize" [totalCount]="totalCount()" (pageChange)="onPageChange($event)"> </app-pagination>

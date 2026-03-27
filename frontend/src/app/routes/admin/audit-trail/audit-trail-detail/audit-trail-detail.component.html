@@ -1,0 +1,97 @@
+<div style="overflow-y: auto">
+  <mat-table mat-table [dataSource]="items" class="mt-4 w-100 border border-primary" ngSkipHydration>
+    <ng-container matColumnDef="time">
+      <th
+        mat-header-cell
+        *matHeaderCellDef
+        mat-sort-header
+        class="fw-bold fs-20 align-middle background-grey"
+        style="min-width: 170px; width: 190px"
+      >
+        {{ 'TIME' | translate }}
+      </th>
+      <td mat-cell *matCellDef="let row" class="align-middle fs-16">{{ row.createdAt | date: 'dd/MM/yyyy hh:mmaa' | lowercase }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="nameOfUser">
+      <th
+        mat-header-cell
+        *matHeaderCellDef
+        mat-sort-header
+        class="fw-bold fs-20 align-middle background-grey"
+        style="min-width: 170px; width: 190px"
+      >
+        {{ 'NAME OF USER' | translate }}
+      </th>
+      <td mat-cell *matCellDef="let row" class="align-middle fs-16">{{ row.loggedUserName }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="username">
+      <th
+        mat-header-cell
+        *matHeaderCellDef
+        mat-sort-header
+        class="fw-bold fs-20 align-middle background-grey"
+        style="min-width: 170px; width: 190px"
+      >
+        {{ 'USERNAME' | translate }}
+      </th>
+      <td mat-cell *matCellDef="let row" class="align-middle fs-16">{{ row.username }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="type">
+      <th
+        mat-header-cell
+        *matHeaderCellDef
+        mat-sort-header
+        class="fw-bold fs-20 align-middle background-grey"
+        style="min-width: 150px; width: 170px"
+      >
+        {{ 'TYPE' | translate }}
+      </th>
+      <td mat-cell *matCellDef="let row" class="align-middle fs-16">{{ row.siteType }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="organisation">
+      <th
+        mat-header-cell
+        *matHeaderCellDef
+        mat-sort-header
+        class="fw-bold fs-20 align-middle background-grey"
+        style="min-width: 170px; width: 190px"
+      >
+        {{ 'ORGANISATION' | translate }}
+      </th>
+      <td mat-cell *matCellDef="let row" class="align-middle fs-16">{{ row.loggedCompanyName }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="roleOfUser">
+      <th
+        mat-header-cell
+        *matHeaderCellDef
+        mat-sort-header
+        class="fw-bold fs-20 align-middle background-grey"
+        style="min-width: 150px; width: 170px"
+      >
+        {{ 'ROLE OF USER' | translate }}
+      </th>
+      <td mat-cell *matCellDef="let row" class="align-middle fs-16">{{ row.loggedUserRole }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="action">
+      <th
+        mat-header-cell
+        *matHeaderCellDef
+        mat-sort-header
+        class="fw-bold fs-20 align-middle background-grey"
+        style="min-width: 170px; width: 190px"
+      >
+        {{ 'ACTION' | translate }}
+      </th>
+      <td mat-cell *matCellDef="let row" class="align-middle fs-16">{{ row.type }} '{{ row.action }}'</td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+  </mat-table>
+</div>

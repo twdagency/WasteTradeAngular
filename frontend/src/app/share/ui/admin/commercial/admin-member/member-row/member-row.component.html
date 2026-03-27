@@ -1,0 +1,66 @@
+@if (user) {
+  <div class="w-100">
+    <div class="border-thin rounded-4 item-wrapper">
+      <div class="row align-items-start g-0" style="column-gap: 28px">
+        <div class="col-auto">
+          <div class="fw-bold mb-3 w-100 text-uppercase">{{ 'Assign' | translate }}</div>
+          <app-assign-admin [dataId]="user.userId" [dataType]="dataType" [assignAdmin]="user.assignAdmin"></app-assign-admin>
+        </div>
+
+        <div class="col-12 d-lg-none">
+          <hr />
+        </div>
+
+        <div class="col">
+          <div class="fw-bold mb-3">{{ user.accountType | translate | uppercase }}</div>
+          <p class="mb-1 fw-500">{{ user.userId }}</p>
+          <p class="mb-1 fw-500">{{ user.userName | titlecase }}</p>
+          <p class="mb-1 fw-500">{{ user.companyName | titlecase }}</p>
+          <p class="mb-1 fw-500">{{ mapCountryCodeToName[user.country] }}</p>
+        </div>
+
+        <div class="col">
+          <div class="fw-bold text-uppercase mb-3">{{ 'DATE OF REGISTRATION' | translate }}</div>
+          <p class="mb-1 fw-500">{{ user.registeredAt }}</p>
+        </div>
+
+        <div class="col">
+          <div class="fw-bold text-uppercase mb-3">{{ 'OVERALL STATUS' | translate }}</div>
+          <p class="mb-1 fw-500" [style.color]="MapUserStatusToColor[user.overallStatus]">
+            {{ MapOverallStatusToLabel[user.overallStatus] | translate | titlecase }}
+          </p>
+        </div>
+
+        <div class="col">
+          <div class="fw-bold text-uppercase mb-3">{{ 'Registration Status' | translate }}</div>
+          <p class="mb-1 fw-500" [style.color]="MapUserStatusToColor[user.registrationStatus]">
+            {{ MapRegistrationStatusToLabel[user.registrationStatus] | translate | titlecase }}
+          </p>
+        </div>
+
+        <div class="col">
+          <div class="fw-bold text-uppercase mb-3">{{ 'ONBOARDING STATUS' | translate }}</div>
+          <p class="mb-1 fw-500" [style.color]="MapOnboardingStatusToColor[user.onboardingStatus]">
+            {{ MapOnboardingStatusToLabel[user.onboardingStatus] | translate | titlecase }}
+          </p>
+        </div>
+
+        <div class="col-12 d-lg-none">
+          <hr />
+        </div>
+
+        <div class="col-auto d-flex align-items-center flex-column justify-content-center justify-content-lg-end">
+          <button
+            mat-stroked-button
+            class="border-primary primary py-4 fw-bold"
+            style="min-width: 165px; height: 60px"
+            (click)="openDetail()"
+          >
+            {{ 'VIEW DETAILS' | translate }}
+          </button>
+          <app-notes-btn [inputData]="{ id: user.userId, adminNote: user.adminNote, dataType: AdminNoteDataType.USERS }"></app-notes-btn>
+        </div>
+      </div>
+    </div>
+  </div>
+}

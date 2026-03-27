@@ -1,0 +1,19 @@
+.button-wrapper {
+  margin-bottom: 33px;
+  @media screen and (min-width: 992px) {
+    margin-bottom: 0;
+    margin-top: 0;
+  }
+}
+
+.buyer-side {
+  background-color: #f6f6f6;
+}
+
+.img-disabled {
+  // Biến ảnh thành màu xám (grayscale) và giảm độ đậm (opacity)
+  filter: grayscale(100%) opacity(0.5);
+
+  // Nếu bạn muốn nó tiệp màu hoàn toàn với text của nút disable trong Angular Material:
+  // filter: contrast(0) brightness(1.5);
+}

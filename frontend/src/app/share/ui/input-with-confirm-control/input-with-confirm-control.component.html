@@ -1,0 +1,61 @@
+<div class="row">
+  <!-- Field 1: Value -->
+  <div class="col-md-6" [class.col-md-12]="isHaulier" [class.mb-4]="isHaulier">
+    <mat-label class="fw-bold mb-1 d-block"
+      >{{ valueLabel }}
+      @if (isRequired) {
+        <span class="asterisk">*</span>
+      }
+    </mat-label>
+    <mat-form-field appearance="outline" class="w-100">
+      <input
+        matInput
+        [formControl]="valueControl"
+        [type]="showValue ? 'text' : 'password'"
+        [placeholder]="placeholder ?? ''"
+        (blur)="onTouched?.()"
+      />
+      @if (type === 'password') {
+        <mat-icon matSuffix style="cursor: pointer" (click)="toggleShowValue()">
+          {{ showValue ? 'visibility' : 'visibility_off' }}
+        </mat-icon>
+      }
+      @if (valueControl.hasError('required') && (valueControl.dirty || valueControl.touched)) {
+        <mat-error> {{ 'This is a required field' | translate }} </mat-error>
+      }
+      @if (valueControl.hasError('email') && (valueControl.dirty || valueControl.touched)) {
+        <mat-error>{{ 'Please enter a valid email address' | translate }}</mat-error>
+      }
+    </mat-form-field>
+  </div>
+
+  <!-- Field 2: Confirm Value -->
+  <div class="col-md-6" [class.col-md-12]="isHaulier">
+    <mat-label class="fw-bold mb-1 d-block"
+      >{{ confirmLabel }}
+      @if (isRequired) {
+        <span class="asterisk">*</span>
+      }
+    </mat-label>
+    <mat-form-field appearance="outline" class="w-100">
+      <input
+        matInput
+        [formControl]="confirmControl"
+        [type]="showConfirmValue ? 'text' : 'password'"
+        [placeholder]="placeholder ?? ''"
+        (blur)="onTouched?.()"
+      />
+      @if (type === 'password') {
+        <mat-icon matSuffix style="cursor: pointer" (click)="toggleShowConfirmValue()">
+          {{ showConfirmValue ? 'visibility' : 'visibility_off' }}
+        </mat-icon>
+      }
+      @if (confirmControl.hasError('required') && (confirmControl.dirty || confirmControl.touched)) {
+        <mat-error> {{ 'This is a required field' | translate }} </mat-error>
+      }
+      @if (confirmControl.hasError('mismatch')) {
+        <mat-error> {{ valueErrorLabel }} {{ 'and' | translate }} {{ valueErrorConfirmLabel }} {{ 'do not match' | translate }} </mat-error>
+      }
+    </mat-form-field>
+  </div>
+</div>

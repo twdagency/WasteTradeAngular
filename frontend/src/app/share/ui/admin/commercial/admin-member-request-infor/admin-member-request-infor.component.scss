@@ -1,0 +1,20 @@
+:host::ng-deep {
+  mat-radio-button {
+    .mdc-label {
+      cursor: pointer;
+      font-weight: bold;
+    }
+  }
+
+  .mdc-text-field,
+  .mat-mdc-form-field-infix {
+    padding: 0;
+  }
+}
+
+.submit-button {
+  height: 70px;
+  font-size: 20px;
+  text-transform: uppercase;
+  font-weight: bold;
+}

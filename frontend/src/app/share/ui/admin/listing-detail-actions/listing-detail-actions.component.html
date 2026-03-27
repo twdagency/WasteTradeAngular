@@ -1,0 +1,36 @@
+@if (canAction()) {
+  <div class="d-flex flex-wrap gap-2">
+    <button
+      mat-flat-button
+      class="custom-button fs-16"
+      (click)="onApprove()"
+      [disabled]="submitting()"
+      [class.overlay-spinner]="submitting() == 'accept'"
+    >
+      {{ 'Approve' | translate }}
+    </button>
+
+    <button
+      mat-flat-button
+      class="custom-button fs-16 background-error"
+      (click)="onReject()"
+      [disabled]="submitting()"
+      [class.overlay-spinner]="submitting() == 'reject'"
+    >
+      {{ 'Reject' | translate }}
+    </button>
+
+    @if (canRequestInformation()) {
+      <button
+        matButton="outlined"
+        class="custom-button bg-white fs-16 rounded primary border border-primary"
+        style="border-width: 3px"
+        (click)="onRequestMoreInformation()"
+        [disabled]="submitting()"
+        [class.overlay-spinner]="submitting() == 'request'"
+      >
+        {{ 'Request more information' | translate }}
+      </button>
+    }
+  </div>
+}

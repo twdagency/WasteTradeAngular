@@ -1,0 +1,59 @@
+<mat-tab-group class="common-tab" animationDuration="0ms" (selectedTabChange)="onTabChange($event)">
+  @for (item of listTab; track $index) {
+    <mat-tab labelClass="wrapper">
+      <ng-template mat-tab-label>
+        <span>
+          {{ item.label | translate }}
+
+          @if ($index === selectedTab() && tabCounts()[item.id] !== undefined) {
+            <span class="badge">{{ tabCounts()[item.id] || 0 }}</span>
+          }
+        </span>
+      </ng-template>
+    </mat-tab>
+  }
+</mat-tab-group>
+
+<div class="col-12 h-100 d-flex flex-column flex-grown" style="overflow: hidden">
+  @if (useFilter) {
+    <app-filter
+      [displayFilter]="displayFilter"
+      [customOptionValues]="customOptionValues"
+      (filterChanged)="onFilterChange($event)"
+      (searchTerm)="searchTerm.set($event)"
+      [pageType]="pageType"
+      [defaultExcludeSold]="false"
+      [cleanFilterSignal]="cleanFilterSignal()"
+    ></app-filter>
+  }
+
+  <div class="content-grid flex-grow-1 overflow-auto overflow-x-hidden">
+    @if (loading()) {
+      <div class="d-flex justify-content-center align-items-center flex-grow-1">
+        <app-spinner></app-spinner>
+      </div>
+    } @else {
+      @if (items().length === 0) {
+        <div class="fs-24 empty-message-container">
+          @if (invalidPage()) {
+            <p class="text-muted text-center">{{ emptyMessage | translate }}</p>
+          } @else if (noResults()) {
+            <p class="text-muted text-center">{{ emptyMessage | translate }}</p>
+          }
+        </div>
+      } @else {
+        <div class="row g-3">
+          @for (item of items(); track $index) {
+            <ng-container *ngTemplateOutlet="itemTemplate; context: { $implicit: item }"></ng-container>
+          }
+        </div>
+      }
+
+      @if (total() > 0 && !noResults()) {
+        <div class="mt-auto">
+          <app-pagination [pageNumber]="page()" [totalCount]="total()" (pageChange)="onPageChange($event)" [size]="20"></app-pagination>
+        </div>
+      }
+    }
+  </div>
+</div>

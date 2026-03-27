@@ -1,0 +1,25 @@
+<div mat-button [matMenuTriggerFor]="menu" class="wrapper haulier-wrapper">
+  <div class="user-name haulier-user-name px-lg-2 py-lg-1">
+    <p class="content text-nowrap">{{ compactUserName() }}</p>
+  </div>
+  <div>
+    <span class="d-none d-lg-block mb-0 fw-bold name" [title]="userName()">{{ userName() }}</span>
+    <span class="text-muted role" [title]="userRole()">{{ userRole() }}</span>
+  </div>
+
+  <mat-icon class="d-none d-lg-block more-icon">arrow_drop_down</mat-icon>
+</div>
+
+<mat-menu #menu="matMenu" class="avatar-menu">
+  <div class="menu-item" routerLink="{{ isHaulier ? routes.haulierProfile : routes.settings }}">
+    <app-icon iconName="library_books"></app-icon>
+
+    <p class="menu-title">{{ 'Account Settings' | translate }}</p>
+  </div>
+
+  <div class="menu-item" (click)="onLogout()">
+    <app-icon iconName="logout"></app-icon>
+
+    <p class="menu-title">{{ 'Log Out' | translate }}</p>
+  </div>
+</mat-menu>

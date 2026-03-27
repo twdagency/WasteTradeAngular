@@ -1,0 +1,17 @@
+@import 'variables';
+
+.list-item {
+  border-bottom: 1px solid #1d1d1b80;
+}
+
+::ng-deep mat-tab-header {
+  @media screen and (max-width: 991px) {
+    .mat-mdc-tab-labels {
+      display: none;
+    }
+
+    .mat-mdc-tab-label-container {
+      border-bottom: none;
+    }
+  }
+}

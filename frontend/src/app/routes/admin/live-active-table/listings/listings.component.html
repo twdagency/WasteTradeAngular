@@ -1,0 +1,13 @@
+<app-list-container
+  [fetchFn]="listingsService.getListingsSell.bind(listingsService)"
+  [displayFilter]="['materialType', 'country', 'status', 'sortBy']"
+  [customOptionValues]="customOptionValues"
+  [pageSize]="20"
+  [pageType]="'sellListing'"
+  [emptyMessage]="'No listing are currently available for display.'"
+  [isCountryFilter]="true"
+>
+  <ng-template let-listing>
+    <app-listing-detail [listing]="listing"></app-listing-detail>
+  </ng-template>
+</app-list-container>

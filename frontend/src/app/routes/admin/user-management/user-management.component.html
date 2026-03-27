@@ -1,0 +1,43 @@
+<app-admin-layout [title]="'User Management' | translate">
+  <div class="d-flex justify-content-between">
+    <div class="d-flex align-items-center gap-2">
+      <span class="text-uppercase fw-bold text-secondary small">
+        {{ 'Rows per page:' | translate }}
+      </span>
+      <mat-form-field appearance="outline" class="mini-select">
+        <mat-select [value]="size()" (selectionChange)="onPageSizeChange($event.value)">
+          <mat-option [value]="10">10</mat-option>
+          <mat-option [value]="20">20</mat-option>
+          <mat-option [value]="50">50</mat-option>
+          <mat-option [value]="100">100</mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
+
+    <button
+      color="primary"
+      class="btn add-admin-btn d-flex align-items-center gap-2 text-uppercase fw-semibold"
+      (click)="openAddAdminDialog()"
+    >
+      <mat-icon>person_add</mat-icon>
+      {{ 'ADD ADMIN' | translate }}
+    </button>
+  </div>
+
+  @if (loading()) {
+    <app-spinner></app-spinner>
+  } @else {
+    @if (displayItems().length === 0) {
+      <div class="fs-24 empty-message-container">
+        <p class="text-muted text-center">{{ 'No Admin users found. Check back later.' | translate }}</p>
+      </div>
+    } @else {
+      <p class="fw-bold text-uppercase mt-4 mb-5">{{ startIndex }} - {{ endIndex }} {{ 'OF' | translate }} {{ totalCount() }}</p>
+      @for (user of displayItems(); track user.emailAddress) {
+        <app-user-row [user]="user"></app-user-row>
+      }
+      <app-pagination [pageNumber]="page()" [totalCount]="totalCount()" [size]="size()" (pageChange)="onPageChange($event)">
+      </app-pagination>
+    }
+  }
+</app-admin-layout>

@@ -1,0 +1,50 @@
+@import '../variables';
+
+.border-radius-tiny {
+  border-radius: $border-radius-tiny;
+}
+
+.border-bottom {
+  border-bottom: 1px solid var(--outline-variant);
+}
+
+.border-radius {
+  border-radius: $border-radius;
+}
+
+.border-info {
+  border-color: $info !important;
+}
+
+.border-primary {
+  border-color: #06985c !important;
+}
+
+.border-black {
+  border-color: $black !important;
+}
+
+.box-shadow {
+  box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
+}
+
+.border-error {
+  border-color: $error !important;
+}
+
+.border-thin {
+  box-shadow: inset 0 0 0 0.5px $primary !important;
+
+  @supports (not (-webkit-text-size-adjust: none)) and (font: -apple-system-body) {
+    box-shadow: none !important;
+    border: 0.5px solid $primary !important;
+  }
+}
+
+.border-1px {
+  box-shadow: inset 0 0 0 0.75px $primary !important;
+}
+
+.border-back {
+  border-color: #3d3e3e;
+}

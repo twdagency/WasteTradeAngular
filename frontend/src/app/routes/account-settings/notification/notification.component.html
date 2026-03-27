@@ -1,0 +1,60 @@
+<div class="col-12 overflow-hidden">
+  <h4 class="fw-bold mt-3 mb-4">{{ 'Edit Notifications' | translate }}</h4>
+  <div class="d-flex flex-column flex-lg-row gap-4">
+    <div
+      class="border border-primary rounded-4 p-3 p-md-4 p-lg-5 d-flex flex-column flex-md-row justify-content-between col-12 col-lg-8 overflow-hidden gap-4"
+    >
+      <div class="col-12 col-md-8 col-lg-9 d-flex flex-column justify-content-between overflow-hidden flex-grow-1 min-w-0">
+        <div class="row g-3 mb-4 mx-0">
+          <div class="col-11 col-md-7 px-2">
+            <div class="fw-bold text-break small mb-1 d-flex align-items-center gap-2">
+              {{ 'EMAIL ME NEW LISTINGS THAT MATCH MY INTERESTS' | translate }}
+            </div>
+            <div class="fw-bold">
+              {{
+                user()?.user?.receiveEmailForNewMatchingListings === true
+                  ? ('Yes' | translate)
+                  : user()?.user?.receiveEmailForNewMatchingListings === false
+                    ? ('No' | translate)
+                    : ('Not set' | translate)
+              }}
+            </div>
+          </div>
+          <div class="col-11 col-md-5 px-2">
+            <div class="fw-bold text-break small mb-1 d-flex align-items-center gap-2">
+              {{ 'EMAIL ME OFFERS ON MY LISTINGS' | translate }}
+            </div>
+            <div class="fw-bold">
+              {{
+                user()?.user?.receiveEmailForOffersOnMyListings === true
+                  ? ('Yes' | translate)
+                  : user()?.user?.receiveEmailForOffersOnMyListings === false
+                    ? ('No' | translate)
+                    : ('Not set' | translate)
+              }}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div appPermissionTooltip="setting.cantEditCompanyNotification">
+      <button
+        mat-stroked-button
+        class="d-flex align-items-center justify-content-center"
+        style="max-width: 200px"
+        (click)="onEditNotifications()"
+        appPermissionDisable="setting.cantEditCompanyNotification"
+      >
+        <img
+          src="assets/images/edit_24px.svg"
+          appFallbackImage
+          loading="lazy"
+          alt="Edit icon"
+          style="height: 1em; width: auto; vertical-align: baseline; margin-right: 5px"
+        />
+        <span class="fw-bold fs-16">{{ 'EDIT' | translate }}</span>
+      </button>
+    </div>
+  </div>
+</div>

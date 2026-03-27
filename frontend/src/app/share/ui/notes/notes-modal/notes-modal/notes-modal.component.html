@@ -1,0 +1,41 @@
+<button mat-icon-button class="common-modal-close-btn" (click)="handleClose()">
+  <mat-icon>close</mat-icon>
+</button>
+@if (!hasAdminNoteDetail()) {
+  <div class="d-flex justify-content-center align-items-center flex-grow-1">
+    <app-spinner></app-spinner>
+  </div>
+} @else {
+  <div class="notes-modal d-flex flex-column justify-content-between">
+    <div class="item">
+      <h2 class="fw-bold">{{ 'Notes' | translate }}</h2>
+
+      <form [formGroup]="noteForm" class="notes-input">
+        <mat-form-field appearance="outline" class="w-100">
+          <textarea
+            matInput
+            class="notes-area fw-500"
+            formControlName="note"
+            rows="4"
+            maxlength="4000"
+            placeholder="Enter notes"
+          ></textarea>
+        </mat-form-field>
+      </form>
+
+      @if (note) {
+        <p class="fw-500 mt-2">{{ 'Last edited by' | translate }} {{ note.updatedBy }}, {{ note.updatedAt }}</p>
+      }
+    </div>
+
+    <button
+      mat-stroked-button
+      class="w-100 py-2 primary-btn submit-btn"
+      [disabled]="noteForm.invalid"
+      [disabled]="noteForm.invalid || submitting"
+      (click)="onSave()"
+    >
+      {{ 'SAVE AND CLOSE' | translate }}
+    </button>
+  </div>
+}

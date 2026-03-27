@@ -1,0 +1,9 @@
+@if (authService.isHaulierUser) {
+  <app-haulier-layout [title]="'Company Members'">
+    <app-company-member-page />
+  </app-haulier-layout>
+} @else {
+  <app-common-layout [title]="'Company Members'">
+    <app-company-member-page />
+  </app-common-layout>
+}

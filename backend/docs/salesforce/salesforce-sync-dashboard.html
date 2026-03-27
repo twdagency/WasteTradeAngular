@@ -1,0 +1,1183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Salesforce Sync Dashboard</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f8fafc;
+            color: #334155;
+            line-height: 1.6;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 2rem;
+            text-align: center;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .header p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .config {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            margin-bottom: 2rem;
+        }
+
+        .section {
+            background: white;
+            margin-bottom: 1.5rem;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+
+        .section h2 {
+            padding: 1rem 1.5rem;
+            background: #f1f5f9;
+            border-bottom: 1px solid #e2e8f0;
+            margin: 0;
+            font-size: 1.2rem;
+        }
+
+        .endpoint {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+            padding: 10px;
+            background: #f9f9f9;
+            border-radius: 4px;
+        }
+
+        .method {
+            font-weight: bold;
+            margin-right: 10px;
+            padding: 4px 8px;
+            border-radius: 4px;
+            color: white;
+            min-width: 50px;
+            text-align: center;
+        }
+
+        .method.GET {
+            background: #3b82f6;
+        }
+
+        .method.POST {
+            background: #10b981;
+        }
+
+        .method.DELETE {
+            background: #ef4444;
+        }
+
+        .url {
+            flex: 1;
+            font-family: monospace;
+            font-size: 14px;
+            margin-right: 10px;
+        }
+
+        .description {
+            font-size: 12px;
+            color: #6b7280;
+            margin-left: 10px;
+            flex: 1;
+        }
+
+        button {
+            padding: 8px 16px;
+            margin-left: 10px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            background: #3b82f6;
+            color: white;
+            white-space: nowrap;
+        }
+
+        button:hover {
+            background: #2563eb;
+        }
+
+        button:disabled {
+            background: #9ca3af;
+            cursor: not-allowed;
+        }
+
+        button.force-sync {
+            background: #f59e0b;
+            font-weight: bold;
+        }
+
+        button.force-sync:hover {
+            background: #d97706;
+        }
+
+        input {
+            padding: 8px;
+            border: 1px solid #d1d5db;
+            border-radius: 4px;
+            width: 100%;
+        }
+
+        .result {
+            margin-top: 10px;
+            padding: 10px;
+            background: #f3f4f6;
+            border-radius: 4px;
+            font-family: monospace;
+            font-size: 12px;
+            white-space: pre-wrap;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+
+        .result.success {
+            border-left: 4px solid #10b981;
+        }
+
+        .result.error {
+            border-left: 4px solid #ef4444;
+        }
+
+        .result pre {
+            margin: 0;
+            white-space: pre-wrap;
+            word-break: break-all;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 10px;
+        }
+
+        .quick-actions {
+            background: #eff6ff;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+
+        .quick-actions button {
+            margin: 5px;
+            background: #1d4ed8;
+        }
+
+        .input-group {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+
+        .input-group label {
+            min-width: 120px;
+            font-weight: bold;
+        }
+
+        .input-group input {
+            flex: 1;
+        }
+
+        .collapsible {
+            cursor: pointer;
+            user-select: none;
+        }
+
+        .collapsible:hover {
+            background: #f3f4f6;
+        }
+
+        .content {
+            display: none;
+            padding: 1.5rem;
+        }
+
+        .content.active {
+            display: block;
+        }
+
+        .toggle-icon {
+            float: right;
+            transition: transform 0.3s;
+        }
+
+        .toggle-icon.active {
+            transform: rotate(90deg);
+        }
+
+        .warning-box {
+            background-color: #fff3cd;
+            border: 1px solid #ffeaa7;
+            border-radius: 5px;
+            padding: 15px;
+            margin: 10px 0;
+            color: #856404;
+        }
+
+        .warning-box strong {
+            color: #d63031;
+        }
+
+        .warning-box code {
+            background-color: #f8f9fa;
+            padding: 2px 4px;
+            border-radius: 3px;
+            font-family: 'Courier New', monospace;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="header">
+        <h1>🚀 Salesforce Sync Dashboard</h1>
+        <p>Complete WasteTrade Salesforce integration testing and monitoring dashboard</p>
+    </div>
+
+    <div class="container">
+        <div class="config">
+            <h2>⚙️ Configuration</h2>
+            <div class="input-group">
+                <label>Base URL:</label>
+                <input type="text" id="baseUrl" value="https://wastetrade-api-dev.b13devops.com" />
+            </div>
+            <div class="input-group">
+                <label>JWT Token:</label>
+                <input type="text" id="jwtToken" value="" placeholder="Enter your JWT token" />
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>🔗 Salesforce UAT Environment Links</h2>
+            <p>Quick access to Salesforce UAT for monitoring synced data and verification</p>
+            <div class="grid">
+                <div class="endpoint">
+                    <span class="method GET">🏢</span>
+                    <span class="url">Accounts (Companies)</span>
+                    <span class="description">View synced WasteTrade companies</span>
+                    <button onclick="window.open('https://letsrecycleit--uat.sandbox.lightning.force.com/lightning/o/Account/list?filterName=AllAccounts', '_blank')">Open</button>
+                </div>
+                <div class="endpoint">
+                    <span class="method GET">🎯</span>
+                    <span class="url">Leads (Users)</span>
+                    <span class="description">View synced WasteTrade users as Leads</span>
+                    <button onclick="window.open('https://letsrecycleit--uat.sandbox.lightning.force.com/lightning/o/Lead/list?filterName=AllOpenLeads', '_blank')">Open</button>
+                </div>
+                <div class="endpoint">
+                    <span class="method GET">👥</span>
+                    <span class="url">Contacts (Verified Users)</span>
+                    <span class="description">View converted users as Contacts</span>
+                    <button onclick="window.open('https://letsrecycleit--uat.sandbox.lightning.force.com/lightning/o/Contact/list?filterName=AllContacts', '_blank')">Open</button>
+                </div>
+                <div class="endpoint">
+                    <span class="method GET">💰</span>
+                    <span class="url">Opportunities (Offers)</span>
+                    <span class="description">View synced offers as Opportunities</span>
+                    <button onclick="window.open('https://letsrecycleit--uat.sandbox.my.salesforce.com/lightning/o/Opportunity/list?filterName=Recent', '_blank')">Open</button>
+                </div>
+                <div class="endpoint">
+                    <span class="method GET">📋</span>
+                    <span class="url">Sales Listings (Custom)</span>
+                    <span class="description">View synced sell listings</span>
+                    <button onclick="window.open('https://letsrecycleit--uat.sandbox.lightning.force.com/lightning/o/Sales_Listing__c/list?filterName=All', '_blank')">Open</button>
+                </div>
+                <div class="endpoint">
+                    <span class="method GET">🔍</span>
+                    <span class="url">Wanted Listings (Custom)</span>
+                    <span class="description">View synced wanted listings</span>
+                    <button onclick="window.open('https://letsrecycleit--uat.sandbox.lightning.force.com/lightning/o/Wanted_Listings__c/list?filterName=All', '_blank')">Open</button>
+                </div>
+                <div class="endpoint">
+                    <span class="method GET">📄</span>
+                    <span class="url">Documents (Custom)</span>
+                    <span class="description">View synced company/location documents</span>
+                    <button onclick="window.open('https://letsrecycleit--uat.sandbox.lightning.force.com/lightning/o/Document__c/list?filterName=All', '_blank')">Open</button>
+                </div>
+                <div class="endpoint">
+                    <span class="method GET">💼</span>
+                    <span class="url">Custom Offers (Custom)</span>
+                    <span class="description">View synced offers in custom object</span>
+                    <button onclick="window.open('https://letsrecycleit--uat.sandbox.lightning.force.com/lightning/o/Offers__c/list?filterName=All', '_blank')">Open</button>
+                </div>
+                <div class="endpoint">
+                    <span class="method GET">🚚</span>
+                    <span class="url">Haulage Offers (Custom)</span>
+                    <span class="description">View synced haulage offers</span>
+                    <button onclick="window.open('https://letsrecycleit--uat.sandbox.lightning.force.com/lightning/o/Haulage_Offers__c/list?filterName=All', '_blank')">Open</button>
+                </div>
+                <div class="endpoint">
+                    <span class="method GET">📦</span>
+                    <span class="url">Haulage Loads (Custom)</span>
+                    <span class="description">View synced haulage loads</span>
+                    <button onclick="window.open('https://letsrecycleit--uat.sandbox.lightning.force.com/lightning/o/Haulage_Loads__c/list?filterName=All', '_blank')">Open</button>
+                </div>
+                <div class="endpoint">
+                    <span class="method GET">⚙️</span>
+                    <span class="url">Setup & Configuration</span>
+                    <span class="description">Salesforce setup and custom objects</span>
+                    <button onclick="window.open('https://letsrecycleit--uat.sandbox.my.salesforce.com/lightning/setup/SetupOneHome/home', '_blank')">Open</button>
+                </div>
+                <div class="endpoint">
+                    <span class="method GET">🔧</span>
+                    <span class="url">Object Manager</span>
+                    <span class="description">Manage custom objects and fields</span>
+                    <button onclick="window.open('https://letsrecycleit--uat.sandbox.my.salesforce.com/lightning/setup/ObjectManager/home', '_blank')">Open</button>
+                </div>
+                <div class="endpoint">
+                    <span class="method GET">🖥️</span>
+                    <span class="url">Developer Console</span>
+                    <span class="description">Apex debug console and SOQL queries</span>
+                    <button onclick="window.open('https://letsrecycleit--uat.sandbox.my.salesforce.com/_ui/common/apex/debug/ApexCSIPage', '_blank')">Open</button>
+                </div>
+                <div class="endpoint">
+                    <span class="method GET">🔌</span>
+                    <span class="url">External Client App Manager</span>
+                    <span class="description">Manage connected apps and OAuth clients</span>
+                    <button onclick="window.open('https://letsrecycleit--uat.sandbox.my.salesforce-setup.com/lightning/setup/ManageExternalClientApplication/home', '_blank')">Open</button>
+                </div>
+                <div class="endpoint">
+                    <span class="method GET">🔑</span>
+                    <span class="url">Reset Security Token</span>
+                    <span class="description">Reset API security token for authentication</span>
+                    <button onclick="window.open('https://letsrecycleit--uat.sandbox.my.salesforce-setup.com/lightning/settings/personal/ResetApiToken/home', '_blank')">Open</button>
+                </div>
+                <div class="endpoint">
+                    <span class="method GET">⚡</span>
+                    <span class="url">Apex Jobs</span>
+                    <span class="description">Monitor async Apex jobs, batch, future, queueable</span>
+                    <button onclick="window.open('https://letsrecycleit--uat.sandbox.my.salesforce.com/lightning/setup/AsyncApexJobs/home', '_blank')">Open</button>
+                </div>
+                <div class="endpoint">
+                    <span class="method GET">🔥</span>
+                    <span class="url">Apex Triggers</span>
+                    <span class="description">View and manage Apex triggers</span>
+                    <button onclick="window.open('https://letsrecycleit--uat.sandbox.my.salesforce.com/lightning/setup/ApexTriggers/home', '_blank')">Open</button>
+                </div>
+                <div class="endpoint">
+                    <span class="method GET">🌐</span>
+                    <span class="url">Remote Site Settings</span>
+                    <span class="description">Allowlisted external URLs for callouts</span>
+                    <button onclick="window.open('https://letsrecycleit--uat.sandbox.my.salesforce.com/lightning/setup/SecurityRemoteProxy/home', '_blank')">Open</button>
+                </div>
+                <div class="endpoint">
+                    <span class="method GET">📈</span>
+                    <span class="url">API Usage</span>
+                    <span class="description">Monitor API request limits and usage</span>
+                    <button onclick="window.open('https://letsrecycleit--uat.sandbox.my.salesforce.com/lightning/setup/CompanyResourceDisk/home', '_blank')">Open</button>
+                </div>
+                <div class="endpoint">
+                    <span class="method GET">🕐</span>
+                    <span class="url">Login History</span>
+                    <span class="description">View recent login attempts and API sessions</span>
+                    <button onclick="window.open('https://letsrecycleit--uat.sandbox.my.salesforce.com/lightning/setup/OrgLoginHistory/home', '_blank')">Open</button>
+                </div>
+            </div>
+            <div style="margin-top: 15px; padding: 10px; background: #fef3c7; border-radius: 4px; font-size: 14px;">
+                <strong>💡 Pro Tips:</strong>
+                <ul style="margin: 5px 0; padding-left: 20px;">
+                    <li>Use <strong>Recent</strong> filter to see newly synced records</li>
+                    <li>Search by <strong>WasteTrade ID</strong> fields to find specific records</li>
+                    <li>Check <strong>Last Modified Date</strong> to verify sync timing</li>
+                    <li>Look for <strong>DEV_</strong> or <strong>UAT_</strong> prefixes in record names</li>
+                    <li>Use <strong>Setup → Object Manager</strong> to verify custom fields exist</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="quick-actions">
+            <h3>⚡ Quick Actions</h3>
+            <button onclick="quickTestBasic()">🔍 Basic Health Check</button>
+            <button onclick="quickTestLimited()">🧪 Limited Test (1 record each)</button>
+            <button onclick="quickTestAll()">🚀 Full Test Suite</button>
+            <button onclick="clearResults()">🧹 Clear Results</button>
+        </div>
+
+        <div class="section">
+            <h2 class="collapsible" onclick="toggleSection('health')">
+                🏥 Health & Connection
+                <span class="toggle-icon">▶</span>
+            </h2>
+            <div id="health" class="content">
+                <div class="endpoint">
+                    <span class="method GET">GET</span>
+                    <span class="url">/ping</span>
+                    <span class="description">Basic application health check</span>
+                    <button onclick="testEndpoint('GET', '/ping')">Test</button>
+                </div>
+                <div class="endpoint">
+                    <span class="method GET">GET</span>
+                    <span class="url">/salesforce/health</span>
+                    <span class="description">Salesforce service health</span>
+                    <button onclick="testEndpoint('GET', '/salesforce/health')">Test</button>
+                </div>
+                <div class="endpoint">
+                    <span class="method GET">GET</span>
+                    <span class="url">/salesforce/test-connection</span>
+                    <span class="description">Test Salesforce connection</span>
+                    <button onclick="testEndpoint('GET', '/salesforce/test-connection')">Test</button>
+                </div>
+                <div class="endpoint">
+                    <span class="method GET">GET</span>
+                    <span class="url">/salesforce/picklist-values/{objectName}</span>
+                    <span class="description">Get picklist values for a Salesforce object</span>
+                    <select id="picklistObjectName" style="margin-left: 10px; padding: 8px; border: 1px solid #d1d5db; border-radius: 4px;">
+                        <option value="Account">Account</option>
+                        <option value="Lead">Lead</option>
+                        <option value="Contact">Contact</option>
+                        <option value="Sales_Listing__c">Sales_Listing__c</option>
+                        <option value="Offers__c">Offers__c</option>
+                        <option value="Haulage_Offers__c">Haulage_Offers__c</option>
+                    </select>
+                    <button onclick="getPicklistValues()">Get Picklists</button>
+                </div>
+                <div class="endpoint">
+                    <span class="method GET">GET</span>
+                    <span class="url">/salesforce/metrics</span>
+                    <span class="description">Get sync metrics</span>
+                    <button onclick="testEndpoint('GET', '/salesforce/metrics')">Get Metrics</button>
+                </div>
+                <div class="endpoint">
+                    <span class="method POST">POST</span>
+                    <span class="url">/salesforce/test-sync-all</span>
+                    <span class="description">Test sync all objects (limit=1)</span>
+                    <button onclick="testEndpoint('POST', '/salesforce/test-sync-all?limit=1')">Test Sync All</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2 class="collapsible" onclick="toggleSection('companies')">
+                🏢 Companies Sync
+                <span class="toggle-icon">▶</span>
+            </h2>
+            <div id="companies" class="content">
+                <div class="endpoint">
+                    <span class="method POST">POST</span>
+                    <span class="url">/salesforce/sync/companies</span>
+                    <span class="description">Sync all companies to Salesforce</span>
+                    <button onclick="testEndpoint('POST', '/salesforce/sync/companies')">Sync All</button>
+                    <button class="force-sync" onclick="testEndpoint('POST', '/salesforce/sync/companies?forceSync=true')">🔄 Sync All (Force)</button>
+                    <button onclick="testEndpoint('POST', '/salesforce/sync/companies?limit=5')">Sync Last 5</button>
+                </div>
+                <div class="endpoint">
+                    <span class="method POST">POST</span>
+                    <span class="url">/salesforce/sync/company/{id}</span>
+                    <span class="description">Sync specific company by ID</span>
+                    <input type="number" id="companyId" placeholder="Company ID" style="width: 100px; margin-left: 10px;">
+                    <button onclick="syncSpecificCompany()">Sync</button>
+                    <button class="force-sync" onclick="syncSpecificCompany(true)">🔄 Force Sync</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2 class="collapsible" onclick="toggleSection('users')">
+                👥 Users Sync
+                <span class="toggle-icon">▶</span>
+            </h2>
+            <div id="users" class="content">
+                <div style="background: #e0f2fe; padding: 10px; border-radius: 4px; margin-bottom: 10px; font-size: 14px;">
+                    <strong>🔄 New Flow (Phase 2):</strong> Users sync as Leads → CompanyUsers sync as Contacts
+                </div>
+                <div class="endpoint">
+                    <span class="method POST">POST</span>
+                    <span class="url">/salesforce/sync/users</span>
+                    <span class="description">Sync all users as Leads</span>
+                    <button onclick="testEndpoint('POST', '/salesforce/sync/users')">Sync All</button>
+                    <button class="force-sync" onclick="testEndpoint('POST', '/salesforce/sync/users?forceSync=true')">🔄 Sync All (Force)</button>
+                    <button onclick="testEndpoint('POST', '/salesforce/sync/users?limit=5')">Sync Last 5</button>
+                </div>
+                <div class="endpoint">
+                    <span class="method POST">POST</span>
+                    <span class="url">/salesforce/sync/user/{id}</span>
+                    <span class="description">Sync specific user as Lead by ID</span>
+                    <input type="number" id="userId" placeholder="User ID" style="width: 100px; margin-left: 10px;">
+                    <button onclick="syncSpecificUser()">Sync</button>
+                    <button class="force-sync" onclick="syncSpecificUser(true)">🔄 Force Sync</button>
+                </div>
+                <div class="endpoint">
+                    <span class="method POST">POST</span>
+                    <span class="url">/salesforce/convert-lead/{userId}</span>
+                    <span class="description">Convert Lead to Account and Contact</span>
+                    <input type="number" id="convertUserId" placeholder="User ID" style="width: 100px; margin-left: 10px;">
+                    <button onclick="convertLead()">Convert</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2 class="collapsible" onclick="toggleSection('company-users')">
+                🤝 CompanyUsers Sync
+                <span class="toggle-icon">▶</span>
+            </h2>
+            <div id="company-users" class="content">
+                <div style="background: #fef3c7; padding: 10px; border-radius: 4px; margin-bottom: 10px; font-size: 14px;">
+                    <strong>✨ CompanyUsers → Contact Sync</strong> — syncs user company memberships as Salesforce Contacts
+                </div>
+                <div class="endpoint">
+                    <span class="method POST">POST</span>
+                    <span class="url">/salesforce/sync/company-users</span>
+                    <span class="description">🆕 Sync all CompanyUsers (memberships) to Contacts</span>
+                    <input type="number" id="companyUsersLimit" placeholder="Limit" style="width: 80px; margin-left: 10px;">
+                    <button onclick="syncCompanyUsersWithLimit()" style="background: #059669;">Sync All Contacts</button>
+                    <button class="force-sync" onclick="testEndpoint('POST', '/salesforce/sync/company-users?forceSync=true')">🔄 Force Sync All</button>
+                    <button onclick="testEndpoint('POST', '/salesforce/sync/company-users?limit=5')" style="background: #059669;">Sync Last 5</button>
+                </div>
+                <div class="endpoint">
+                    <span class="method POST">POST</span>
+                    <span class="url">/salesforce/sync/company-user/{id}</span>
+                    <span class="description">🆕 Sync CompanyUser (membership) to Contact by ID</span>
+                    <input type="number" id="companyUserId" placeholder="CompanyUser ID" style="width: 100px; margin-left: 10px;">
+                    <button onclick="syncSpecificCompanyUser()" style="background: #059669;">Sync CompanyUser</button>
+                    <button class="force-sync" onclick="syncSpecificCompanyUser(true)">🔄 Force Sync</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2 class="collapsible" onclick="toggleSection('listings')">
+                📋 Listings Sync
+                <span class="toggle-icon">▶</span>
+            </h2>
+            <div id="listings" class="content">
+                <div class="endpoint">
+                    <span class="method POST">POST</span>
+                    <span class="url">/salesforce/sync/all-listings</span>
+                    <span class="description">Sync all listings (regular + wanted)</span>
+                    <button onclick="testEndpoint('POST', '/salesforce/sync/all-listings')">Sync All</button>
+                    <button class="force-sync" onclick="testEndpoint('POST', '/salesforce/sync/all-listings?forceSync=true')">🔄 Sync All (Force)</button>
+                    <button onclick="testEndpoint('POST', '/salesforce/sync/all-listings?limit=5')">Sync Last 5</button>
+                </div>
+                <div class="endpoint">
+                    <span class="method POST">POST</span>
+                    <span class="url">/salesforce/sync/listing/{id}</span>
+                    <span class="description">Sync specific listing by ID</span>
+                    <input type="number" id="listingId" placeholder="Listing ID" style="width: 100px; margin-left: 10px;">
+                    <button onclick="syncSpecificListing()">Sync</button>
+                    <button class="force-sync" onclick="syncSpecificListing(true)">🔄 Force Sync</button>
+                </div>
+                <div class="endpoint">
+                    <span class="method POST">POST</span>
+                    <span class="url">/salesforce/sync/wanted-listing/{listingId}</span>
+                    <span class="description">Sync specific wanted listing</span>
+                    <input type="number" id="wantedListingId" placeholder="Listing ID" style="width: 100px; margin-left: 10px;">
+                    <button onclick="syncSpecificWantedListing()">Sync</button>
+                    <button class="force-sync" onclick="syncSpecificWantedListing(true)">🔄 Force Sync</button>
+                </div>
+                <div class="endpoint">
+                    <span class="method POST">POST</span>
+                    <span class="url">/salesforce/sync/all-wanted-listings</span>
+                    <span class="description">Sync All Wanted Listings</span>
+                    <button onclick="testEndpoint('POST', '/salesforce/sync/all-wanted-listings')">Sync All</button>
+                    <button class="force-sync" onclick="testEndpoint('POST', '/salesforce/sync/all-wanted-listings?forceSync=true')">🔄 Sync All (Force)</button>
+                    <button onclick="testEndpoint('POST', '/salesforce/sync/all-wanted-listings?limit=5')">Sync Last 5</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2 class="collapsible" onclick="toggleSection('offers')">
+                💰 Offers Sync
+                <span class="toggle-icon">▶</span>
+            </h2>
+            <div id="offers" class="content">
+                <div class="endpoint">
+                    <span class="method POST">POST</span>
+                    <span class="url">/salesforce/sync/offers</span>
+                    <span class="description">Sync all offers to Salesforce</span>
+                    <button onclick="testEndpoint('POST', '/salesforce/sync/offers')">Sync All</button>
+                    <button class="force-sync" onclick="testEndpoint('POST', '/salesforce/sync/offers?forceSync=true')">🔄 Sync All (Force)</button>
+                    <button onclick="testEndpoint('POST', '/salesforce/sync/offers?limit=5')">Sync Last 5</button>
+                </div>
+                <div class="endpoint">
+                    <span class="method POST">POST</span>
+                    <span class="url">/salesforce/sync/offers/{offerId}</span>
+                    <span class="description">Sync specific offer by ID</span>
+                    <input type="number" id="offerId" placeholder="Offer ID" style="width: 100px; margin-left: 10px;">
+                    <button onclick="syncSpecificOffer()">Sync</button>
+                    <button class="force-sync" onclick="syncSpecificOffer(true)">🔄 Force Sync</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2 class="collapsible" onclick="toggleSection('haulage-offers')">
+                🚚 Haulage Offers Sync
+                <span class="toggle-icon">▶</span>
+            </h2>
+            <div id="haulage-offers" class="content">
+                <div class="endpoint">
+                    <span class="method POST">POST</span>
+                    <span class="url">/salesforce/sync/haulage-offers</span>
+                    <span class="description">Sync all haulage offers to Salesforce</span>
+                    <button onclick="testEndpoint('POST', '/salesforce/sync/haulage-offers')">Sync All</button>
+                    <button class="force-sync" onclick="testEndpoint('POST', '/salesforce/sync/haulage-offers?forceSync=true')">🔄 Sync All (Force)</button>
+                    <button onclick="testEndpoint('POST', '/salesforce/sync/haulage-offers?limit=5')">Sync Last 5</button>
+                </div>
+                <div class="endpoint">
+                    <span class="method POST">POST</span>
+                    <span class="url">/salesforce/sync/haulage-offers/{haulageOfferId}</span>
+                    <span class="description">Sync specific haulage offer by ID</span>
+                    <input type="number" id="haulageOfferId2" placeholder="Haulage Offer ID" style="width: 120px; margin-left: 10px;">
+                    <button onclick="syncSpecificHaulageOffer()">Sync</button>
+                    <button class="force-sync" onclick="syncSpecificHaulageOffer(true)">🔄 Force Sync</button>
+                </div>
+                <div class="endpoint">
+                    <span class="method POST">POST</span>
+                    <span class="url">/salesforce/pull/haulage-offer/{haulageOfferId}</span>
+                    <span class="description">⬇️ Pull single haulage offer from Salesforce to WasteTrade</span>
+                    <input type="number" id="pullHaulageOfferId" placeholder="Haulage Offer ID" style="width: 120px; margin-left: 10px;">
+                    <button onclick="pullSingleHaulageOffer()" style="background: #059669;">⬇️ Pull from SF</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2 class="collapsible" onclick="toggleSection('haulage-loads')">
+                🚚 Haulage Loads Sync
+                <span class="toggle-icon">▶</span>
+            </h2>
+            <div id="haulage-loads" class="content">
+                <div style="background: #e0f2fe; padding: 10px; border-radius: 4px; margin-bottom: 10px; font-size: 14px;">
+                    <strong>🆕 Phase 2: Load Details Integration</strong> - Auto-generated when haulage offer accepted, syncs to Salesforce Haulage_Loads__c
+                </div>
+                <div class="endpoint">
+                    <span class="method POST">POST</span>
+                    <span class="url">/salesforce/sync/haulage-loads</span>
+                    <span class="description">Sync all haulage loads to Salesforce</span>
+                    <button onclick="testEndpoint('POST', '/salesforce/sync/haulage-loads')">Sync All</button>
+                    <button class="force-sync" onclick="testEndpoint('POST', '/salesforce/sync/haulage-loads?forceSync=true')">🔄 Sync All (Force)</button>
+                    <button onclick="testEndpoint('POST', '/salesforce/sync/haulage-loads?limit=5')">Sync Last 5</button>
+                </div>
+                <div class="endpoint">
+                    <span class="method POST">POST</span>
+                    <span class="url">/salesforce/sync/haulage-load/{loadId}</span>
+                    <span class="description">Sync specific haulage load by ID</span>
+                    <input type="number" id="haulageLoadId" placeholder="Load ID" style="width: 100px; margin-left: 10px;">
+                    <button onclick="syncSpecificHaulageLoad()">Sync</button>
+                    <button class="force-sync" onclick="syncSpecificHaulageLoad(true)">🔄 Force Sync</button>
+                </div>
+                <div class="endpoint">
+                    <span class="method GET">GET</span>
+                    <span class="url">/haulage-offers/{id}/loads</span>
+                    <span class="description">View loads for haulage offer</span>
+                    <input type="number" id="viewLoadsOfferId" placeholder="Haulage Offer ID" style="width: 120px; margin-left: 10px;">
+                    <button onclick="viewHaulageLoads()">View Loads</button>
+                </div>
+                <div style="background: #fef3c7; padding: 10px; border-radius: 4px; margin: 10px 0; font-size: 14px;">
+                    <strong>⬇️ Pull from Salesforce (Inbound Sync)</strong>
+                </div>
+                <div class="endpoint">
+                    <span class="method POST">POST</span>
+                    <span class="url">/salesforce/pull/haulage-loads/{haulageOfferId}</span>
+                    <span class="description">🆕 Pull load updates from Salesforce (weight, collection date, status)</span>
+                    <input type="number" id="pullLoadsOfferId" placeholder="Haulage Offer ID" style="width: 120px; margin-left: 10px;">
+                    <button onclick="pullHaulageLoads()" style="background: #059669;">⬇️ Pull from SF</button>
+                </div>
+                <div style="background: #f3f4f6; padding: 10px; border-radius: 4px; margin: 10px 0; font-size: 12px;">
+                    <strong>Auto-Generation:</strong> Loads are automatically created when haulage offer is accepted<br>
+                    <strong>Sync Flow:</strong> WasteTrade → Salesforce (outbound), Salesforce → WasteTrade (inbound webhook)<br>
+                    <strong>Auto-Update:</strong> When SF updates load status to "Delivered", offer's shippedLoads count is auto-updated<br>
+                    <strong>Setup Required:</strong> See <code>docs/salesforce/apex/HaulageLoadsTrigger.trigger</code> for Apex trigger setup
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2 class="collapsible" onclick="toggleSection('inbound-sync')">
+                ⬇️ Inbound Sync (SF → WasteTrade)
+                <span class="toggle-icon">▶</span>
+            </h2>
+            <div id="inbound-sync" class="content">
+                <div style="background: #d1fae5; padding: 15px; border-radius: 8px; margin-bottom: 15px;">
+                    <h4>🔄 Pull Updates from Salesforce</h4>
+                    <p>Manually trigger inbound sync to pull changes from Salesforce to WasteTrade</p>
+                </div>
+                <div class="endpoint">
+                    <span class="method POST">POST</span>
+                    <span class="url">/salesforce/pull-updates</span>
+                    <span class="description">⬇️ Pull all updates from Salesforce (Accounts, Contacts, Haulage Offers)</span>
+                    <button onclick="testEndpoint('POST', '/salesforce/pull-updates')" style="background: #059669; font-weight: bold;">⬇️ Pull All Updates</button>
+                </div>
+                <div style="background: #f3f4f6; padding: 10px; border-radius: 4px; margin: 10px 0; font-size: 12px;">
+                    <strong>What gets synced:</strong>
+                    <ul style="margin: 5px 0; padding-left: 20px;">
+                        <li><strong>Accounts:</strong> Company name, VAT, registration number, address</li>
+                        <li><strong>Contacts:</strong> User name, phone, role, status</li>
+                        <li><strong>Haulage Offers:</strong> Transit time, transport provider, container type, demurrage, collection date, customs clearance</li>
+                    </ul>
+                    <strong>Note:</strong> Only records modified in SF after last sync will be updated (default: last 60 minutes)
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2 class="collapsible" onclick="toggleSection('documents')">
+                📄 Documents Sync
+                <span class="toggle-icon">▶</span>
+            </h2>
+            <div id="documents" class="content">
+                <div style="background: #e0f2fe; padding: 10px; border-radius: 4px; margin-bottom: 10px; font-size: 14px;">
+                    <strong>🆕 Phase 2: Haulage Documents Integration</strong> - Documents flow from Salesforce to WasteTrade via webhook
+                </div>
+                <div class="endpoint">
+                    <span class="method POST">POST</span>
+                    <span class="url">/salesforce/webhook/haulage-documents</span>
+                    <span class="description">🆕 Webhook endpoint for Salesforce haulage documents</span>
+                    <button onclick="testWebhook('/salesforce/webhook/haulage-documents', getHaulageDocWebhookPayload(), 'X-Salesforce-Secret')">Test Webhook</button>
+                </div>
+                <div class="endpoint">
+                    <span class="method GET">GET</span>
+                    <span class="url">/haulage-offers/{id}/documents</span>
+                    <span class="description">🆕 View documents for haulage offer</span>
+                    <input type="number" id="haulageOfferId" placeholder="Haulage Offer ID" style="width: 120px; margin-left: 10px;">
+                    <button onclick="viewHaulageDocuments()">View Documents</button>
+                </div>
+                <div style="background: #f3f4f6; padding: 10px; border-radius: 4px; margin: 10px 0; font-size: 12px;">
+                    <strong>Setup Required:</strong> See <code>CU-869abxxnm_SALESFORCE_SETUP.md</code> for Salesforce Apex trigger setup
+                </div>
+                <div class="endpoint">
+                    <span class="method POST">POST</span>
+                    <span class="url">/salesforce/sync/documents/company</span>
+                    <span class="description">Sync all company documents</span>
+                    <button onclick="testEndpoint('POST', '/salesforce/sync/documents/company')">Sync All</button>
+                    <button class="force-sync" onclick="testEndpoint('POST', '/salesforce/sync/documents/company?forceSync=true')">🔄 Sync All (Force)</button>
+                    <button onclick="testEndpoint('POST', '/salesforce/sync/documents/company?limit=5')">Sync Last 5</button>
+                </div>
+                <div class="endpoint">
+                    <span class="method POST">POST</span>
+                    <span class="url">/salesforce/sync/documents/company/{documentId}</span>
+                    <span class="description">Sync specific company document</span>
+                    <input type="number" id="companyDocId" placeholder="Document ID" style="width: 100px; margin-left: 10px;">
+                    <button onclick="syncSpecificCompanyDoc()">Sync</button>
+                    <button class="force-sync" onclick="syncSpecificCompanyDoc(true)">🔄 Force Sync</button>
+                </div>
+                <div class="endpoint">
+                    <span class="method POST">POST</span>
+                    <span class="url">/salesforce/sync/documents/location</span>
+                    <span class="description">Sync all location documents</span>
+                    <button onclick="testEndpoint('POST', '/salesforce/sync/documents/location')">Sync All</button>
+                    <button class="force-sync" onclick="testEndpoint('POST', '/salesforce/sync/documents/location?forceSync=true')">🔄 Sync All (Force)</button>
+                    <button onclick="testEndpoint('POST', '/salesforce/sync/documents/location?limit=5')">Sync Last 5</button>
+                </div>
+                <div class="endpoint">
+                    <span class="method POST">POST</span>
+                    <span class="url">/salesforce/sync/documents/location/{documentId}</span>
+                    <span class="description">Sync specific location document</span>
+                    <input type="number" id="locationDocId" placeholder="Document ID" style="width: 100px; margin-left: 10px;">
+                    <button onclick="syncSpecificLocationDoc()">Sync</button>
+                    <button class="force-sync" onclick="syncSpecificLocationDoc(true)">🔄 Force Sync</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2 class="collapsible" onclick="toggleSection('bulk')">
+                🔄 Bulk Operations
+                <span class="toggle-icon">▶</span>
+            </h2>
+            <div id="bulk" class="content">
+                <div class="endpoint">
+                    <span class="method POST">POST</span>
+                    <span class="url">/salesforce/sync/all</span>
+                    <span class="description">🔄 SYNC ALL TABLES: Companies, Users (Leads), Listings, Offers, Company Documents, Location Documents</span>
+                    <button onclick="testEndpoint('POST', '/salesforce/sync/all')">Sync All Data</button>
+                    <button class="force-sync" onclick="testEndpoint('POST', '/salesforce/sync/all?forceSync=true')">🔄 Force Sync All Data</button>
+                </div>
+                <div class="endpoint">
+                    <span class="method POST">POST</span>
+                    <span class="url">/salesforce/sync/modified-after</span>
+                    <span class="description">Sync records modified after specific date</span>
+                    <input type="date" id="modifiedDate" style="width: 150px; margin-left: 10px;">
+                    <select id="recordType" style="margin-left: 10px;">
+                        <option value="companies">Companies</option>
+                        <option value="users">Users</option>
+                        <option value="listings">Listings</option>
+                        <option value="offers">Offers</option>
+                        <option value="company_documents">Company Documents</option>
+                        <option value="location_documents">Location Documents</option>
+                    </select>
+                    <button onclick="syncModifiedAfter()">Sync</button>
+                    <button class="force-sync" onclick="syncModifiedAfter(true)">🔄 Force Sync</button>
+                </div>
+                <div class="endpoint">
+                    <span class="method POST">POST</span>
+                    <span class="url">/salesforce/trigger-cron</span>
+                    <span class="description">Trigger Cron Job manually</span>
+                    <button onclick="confirmAndExecute('POST', '/salesforce/trigger-cron', 'This will manually trigger the Salesforce sync cron job. Continue?')" style="background: #7c3aed;">Trigger Cron</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2 class="collapsible" onclick="toggleSection('cleanup')">
+                🧹 Data Cleanup
+                <span class="toggle-icon">▶</span>
+            </h2>
+            <div id="cleanup" class="content">
+                <div class="endpoint">
+                    <span class="method POST">POST</span>
+                    <span class="url">/salesforce/cleanup/pending-companies</span>
+                    <span class="description">🗑️ Delete Accounts for companies still PENDING</span>
+                    <button onclick="confirmAndExecute('POST', '/salesforce/cleanup/pending-companies', 'This will delete Salesforce Accounts for companies that are still PENDING. This action cannot be undone. Continue?')" style="background: #dc2626;">🧹 Cleanup Pending Accounts</button>
+                </div>
+                <div class="endpoint">
+                    <span class="method DELETE" style="background: #ef4444;">DELETE</span>
+                    <span class="url">/salesforce/haulage-loads</span>
+                    <span class="description">🗑️ Keep 1st load per offer, delete extras from DB & SF, set all offers to 1 load</span>
+                    <button onclick="confirmAndExecute('DELETE', '/salesforce/haulage-loads', 'This will DELETE all extra haulage loads (2nd onward) from DB and Salesforce, keep only the first load per offer, and set all offers numberOfLoads to 1. This cannot be undone. Continue?')" style="background: #dc2626;">🗑️ Delete Extra Haulage Loads</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2 class="collapsible" onclick="toggleSection('monitoring')">
+                📊 Monitoring & Logs
+                <span class="toggle-icon">▶</span>
+            </h2>
+            <div id="monitoring" class="content active">
+                <div class="endpoint">
+                    <span class="method GET">GET</span>
+                    <span class="url">/salesforce/sync/logs</span>
+                    <span class="description">Get sync logs for all objects</span>
+                    <button onclick="testEndpoint('GET', '/salesforce/sync/logs')">All Logs</button>
+                    <button onclick="testEndpoint('GET', '/salesforce/sync/logs?objectType=Account')">Account Logs</button>
+                    <button onclick="testEndpoint('GET', '/salesforce/sync/logs?objectType=Lead')">Lead Logs</button>
+                </div>
+                <div class="endpoint">
+                    <span class="method GET">GET</span>
+                    <span class="url">/salesforce/sync/failed</span>
+                    <span class="description">Get failed sync operations</span>
+                    <button onclick="testEndpoint('GET', '/salesforce/sync/failed')">Failed Syncs</button>
+                </div>
+                <div class="endpoint">
+                    <span class="method DELETE" style="background: #ef4444;">DELETE</span>
+                    <span class="url">/salesforce/sync/failed</span>
+                    <span class="description">Clear all failed sync logs</span>
+                    <button onclick="confirmAndExecute('DELETE', '/salesforce/sync/failed', 'This will permanently delete all failed sync logs. Continue?')" style="background: #dc2626;">🗑️ Clear Failed Logs</button>
+                </div>
+            </div>
+        </div>
+
+        <div id="results"></div>
+    </div>
+
+    <script>
+        // ---- Helpers ----
+
+        function appendResult(label, data, isSuccess) {
+            const resultsDiv = document.getElementById('results');
+            const cls = isSuccess ? 'success' : 'error';
+            const icon = isSuccess ? '✅' : '❌';
+            const div = document.createElement('div');
+            div.className = 'result ' + cls;
+            const hdr = document.createElement('strong');
+            hdr.textContent = icon + ' ' + label;
+            const pre = document.createElement('pre');
+            pre.textContent = JSON.stringify(data, null, 2);
+            div.appendChild(hdr);
+            div.appendChild(document.createElement('br'));
+            div.appendChild(pre);
+            resultsDiv.insertBefore(div, resultsDiv.firstChild);
+        }
+
+        function appendResultError(label, message) {
+            const resultsDiv = document.getElementById('results');
+            const div = document.createElement('div');
+            div.className = 'result error';
+            const hdr = document.createElement('strong');
+            hdr.textContent = '❌ ' + label;
+            div.appendChild(hdr);
+            div.appendChild(document.createElement('br'));
+            div.appendChild(document.createTextNode('Network Error: ' + message));
+            resultsDiv.insertBefore(div, resultsDiv.firstChild);
+        }
+
+        // ---- Toggle section visibility ----
+
+        function toggleSection(sectionId) {
+            const content = document.getElementById(sectionId);
+            const icon = content.parentElement.querySelector('.toggle-icon');
+            if (content.classList.contains('active')) {
+                content.classList.remove('active');
+                icon.classList.remove('active');
+            } else {
+                content.classList.add('active');
+                icon.classList.add('active');
+            }
+        }
+
+        // ---- Core request function ----
+
+        async function testEndpoint(method, endpoint) {
+            const baseUrl = document.getElementById('baseUrl').value;
+            const token = document.getElementById('jwtToken').value;
+            const resultsDiv = document.getElementById('results');
+            const label = method + ' ' + endpoint;
+
+            const placeholder = document.createElement('div');
+            placeholder.className = 'result';
+            const hdr = document.createElement('strong');
+            hdr.textContent = label;
+            placeholder.appendChild(hdr);
+            placeholder.appendChild(document.createElement('br'));
+            placeholder.appendChild(document.createTextNode('⏳ Loading...'));
+            resultsDiv.insertBefore(placeholder, resultsDiv.firstChild);
+
+            try {
+                const response = await fetch(baseUrl + endpoint, {
+                    method: method,
+                    headers: {
+                        'Authorization': 'Bearer ' + token,
+                        'Content-Type': 'application/json'
+                    }
+                });
+
+                const data = await response.json();
+                const isSuccess = response.ok && data.status === 'success';
+
+                placeholder.className = 'result ' + (isSuccess ? 'success' : 'error');
+                while (placeholder.firstChild) placeholder.removeChild(placeholder.firstChild);
+
+                const hdr2 = document.createElement('strong');
+                hdr2.textContent = (isSuccess ? '✅ ' : '❌ ') + label;
+                placeholder.appendChild(hdr2);
+                placeholder.appendChild(document.createElement('br'));
+
+                const pre = document.createElement('pre');
+                pre.textContent = JSON.stringify(data, null, 2);
+                placeholder.appendChild(pre);
+            } catch (error) {
+                placeholder.className = 'result error';
+                while (placeholder.firstChild) placeholder.removeChild(placeholder.firstChild);
+
+                const hdr2 = document.createElement('strong');
+                hdr2.textContent = '❌ ' + label;
+                placeholder.appendChild(hdr2);
+                placeholder.appendChild(document.createElement('br'));
+                placeholder.appendChild(document.createTextNode('Network Error: ' + error.message));
+            }
+        }
+
+        // ---- Specific sync functions ----
+
+        function syncSpecificCompany(forceSync) {
+            const id = document.getElementById('companyId').value;
+            if (!id) { alert('Please enter a Company ID'); return; }
+            testEndpoint('POST', '/salesforce/sync/company/' + id + (forceSync ? '?forceSync=true' : ''));
+        }
+
+        function syncSpecificUser(forceSync) {
+            const id = document.getElementById('userId').value;
+            if (!id) { alert('Please enter a User ID'); return; }
+            testEndpoint('POST', '/salesforce/sync/user/' + id + (forceSync ? '?forceSync=true' : ''));
+        }
+
+        function convertLead() {
+            const id = document.getElementById('convertUserId').value;
+            if (!id) { alert('Please enter a User ID'); return; }
+            testEndpoint('POST', '/salesforce/convert-lead/' + id);
+        }
+
+        function syncCompanyUsersWithLimit() {
+            const limit = document.getElementById('companyUsersLimit').value;
+            const endpoint = '/salesforce/sync/company-users' + (limit ? '?limit=' + limit : '');
+            testEndpoint('POST', endpoint);
+        }
+
+        function syncSpecificCompanyUser(forceSync) {
+            const id = document.getElementById('companyUserId').value;
+            if (!id) { alert('Please enter a CompanyUser ID'); return; }
+            testEndpoint('POST', '/salesforce/sync/company-user/' + id + (forceSync ? '?forceSync=true' : ''));
+        }
+
+        function syncSpecificListing(forceSync) {
+            const id = document.getElementById('listingId').value;
+            if (!id) { alert('Please enter a Listing ID'); return; }
+            testEndpoint('POST', '/salesforce/sync/listing/' + id + (forceSync ? '?forceSync=true' : ''));
+        }
+
+        function syncSpecificWantedListing(forceSync) {
+            const id = document.getElementById('wantedListingId').value;
+            if (!id) { alert('Please enter a Listing ID'); return; }
+            testEndpoint('POST', '/salesforce/sync/wanted-listing/' + id + (forceSync ? '?forceSync=true' : ''));
+        }
+
+        function syncSpecificOffer(forceSync) {
+            const id = document.getElementById('offerId').value;
+            if (!id) { alert('Please enter an Offer ID'); return; }
+            testEndpoint('POST', '/salesforce/sync/offers/' + id + (forceSync ? '?forceSync=true' : ''));
+        }
+
+        function syncSpecificHaulageOffer(forceSync) {
+            const id = document.getElementById('haulageOfferId2').value;
+            if (!id) { alert('Please enter a Haulage Offer ID'); return; }
+            testEndpoint('POST', '/salesforce/sync/haulage-offers/' + id + (forceSync ? '?forceSync=true' : ''));
+        }
+
+        function pullSingleHaulageOffer() {
+            const id = document.getElementById('pullHaulageOfferId').value;
+            if (!id) { alert('Please enter a Haulage Offer ID'); return; }
+            testEndpoint('POST', '/salesforce/pull/haulage-offer/' + id);
+        }
+
+        function syncSpecificHaulageLoad(forceSync) {
+            const id = document.getElementById('haulageLoadId').value;
+            if (!id) { alert('Please enter a Haulage Load ID'); return; }
+            testEndpoint('POST', '/salesforce/sync/haulage-load/' + id + (forceSync ? '?forceSync=true' : ''));
+        }
+
+        function pullHaulageLoads() {
+            const id = document.getElementById('pullLoadsOfferId').value;
+            if (!id) { alert('Please enter a Haulage Offer ID'); return; }
+            testEndpoint('POST', '/salesforce/pull/haulage-loads/' + id);
+        }
+
+        function syncSpecificCompanyDoc(forceSync) {
+            const id = document.getElementById('companyDocId').value;
+            if (!id) { alert('Please enter a Document ID'); return; }
+            testEndpoint('POST', '/salesforce/sync/documents/company/' + id + (forceSync ? '?forceSync=true' : ''));
+        }
+
+        function syncSpecificLocationDoc(forceSync) {
+            const id = document.getElementById('locationDocId').value;
+            if (!id) { alert('Please enter a Document ID'); return; }
+            testEndpoint('POST', '/salesforce/sync/documents/location/' + id + (forceSync ? '?forceSync=true' : ''));
+        }
+
+        function syncModifiedAfter(forceSync) {
+            const date = document.getElementById('modifiedDate').value;
+            const recordType = document.getElementById('recordType').value;
+            if (!date) { alert('Please select a date'); return; }
+            const forceSyncParam = forceSync ? '&forceSync=true' : '';
+            testEndpoint('POST', '/salesforce/sync/modified-after?modifiedAfter=' + date + '&recordType=' + recordType + forceSyncParam);
+        }
+
+        function confirmAndExecute(method, endpoint, message) {
+            if (confirm(message)) {
+                testEndpoint(method, endpoint);
+            }
+        }
+
+        function getPicklistValues() {
+            const objectName = document.getElementById('picklistObjectName').value;
+            testEndpoint('GET', '/salesforce/picklist-values/' + objectName);
+        }
+
+        function viewHaulageDocuments() {
+            const id = document.getElementById('haulageOfferId').value;
+            if (!id) { alert('Please enter a Haulage Offer ID'); return; }
+            testEndpoint('GET', '/haulage-offers/' + id + '/documents');
+        }
+
+        function viewHaulageLoads() {
+            const id = document.getElementById('viewLoadsOfferId').value;
+            if (!id) { alert('Please enter a Haulage Offer ID'); return; }
+            testEndpoint('GET', '/haulage-offers/' + id + '/loads');
+        }
+
+        // ---- Quick action functions ----
+
+        async function quickTestBasic() {
+            const endpoints = [
+                ['GET', '/ping'],
+                ['GET', '/salesforce/health'],
+                ['GET', '/salesforce/test-connection']
+            ];
+            for (const [method, endpoint] of endpoints) {
+                await testEndpoint(method, endpoint);
+                await new Promise(resolve => setTimeout(resolve, 200));
+            }
+        }
+
+        async function quickTestLimited() {
+            const endpoints = [
+                ['GET', '/salesforce/test-connection'],
+                ['POST', '/salesforce/sync/companies?limit=1'],
+                ['POST', '/salesforce/sync/users?limit=1'],
+                ['POST', '/salesforce/sync/all-listings?limit=1'],
+                ['GET', '/salesforce/sync/logs'],
+                ['GET', '/salesforce/sync/failed']
+            ];
+            for (const [method, endpoint] of endpoints) {
+                await testEndpoint(method, endpoint);
+                await new Promise(resolve => setTimeout(resolve, 500));
+            }
+        }
+
+        async function quickTestAll() {
+            if (!confirm('This will test ALL endpoints. This may take a while and create a lot of data. Continue?')) {
+                return;
+            }
+            const endpoints = [
+                ['GET', '/salesforce/test-connection'],
+                ['POST', '/salesforce/sync/companies?limit=2'],
+                ['POST', '/salesforce/sync/users?limit=2'],
+                ['POST', '/salesforce/sync/all-listings?limit=2'],
+                ['POST', '/salesforce/sync/offers?limit=2'],
+                ['POST', '/salesforce/sync/documents/company?limit=2'],
+                ['POST', '/salesforce/sync/documents/location?limit=2'],
+                ['GET', '/salesforce/sync/logs'],
+                ['GET', '/salesforce/sync/failed']
+            ];
+            for (const [method, endpoint] of endpoints) {
+                await testEndpoint(method, endpoint);
+                await new Promise(resolve => setTimeout(resolve, 1000));
+            }
+        }
+
+        function clearResults() {
+            document.getElementById('results').innerHTML = '';
+        }
+
+        // ---- Init ----
+
+        document.addEventListener('DOMContentLoaded', function () {
+            // Restore persisted config
+            const savedUrl = localStorage.getItem('sf_dashboard_baseUrl');
+            const savedToken = localStorage.getItem('sf_dashboard_token');
+            if (savedUrl) document.getElementById('baseUrl').value = savedUrl;
+            if (savedToken) document.getElementById('jwtToken').value = savedToken;
+
+            document.getElementById('baseUrl').addEventListener('change', function () {
+                localStorage.setItem('sf_dashboard_baseUrl', this.value);
+            });
+            document.getElementById('jwtToken').addEventListener('change', function () {
+                localStorage.setItem('sf_dashboard_token', this.value);
+            });
+            // Set default date to yesterday
+            const yesterday = new Date();
+            yesterday.setDate(yesterday.getDate() - 1);
+            document.getElementById('modifiedDate').value = yesterday.toISOString().split('T')[0];
+        });
+    </script>
+</body>
+</html>

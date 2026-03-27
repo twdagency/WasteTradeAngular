@@ -1,0 +1,32 @@
+@import 'variables';
+
+.small-mat-form-field .mat-datepicker-input {
+  display: flex;
+  align-items: center;
+  position: absolute !important;
+  bottom: 30px !important;
+
+  &::placeholder {
+    font-weight: bold !important;
+    color: black !important;
+  }
+
+  &::-webkit-input-placeholder {
+    font-weight: 700 !important;
+    color: $black !important;
+  }
+
+  &::-moz-placeholder {
+    font-weight: 700 !important;
+    color: $black !important;
+  }
+
+  &:-ms-input-placeholder {
+    font-weight: 700 !important;
+    color: $black !important;
+  }
+}
+
+.small-mat-form-field .mat-date-input-wrapper {
+  max-width: none !important;
+}

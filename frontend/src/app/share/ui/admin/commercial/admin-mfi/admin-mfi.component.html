@@ -1,0 +1,12 @@
+<app-list-container
+  [fetchFn]="adminCommercialService.getMfi.bind(adminCommercialService)"
+  [displayFilter]="[]"
+  [pageSize]="20"
+  [emptyMessage]="'No MFI requests found. Check back later.'"
+  [useFilter]="false"
+  [listingType]="'mfi'"
+>
+  <ng-template let-item>
+    <app-mfi-listing-item [item]="item"></app-mfi-listing-item>
+  </ng-template>
+</app-list-container>

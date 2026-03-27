@@ -1,0 +1,20 @@
+<div class="py-4 px-4 position-relative">
+  <div class="position-relative">
+    <div class="close-button position-absolute top-0 end-0" [mat-dialog-close]="false">
+      <app-icon iconName="close"></app-icon>
+    </div>
+  </div>
+  <div class="fw-bold fs-24 mt-4">Are you sure you want to delete this site?</div>
+  <div class="flex-column mt-3">
+    <div class="fw-bold mb-2">ADDRESS {{ data.index || '' }}</div>
+    <div class="d-flex justify-content-between align-items-center">
+      <div class="flex-grow-1">
+        {{ data.location.addressLine }}
+      </div>
+    </div>
+  </div>
+  <div class="flex-column gap-3 justify-content-center mt-5 w-100">
+    <button mat-flat-button class="w-100 background-primary mb-4" (click)="onCancel()">KEEP SITE</button>
+    <button mat-flat-button class="w-100 background-error" (click)="onOk()">REMOVE SITE</button>
+  </div>
+</div>

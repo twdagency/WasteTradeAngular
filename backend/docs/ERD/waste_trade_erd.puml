@@ -1,0 +1,621 @@
+@startuml WasteTrade_ERD
+' Entity Relationship Diagram for WasteTrade
+' A global waste marketplace platform
+' Updated based on actual LoopBack 4 models
+' Styling settings
+skinparam linetype ortho
+skinparam nodesep 20
+skinparam ranksep 30
+skinparam padding 2
+hide circle
+hide stereotype
+' Color definitions
+!define USER_COLOR #E2F0D9
+!define COMPANY_COLOR #DEE8F7
+!define MATERIAL_COLOR #FFF2CC
+!define LISTING_COLOR #FCE4D6
+!define TRANSACTION_COLOR #FFD6D6
+!define TRANSPORT_COLOR #DBDBF9
+!define COMMUNICATION_COLOR #F7DBFF
+
+' ===== User Management =====
+entity "users" as users #USER_COLOR {
+  id: number <<PK>>
+  --
+  *email: string <<unique>>
+  username?: string
+  *password_hash: string
+  *first_name: string
+  *last_name: string
+  prefix?: string
+  job_title?: string
+  phone_number?: string
+  mobile_number?: string
+  *is_verified: boolean <<default: false>>
+  verification_token?: string
+  reset_password_token?: string
+  reset_token_expires_at?: Date
+  *global_role: string <user|admin|super_admin>
+  *status: string <active|inactive|suspended>
+  *notification_email_enabled: boolean <<default: true>>
+  *notification_push_enabled: boolean <<default: true>>
+  *notification_in_app_enabled: boolean <<default: true>>
+  receive_email_for_offers_on_my_listings?: boolean <<default: true>>
+  receive_email_for_new_matching_listings?: boolean <<default: true>>
+  where_did_you_hear_about_us?: string
+  last_login_at?: Date
+  *created_at: Date <<default: now()>>
+  *updated_at: Date <<default: now()>>
+  *is_synced_salesforce: boolean <<default: false>>
+  last_synced_salesforce_date?: Date
+  salesforce_id?: string
+}
+
+entity "companies" as companies #COMPANY_COLOR {
+  id: number <<PK>>
+  --
+  country_code?: string
+  *name: string
+  registration_number?: string
+  email?: string
+  vat_number?: string
+  vat_registration_country?: string
+  address_line_1?: string
+  address_line_2?: string
+  city?: string
+  country?: string
+  state_province?: string
+  postal_code?: string
+  website?: string
+  phone_number?: string
+  mobile_number?: string
+  company_type?: string
+  favorite_materials?: string[]
+  other_material?: string
+  company_interest?: string
+  *is_haulier: boolean <<default: false>>
+  *box_clearing_agent: boolean <<default: false>>
+  fleet_type?: string
+  areas_covered?: string[]
+  container_types?: string[]
+  *status: string <active|inactive|pending_verification|suspended>
+  verified_at?: Date
+  facebook_url?: string
+  instagram_url?: string
+  linkedin_url?: string
+  x_url?: string
+  additional_social_media_urls?: object[]
+  description?: string
+  *is_seller: boolean <<default: false>>
+  *is_buyer: boolean <<default: true>>
+  rejection_reason?: string
+  info_request_type?: string
+  admin_message?: string
+  *created_at: Date <<default: now()>>
+  *updated_at: Date <<default: now()>>
+  *is_synced_salesforce: boolean <<default: false>>
+  last_synced_salesforce_date?: Date
+  salesforce_id?: string
+}
+
+entity "company_users" as companyUsers #COMPANY_COLOR {
+  id: number <<PK>>
+  --
+  ~*company_id: number <<FK>>
+  ~*user_id: number <<FK>>
+  --
+  *company_role: string
+  *is_primary_contact: boolean <<default: false>>
+  *status: string <active|inactive|pending>
+  *created_at: Date <<default: now()>>
+  *updated_at: Date <<default: now()>>
+}
+
+entity "company_documents" as companyDocuments #COMPANY_COLOR {
+  id: number <<PK>>
+  --
+  ~*company_id: number <<FK>>
+  ~*uploaded_by_user_id: number <<FK>>
+  ~reviewed_by_user_id?: number <<FK>>
+  --
+  document_type?: string
+  *document_name: string
+  *document_url: string
+  *status: string <pending|approved|rejected>
+  rejection_reason?: string
+  reviewed_at?: Date
+  expiry_date?: string
+  *created_at: Date <<default: now()>>
+  *updated_at: Date <<default: now()>>
+  *is_synced_salesforce: boolean <<default: false>>
+  last_synced_salesforce_date?: Date
+}
+
+entity "company_locations" as companyLocations #COMPANY_COLOR {
+  id: number <<PK>>
+  --
+  ~*company_id: number <<FK>>
+  --
+  location_name?: string
+  prefix?: string <mr|mrs|ms|dr>
+  first_name?: string
+  last_name?: string
+  position_in_company?: string
+  site_point_contact?: string
+  phone_number?: string
+  address_line?: string
+  street?: string
+  postcode?: string
+  city?: string
+  country?: string
+  state_province?: string
+  office_open_time?: time
+  office_close_time?: time
+  loading_ramp?: boolean
+  weighbridge?: boolean
+  container_type?: string[]
+  accepted_materials?: string[]
+  site_specific_instructions?: string
+  self_load_unload_capability?: boolean
+  access_restrictions?: string
+  other_material?: string
+  *main_location: boolean <<default: false>>
+  *created_at: Date <<default: now()>>
+  *updated_at: Date <<default: now()>>
+}
+
+entity "company_location_documents" as companyLocationDocuments #COMPANY_COLOR {
+  id: number <<PK>>
+  --
+  ~*company_location_id: number <<FK>>
+  ~*uploaded_by_user_id: number <<FK>>
+  --
+  document_type?: string
+  *document_name: string
+  *document_url: string
+  *created_at: Date <<default: now()>>
+  *updated_at: Date <<default: now()>>
+}
+
+' ===== Material Management =====
+entity "materials" as materials #MATERIAL_COLOR {
+  id: number <<PK>>
+  --
+  ~parent_id?: number <<FK>>
+  ~*created_by_user_id: number <<FK>>
+  --
+  *name: string
+  description?: string
+  *is_custom: boolean <<default: false>>
+  *is_active: boolean <<default: true>>
+  *created_at: Date <<default: now()>>
+  *updated_at: Date <<default: now()>>
+}
+
+entity "material_users" as materialUsers #MATERIAL_COLOR {
+  id: number <<PK>>
+  --
+  ~*material_id: number <<FK>>
+  ~*user_id: number <<FK>>
+  --
+  *created_at: Date <<default: now()>>
+  *updated_at: Date <<default: now()>>
+}
+
+' ===== Listings Management =====
+entity "listings" as listings #LISTING_COLOR {
+  id: number <<PK>>
+  --
+  ~*company_id: number <<FK>>
+  ~location_id?: number <<FK>>
+  ~*created_by_user_id: number <<FK>>
+  --
+  *material_type: string
+  material_item?: string
+  material_form?: string
+  material_grading?: string
+  material_color?: string
+  material_finishing?: string
+  material_packing?: string
+  country?: string
+  listing_type?: string
+  title?: string
+  description?: string
+  quantity?: number
+  remaining_quantity?: number
+  material_flow_index?: string
+  material_weight_per_unit?: number
+  weight_unit?: string
+  material_weight?: number
+  number_of_loads?: number
+  total_weight?: number
+  weight_per_load?: number
+  material_remain_in_country?: boolean <<default: false>>
+  currency?: string <gbp|usd|eur>
+  additional_notes?: string
+  *start_date: Date
+  end_date?: Date
+  *status: string <available|pending|sold|rejected|expired>
+  state?: string
+  is_featured?: boolean <<default: false>>
+  is_urgent?: boolean <<default: false>>
+  capacity_per_month?: number
+  material_weight_wanted?: number
+  waste_storation?: string
+  renewal_period?: string
+  listing_duration?: Date
+  view_count?: number
+  rejection_reason?: string
+  message?: string
+  price_per_metric_tonne?: number
+  incoterms?: string
+  location_other?: string
+  *created_at: Date <<default: now()>>
+  *updated_at: Date <<default: now()>>
+  *is_synced_salesforce: boolean <<default: false>>
+  last_synced_salesforce_date?: Date
+  salesforce_id?: string
+}
+
+entity "listing_documents" as listingDocuments #LISTING_COLOR {
+  id: number <<PK>>
+  --
+  ~*listing_id: number <<FK>>
+  --
+  document_type?: string
+  document_url?: string
+  *created_at: Date <<default: now()>>
+  *updated_at: Date <<default: now()>>
+}
+
+' ===== Offers and Transactions =====
+entity "offers" as offers #TRANSACTION_COLOR {
+  id: number <<PK>>
+  --
+  ~*listing_id: number <<FK>>
+  ~buyer_company_id?: number <<FK>>
+  ~buyer_user_id?: number <<FK>>
+  ~buyer_location_id?: number <<FK>>
+  ~seller_company_id?: number <<FK>>
+  ~seller_user_id?: number <<FK>>
+  ~seller_location_id?: number <<FK>>
+  ~created_by_user_id?: number <<FK>>
+  ~rejected_by_user_id?: number <<FK>>
+  ~accepted_by_user_id?: number <<FK>>
+  --
+  buyer_country?: string
+  seller_country?: string
+  *quantity: number
+  *offered_price_per_unit: number
+  currency?: string <gbp|usd|eur>
+  *total_price: number
+  message?: string
+  state?: string <pending|active|closed>
+  status?: string <pending|approved|accepted|rejected|shipped>
+  incoterms?: string
+  shipping_port?: string
+  rejection_reason?: string
+  rejection_source?: string <admin|seller|system>
+  *needs_transport: boolean <<default: false>>
+  earliest_delivery_date?: Date
+  latest_delivery_date?: Date
+  accepted_at?: Date
+  expires_at?: Date
+  *created_at: Date <<default: now()>>
+  *updated_at: Date <<default: now()>>
+  *is_synced_salesforce: boolean <<default: false>>
+  last_synced_salesforce_date?: Date
+  salesforce_id?: string
+}
+
+entity "transactions" as transactions #TRANSACTION_COLOR {
+  id: number <<PK>>
+  --
+  ~*offer_id: number <<FK>>
+  ~*listing_id: number <<FK>>
+  ~*buyer_company_id: number <<FK>>
+  ~*seller_company_id: number <<FK>>
+  ~haulier_company_id?: number <<FK>>
+  --
+  *transaction_ref: string
+  *quantity: number
+  *unit_price: number
+  *transport_cost: number <<default: 0>>
+  *total_amount: number
+  currency?: string <gbp|usd|eur>
+  *status: string
+  *payment_status: string
+  expected_collection_date?: Date
+  actual_collection_date?: Date
+  expected_delivery_date?: Date
+  actual_delivery_date?: Date
+  buyer_feedback?: string
+  seller_feedback?: string
+  haulier_feedback?: string
+  buyer_rating?: number
+  seller_rating?: number
+  haulier_rating?: number
+  *created_at: Date <<default: now()>>
+  *updated_at: Date <<default: now()>>
+}
+
+' ===== Transport Management =====
+entity "haulage_offers" as haulageOffers #TRANSPORT_COLOR {
+  id: number <<PK>>
+  --
+  ~*offer_id: number <<FK>>
+  ~*haulier_company_id: number <<FK>>
+  ~*haulier_user_id: number <<FK>>
+  --
+  *trailer_container_type: string
+  *completing_customs_clearance: boolean <<default: false>>
+  *number_of_loads: number
+  *quantity_per_load: number
+  *haulage_cost_per_load: number
+  *currency: string <gbp|usd|eur>
+  *customs_fee: number
+  *haulage_total: number
+  *transport_provider: string
+  *suggested_collection_date: Date
+  *expected_transit_time: string
+  *demurrage_at_destination: number
+  notes?: string
+  *status: string <<pending>>
+  *created_at: Date <<default: now()>>
+  *updated_at: Date <<default: now()>>
+  *is_synced_salesforce: boolean <<default: false>>
+  last_synced_salesforce_date?: Date
+  salesforce_id?: string
+  shipped_loads?: number
+  shipped_date?: Date
+}
+
+entity "haulage_bid_actions" as haulageBidActions #TRANSPORT_COLOR {
+  id: number <<PK>>
+  --
+  ~*haulage_offer_id: number <<FK>>
+  ~*user_id: number <<FK>>
+  --
+  *action: string
+  comments?: string
+  *created_at: Date <<default: now()>>
+  *updated_at: Date <<default: now()>>
+}
+
+' ===== Communication =====
+entity "conversations" as conversations #COMMUNICATION_COLOR {
+  id: number <<PK>>
+  --
+  ~listing_id?: number <<FK>>
+  ~offer_id?: number <<FK>>
+  ~transaction_id?: number <<FK>>
+  --
+  title?: string
+  *created_at: Date <<default: now()>>
+  *updated_at: Date <<default: now()>>
+}
+
+entity "messages" as messages #COMMUNICATION_COLOR {
+  id: number <<PK>>
+  --
+  ~*conversation_id: number <<FK>>
+  ~*sender_id: number <<FK>>
+  ~*sender_company_id: number <<FK>>
+  --
+  *message_content: string
+  attachments?: string
+  *is_system_message: boolean <<default: false>>
+  *created_at: Date <<default: now()>>
+}
+
+' ===== Audit and Logging =====
+entity "audit_trails" as auditTrails #lightgrey {
+  id: number <<PK>>
+  --
+  ~user_id?: number <<FK>>
+  ~company_id?: number <<FK>>
+  --
+  *type: string
+  *action: string
+  *method: string
+  ip_address?: string
+  user_agent?: string
+  request_body?: object
+  response_status?: number
+  *logged_user_name: string
+  *logged_user_role: string
+  *logged_company_name: string
+  *site_type: string
+  username?: string
+  *created_at: Date <<default: now()>>
+  *updated_at: Date <<default: now()>>
+}
+
+entity "salesforce_sync_logs" as salesforceSyncLogs #lightgrey {
+  id: number <<PK>>
+  --
+  *record_id: string
+  *object_type: string
+  *operation: string <CREATE|UPDATE|DELETE|CONVERT>
+  *status: string <SUCCESS|FAILED|PENDING>
+  error_message?: string
+  sync_data?: object
+  *created_at: Date <<default: now()>>
+  *updated_at: Date <<default: now()>>
+}
+
+entity "files" as files #lightgrey {
+  id: number <<PK>>
+  --
+  *file_name: string
+  *origin_file_name: string
+  *file_url: string
+  *created_at: Date <<default: now()>>
+  *updated_at: Date <<default: now()>>
+}
+
+' ===== Registration and Request Models =====
+entity "register_trading_request" as registerTradingRequest #lightgrey {
+  id: number <<PK>>
+  --
+  *email: string
+  *first_name: string
+  *last_name: string
+  *phone_number: string
+  *company_name: string
+  company_registration_number?: string
+  company_website?: string
+  *is_haulier: boolean
+  *material_interests: string[]
+  other_material?: string
+  *status: string
+  rejection_reason?: string
+  admin_message?: string
+  *created_at: Date <<default: now()>>
+  *updated_at: Date <<default: now()>>
+}
+
+entity "register_haulier_request" as registerHaulierRequest #lightgrey {
+  id: number <<PK>>
+  --
+  *email: string
+  *first_name: string
+  *last_name: string
+  *phone_number: string
+  *company_name: string
+  company_registration_number?: string
+  fleet_type?: string
+  areas_covered?: string[]
+  container_types?: string[]
+  *status: string
+  rejection_reason?: string
+  admin_message?: string
+  *created_at: Date <<default: now()>>
+  *updated_at: Date <<default: now()>>
+}
+
+entity "update_company_request" as updateCompanyRequest #lightgrey {
+  id: number <<PK>>
+  --
+  ~*company_id: number <<FK>>
+  ~*user_id: number <<FK>>
+  --
+  update_data?: object
+  *status: string
+  rejection_reason?: string
+  admin_message?: string
+  *created_at: Date <<default: now()>>
+  *updated_at: Date <<default: now()>>
+}
+
+' ===== Authentication Models =====
+entity "forgot_password_request" as forgotPasswordRequest #lightgrey {
+  id: number <<PK>>
+  --
+  *email: string
+  *token: string
+  *expires_at: Date
+  *is_used: boolean <<default: false>>
+  *created_at: Date <<default: now()>>
+  *updated_at: Date <<default: now()>>
+}
+
+entity "reset_password_request" as resetPasswordRequest #lightgrey {
+  id: number <<PK>>
+  --
+  *email: string
+  *token: string
+  *expires_at: Date
+  *is_used: boolean <<default: false>>
+  *created_at: Date <<default: now()>>
+  *updated_at: Date <<default: now()>>
+}
+
+' ===== Other Models =====
+entity "waste_trade_notifications" as wasteTradeNotifications #lightgrey {
+  id: number <<PK>>
+  --
+  ~*user_id: number <<FK>>
+  --
+  *type: string
+  *title: string
+  *content: string
+  metadata?: object
+  *is_read: boolean <<default: false>>
+  read_at?: Date
+  *created_at: Date <<default: now()>>
+  *updated_at: Date <<default: now()>>
+}
+
+entity "data_draft" as dataDraft #lightgrey {
+  id: number <<PK>>
+  --
+  ~*user_id: number <<FK>>
+  --
+  draft_type?: string
+  draft_data?: object
+  *created_at: Date <<default: now()>>
+  *updated_at: Date <<default: now()>>
+}
+
+' ===== Relationships =====
+' User Management
+users ||--o{ companyUsers : has
+companies ||--o{ companyUsers : employs
+
+' Company Management
+companies ||--o{ companyDocuments : uploads
+companies ||--o{ companyLocations : has
+users ||--o{ companyDocuments : "uploads/reviews"
+companyLocations ||--o{ companyLocationDocuments : contains
+
+' Material Management
+materials ||--o{ materials : "parent/child"
+users ||--o{ materials : creates
+users ||--o{ materialUsers : has
+materials ||--o{ materialUsers : has
+
+' Listings Management
+companies ||--o{ listings : sells
+companyLocations ||--o{ listings : associated_with
+users ||--o{ listings : creates
+listings ||--o{ listingDocuments : contains
+
+' Offers and Transactions
+listings ||--o{ offers : "receives"
+companies ||--o{ offers : makes
+users ||--o{ offers : creates
+offers ||--o| transactions : "converts to"
+listings ||--o{ transactions : "sold in"
+companies ||--o{ transactions : "buys/sells"
+companies |o--o{ transactions : transports
+
+' Transport Management
+offers ||--o{ haulageOffers : "transport bids"
+companies ||--o{ haulageOffers : "provides transport"
+users ||--o{ haulageOffers : creates
+haulageOffers ||--o{ haulageBidActions : tracks
+
+' Communication
+listings ||--o{ conversations : "discussed in"
+offers ||--o{ conversations : "negotiated in"
+transactions ||--o{ conversations : "managed in"
+conversations ||--o{ messages : contains
+users ||--o{ messages : sends
+
+' Audit and Logging
+users ||--o{ auditTrails : generates
+companies ||--o{ auditTrails : "associated with"
+
+' Registration and Requests
+users ||--o{ registerTradingRequest : "creates from"
+users ||--o{ registerHaulierRequest : "creates from"
+companies ||--o{ updateCompanyRequest : "requests updates for"
+
+' Notifications
+users ||--o{ wasteTradeNotifications : receives
+
+' Data Management
+users ||--o{ dataDraft : creates
+
+@enduml

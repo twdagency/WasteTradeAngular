@@ -1,0 +1,382 @@
+Trader Registration;;;;;
+;;;;;
+Fields collected during onboarding (6.1.1.1) or editing a profile (6.4.8.4) to be mapped to;;the following fields in Salesforce;;;
+Pushed to Salesforce as a Lead on Registration;;;;;
+Updated in Salesforce to an Account upon Verification;;Lead splits into Account and Contact;;;
+Wastetrade field;Constraints;Salesforce field;Constraints;Salesforce API Key;
+User ID;(system generated) Unique 8-digit numerical username;WasteTrade User Id;(string);WasteTrade_User_Id__c;
+Prefix;"Input Type: Dropdown; Dropdown Options: Dr, Miss, Mr, Mrs, Ms, Mx, Prof., Rev., Constraints: None; Mandatory: Yes; Default value : “Mr”";Title;(string);Title;
+First Name;"Input Type: Text; Support for Latin-1 Supplement, Latin Extended-A, Latin Extended B, Arabic, Cantonese Bopomofo, Mandarin, and support for special characters and punctuation,Script Constraints: Max 50 characters; Mandatory: Yes";First Name;(string);FirstName;
+Last Name;"Input Type: Text; Support for Latin-1 Supplement, Latin Extended-A, Latin Extended B, Arabic, Cantonese Bopomofo, Mandarin, and support for special characters and punctuation,Script Constraints: Max 50 characters; Mandatory: Yes";* Last Name ;(string);LastName;
+Phone Number Country Code;"Input Type: Dropdown; Dropdown options show country flag, Country Name, Country code Constraints: None; Mandatory: Yes; Default value : UK +44";Pushes through as part of Mobile Phone;;;
+Job Title;"Input type: Text; Constraints: Min 1 character, Max 50 characters, Mandatory";Job Title;Text(100);Job_Title__c;
+Phone Number;"Input Type: Text; Constraints: Numeric, Max 15 digits; Mandatory: Yes";Mobile Phone;(phone);MobilePhone;
+Email Address;"Input Type: Email; Constraints: Must include “@” Valid email format; Mandatory: Yes;";Doesn't Push to Salesforce - Saved on WasteTrade;;;
+Password;"Input Type: Password; Constraints: Min 8 characters, must include numbers and letters, contain special characters; Mandatory: Yes";;;;
+Company Name;"Input Type: Text; Constraints: Max 100 characters; Mandatory: Yes";* Company ;(string);Company;
+Company Interest;"Input Type: Dropdown menu with values Buyer, Seller, Both; Constraints: No; Mandatory: Yes; Default value: “Both”";WasteTrade Company Interest;(picklist);WasteTrade_Company_Interest__c;
+Company Type;"Auto-populated and editable field; 
+Input Type: Dropdown menu with values from predefined sources; Constraints: None; Mandatory";WasteTrade Type (picklist) or Wastetrade Type Other (string);;WasteTrade_Type__c;
+Type;;Type;;Default Value of Customer?;
+Materials of interest (Multiple selection);Checkboxes: and all material checkboxes as defined in the database, Text field 'Other material' is displayed when 'Other' is checked;"These are the WordPress to SF keys for each individual material
+LDPE
+PC
+PET
+PVC
+PA
+HDPE
+PP
+ABS
+PS
+ACRYLIC
+OTHER MIX
+Verified
+Inactive
+FERROUS_METAL
+NON_FERROUS_METAL
+FIBRE ORDINARY GRADES
+FIBRE MEDIUM GRADES
+FIBRE HIGH GRADES
+FIBRE KRAFT GRADES
+FIBRE SPECIAL GRADES
+NATURAL RUBBER
+SYNTHETIC RUBBER";Checkbox;"These are the WordPress to SF keys for each individual material
+LDPE__c' => $ldpe,
+PC__c' => $pc,
+PET__c' => $pet,
+PVC__c' => $pvc,
+PA__c' => $pa,
+HDPE__c' => $hdpe,
+PP__c' => $pp,
+ABS__c' => $abs,
+//         'EPS__c'       => $eps,
+PS__c' => $ps,
+ACRYLIC__c' => $acrylic,
+OTHER_MIX__c' => $other_mix,
+Verified__c' => $verified_value,
+Inactive__c' => $inactive_value,
+FERROUS_METAL__c' => $ferrous,
+NON_FERROUS_METAL__c' => $non_ferrous,
+FIBRE_ORDINARY_GRADES__c' => $ordinary_grades,
+FIBRE_MEDIUM_GRADES__c' => $medium_grades,
+FIBRE_HIGH_GRADES__c' => $high_grades,
+FIBRE_KRAFT_GRADES__c' => $kraft_grades,
+FIBRE_SPECIAL_GRADES__c' => $special_grades,
+NATURAL_RUBBER__c' => $natural_rubber,
+SYNTHETIC_RUBBER__c' => $synthetic_rubber";
+Other material;"Display condition: When 'Other' in the Materials of interest is checked
+Input Type: Text field; Constraints:Max 100 characters; Mandatory: Yes";Other Material;(String);Other_Material__c;
+Where did you hear about us?;"Input Type: Dropdown menu with values from predefined sources ; Mandatory: Yes";Lead Source ;(picklist);LeadSource;
+;;Lead Direction;(picklist);Lead_Direction__c;
+;;Lead Buyer Intention;(picklist);Lead_Buyer_Intention__c;
+;;WasteTrade Lead Source ;(picklist);Wastetrade_Lead_Source__c;
+;;Subsidary Source;(picklist);Subsidiary_Source__c;
+;;Engagement Source URL;URL(255);Engagement_Source_URL__c;
+Member approval - Approve user;Input type: approve button;Complete Account ;(picklist);;
+Member approval - Reject user;Radio button: Incomplete documentation, Invalid Company Registration, Duplicate account, Unverified contact information, Other (provide a custom reason);Complete Account ;(picklist);;
+Member approval - More information required;"Radio buttons: Additional company documentation required, Clarification on provided details, Update on business address, Other (provide a custom request)
+";Complete Account ;(picklist);;
+Admin-visible notes (per user);"Multiline text; Alphanumeric and support for special characters and punctuation. Max 4000 chars. Supports line breaks. Optional.";;;;
+User Role;"System-defined during registration or updated by Company Admin/Platform Admin (6.3.3.6, 6.3.3.9)
+
+Options: Buyer, Seller, Dual, Haulier, Company Admin
+
+Company Admin shown as original user role + Company Admin
+e.g. ""Buyer (Company Admin)""";"Role
+";;;
+;;Company Admin?;Checkbox;Contact.IsCompanyAdmin__c;
+;;;;;
+;;;;;
+Trader Org Details;;;;;
+;;;;;
+Wastetrade field;Constraints;Salesforce field;Constraints;Salesforce API Key;
+Company ID;(system generated) ;;;Account.ExternalId__c;
+VAT Registration Country;"Auto-populated and editable field; 
+Input Type: Radio Button; EU, UK, Other. Mandatory";N/A ;N/A;;
+VAT Number;"Display conditions : When VAT Registration Country checked
+Auto-populated and editable field. Input Type: Text; Mandatory";Company VAT Number ;(string);Company_VAT_Number__c;
+Company Registration Number;"Input Type: Text; 
+Constraints: None
+Mandatory";Company Registration Number ;(string);Company_Registration_Number__c;
+Company Size;System-generated based on number of members associated with a company.;Not on SF;;;
+Address (Street Address);"Auto-populated and editable field; 
+Input Type: Text
+Constraints: Max 100 characters;
+Mandatory";Address;Address fields all in one object;Address__c;
+Postcode;"Auto-populated and editable field; 
+Input Type: Text; 
+Constraints: Max 20 characters; 
+Mandatory";Mailing Zip/Postal Code OR Zip/Postal Code ;Address fields all in one object;;
+City;"Auto-populated and editable field; 
+Input Type: Text; 
+Constraints: Max 50 characters; 
+Mandatory";Mailing City OR City ;Address fields all in one object;;
+County/State/Region;"Auto-populated and editable field; 
+Input Type: Text; 
+Constraints: Max 50 characters; 
+Mandatory";Mailing Country OR Country ;Address fields all in one object;;
+Country;"Auto-populated and editable field; 
+Input Type: Dropdown menu with predefined options; 
+Constraints: Max 50 characters; 
+Mandatory";;Address fields all in one object;;
+Site location info;;;;;
+Location Name;"Input Type: Text; Constraints: Mandatory; No character limit specified";;;;
+Site Point of Contact;"Input Type: Auto-populated from registration; Constraints: First Name, Last Name; Mandatory";See below fields;;;
+First Name;"Input Type: Text; Support for Latin-1 Supplement, Latin Extended-A, Latin Extended B, Arabic, Cantonese Bopomofo, Mandarin, and support for special characters and punctuation, Script Constraints: Max 50 characters; Mandatory: Yes";Lead First Name;Text(255);Lead_First_Name__c;
+Last Name;"Input Type: Text; Support for Latin-1 Supplement, Latin Extended-A, Latin Extended B, Arabic, Cantonese Bopomofo, Mandarin, and support for special characters and punctuation, Script Constraints: Max 50 characters; Mandatory: Yes";Lead Last Name;Text(255);Lead_Last_Name__c;
+Position;"Input Type: Text; Constraints: Optional; No character limit specified; Mandatory";Not on SF;;;
+Location Telephone;"Input Type: Text; Constraints: Numeric, format as per country standards; Mandatory";Phone OR Busines Phone ;(phone);Lead_Phone__c;
+Address;"Input Type: Conditional; Select same as previous or enter new; Mandatory";;;;
+Street Address;"Input Type: Text; Constraints: Mandatory if new address; No character limit specified";;Text Area (255);Shipping_Street__c;
+Postcode;"Input Type: Text; Constraints: Mandatory if new address; No character limit specified";;Text (20);Shipping_Zip_Postal_Code__c;
+City;"Input Type: Text; Constraints: Mandatory if new address; No character limit specified";;Text(20);Shipping_City__c;
+County/State/Region;"Input Type: Text; Constraints: Mandatory if new address; No character limit specified";;Text(20);Shipping_State_Province__c;
+Country;"Input Type: Dropdown menu with predefined options; Constraints: Mandatory if new address; No character limit specified";;Text(20);Shipping_Country__c;
+Head Office Opening Time;"Input Type: Time; Format: HH:MM
+; Constraints: Mandatory";Not on SF;;;
+Head Office Closing Time;"Input Type: Time; Format: HH:MM
+; Constraints: Mandatory";Not on SF;;;
+Materials Accepted;"Input Type: Checkboxes; Constraints: List of materials; Mandatory";Not on SF;;;
+Loading Ramp;"Input Type: Radio Button; Options: Yes, No; Mandatory";Has Loading Ramp;Picklist;Has_Loading_Ramp__c;
+Weighbridge;"Input Type: Radio Button; Options: Yes, No; Mandatory";Has Weigh Bridge;Picklist;Has_Weigh_Bridge__c;
+Container Types;"Input Type: Checkbox; Options: Curtain Slider, Containers, Tipper Trucks, Walking Floor; Mandatory";Not on SF;;;
+Self Load/Unload Capability;"Input Type: Radio Button; Options: Yes, No; Mandatory";Not on SF;;;
+Access Restrictions;"Input Type: Conditional Text; Displayed if Yes selected; Optional";Not on SF;;;
+Environmental Permit upload;"File upload; Constraints: Valid file types only (.jpeg, .jpg, tiff, .png, .pdf). Max file size 25 MB. Expiry date per document.";Not on SF - We need a doc upload to licence information on an Account;;;
+Waste Exemptions Upload;"File upload; Constraints: Valid file types only (.jpeg, .jpg, tiff, .png, .pdf). Max file size 25 MB. Expiry date per document.";Not on SF - We need a doc upload to licence information on an Account;;;
+Other document upload;"File upload; Constraints: Valid file types only (.jpeg, .jpg, tiff, .png, .pdf). Max file size 25 MB. Expiry date per document.";;;;
+Waste Carrier Licence;"File upload; Constraints: Valid file types only (.jpeg, .jpg, tiff, .png, .pdf). Max file size 25 MB. Expiry date per document.";Not on SF - We need a doc upload to licence information on an Account;;;
+Box Clearing Agent;"Input Type: Radio button; Options: Yes, No;";Not on SF;;;
+Company Admins;System defined list of Company Admin users (First name, Last name, Email address, User ID);;;;
+;;;;;
+Haulier Registration;;;;;
+;;;;;
+Fields collected during onboarding (6.1.1.1) or editing a profile (6.4.8.4) to be mapped to;;the following fields in Salesforce;;;
+Pushed to Salesforce as a Lead on Registration;;;;;
+Updated in Salesforce to an Account upon Verification;;Lead splits into Account and Contact;;;
+Wastetrade field;Constraints;Salesforce field;Constraints;Salesforce API Key;
+Prefix;"Input Type: Dropdown; Dropdown Options: Dr, Miss, Mr, Mrs, Ms, Mx, Prof., Rev., Constraints: None; Mandatory: Yes; Default value : “Mr”";Title;(string);;
+First Name;"Input Type: Text; Support for Latin-1 Supplement, Latin Extended-A, Latin Extended B, Arabic, Cantonese Bopomofo, Mandarin, and support for special characters and punctuation,Script Constraints: Max 50 characters; Mandatory: Yes";First Name;(string);;
+Last Name;"Input Type: Text; Support for Latin-1 Supplement, Latin Extended-A, Latin Extended B, Arabic, Cantonese Bopomofo, Mandarin, and support for special characters and punctuation,Script Constraints: Max 50 characters; Mandatory: Yes";* Last Name ;(string);;
+Phone Number Country Code;"Input Type: Dropdown; Dropdown options show country flag, Country Name, Country code Constraints: None; Mandatory: Yes; Default value : UK +44";Pushes through as part of Mobile Phone;;;
+Job Title;"Input type: Text; Constraints: Min 1 character, Max 50 characters, Mandatory";Job Title;Text(100);;
+Phone Number;"Input Type: Text; Constraints: Numeric, Max 15 digits; Mandatory: Yes";Mobile Phone;(phone);;
+Email Address;"Input Type: Email; Constraints: Must include “@” Valid email format; Mandatory: Yes;";Email;(email);;
+Password;"Input Type: Password; Constraints: Min 8 characters, must include numbers and letters, contain special characters; Mandatory: Yes";Doesn't Push to Salesforce - Saved on WasteTrade;;;
+Company Name;"Input Type: Text; Constraints: Max 100 characters; Mandatory: Yes";* Company ;(string);;
+Company Interest;"Input Type: Dropdown menu with values Buyer, Seller, Both; Constraints: No; Mandatory: Yes; Default value: “Both”";WasteTrade Company Interest;(picklist);;
+Company Type;"Auto-populated and editable field; 
+Input Type: Dropdown menu with values from predefined sources; Constraints: None; Mandatory";WasteTrade Type (picklist) or Wastetrade Type Other (string);;;
+Type;Haulier;Type;;;
+VAT Registration Country;"Auto-populated and editable field; 
+Input Type: Radio Button; EU, UK, Other. Mandatory";N/A ;N/A;;
+VAT Number;"Display conditions : When VAT Registration Country checked
+Auto-populated and editable field. Input Type: Text; Mandatory";Company VAT Number ;(string);;
+Company Registration Number;"Input Type: Text; 
+Constraints: None
+Mandatory";Company Registration Number ;(string);;
+Address (Street Address);"Auto-populated and editable field; 
+Input Type: Text
+Constraints: Max 100 characters;
+Mandatory";Address;Address fields all in one object;;
+Postcode;"Auto-populated and editable field; 
+Input Type: Text; 
+Constraints: Max 20 characters; 
+Mandatory";Mailing Zip/Postal Code OR Zip/Postal Code ;Address fields all in one object;;
+City;"Auto-populated and editable field; 
+Input Type: Text; 
+Constraints: Max 50 characters; 
+Mandatory";Mailing City OR City ;Address fields all in one object;;
+County/State/Region;"Auto-populated and editable field; 
+Input Type: Text; 
+Constraints: Max 50 characters; 
+Mandatory";Mailing Country OR Country ;Address fields all in one object;;
+Country;"Auto-populated and editable field; 
+Input Type: Dropdown menu with predefined options; 
+Constraints: Max 50 characters; 
+Mandatory";;Address fields all in one object;;
+Fleet Type;;Not in SF;;;
+Areas Company can cover;;Not in SF;;;
+EU Countries;"Austria
+Albania
+Belgium
+Bosnia and Herzegovina
+Bulgaria
+Czech Republic
+Croatia
+Denmark
+Estonia
+Finland
+France
+Germany
+Greece
+Hungary
+Ireland
+Italy
+Kosovo
+Latvia
+Lithuania
+Luxembourg
+Montenegro
+Netherlands
+North Macedonia
+Poland
+Portugal
+Romania
+Serbia
+Slovakia
+Slovenia
+Spain
+Sweden
+United Kingdom";Not in SF;;;
+Container Types;;Not in SF;;;
+Waste Carrier Licence;"File upload; Constraints: Valid file types only (.jpeg, .jpg, tiff, .png, .pdf). Max file size 25 MB. Expiry date per document.";;;;
+Member approval - Approve user;Input type: approve button;Complete Account ;(picklist);;
+Member approval - Reject user;Radio button: Incomplete documentation, Invalid Company Registration, Duplicate account, Unverified contact information, Other (provide a custom reason);Complete Account ;(picklist);;
+Member approval - More information required;"Radio buttons: Additional company documentation required, Clarification on provided details, Update on business address, Other (provide a custom request)
+";Complete Account ;(picklist);;
+Admin-visible notes (per user);Notes;"Multiline text; Alphanumeric and support for special characters and punctuation. Max 4000 chars. Supports line breaks. Optional.";;;
+;;;;;
+ListingsBids;;;;;
+;;;;;
+Function;Wastetrade field;Constraints;Salesforce field;Constraints;Salesforce API Key
+Sales Listings;Listing ID;(system generated);WasteTrade Listing Id AND Sales Listing Name ;(string);WasteTrade_Listing_Id__c
+;;;Sales Listing Link ;(url);Sales_Listing_Link__c
+;Seller full name;Text, Mandatory;WasteTrade User Id ;(string);It just references WasteTrade_User_Id__c - Probably needs to also reference the SF Account/Contact
+;Seller company;Text, Mandatory;;;N/A 
+"Seller info obtained in 6.4.3.2 Create a listing (sell material)
+";Seller location (Warehouse);Dropdown: Options prefilled from My Locations, and “Other” free text option, Max Length: 100 characters, Mandatory;WasteTrade Site Id OR Material Location ;(string);Material_Location__c - Needs to reference a site
+;Featured image;"Input Type: File Upload; Constraints: Image files - jpeg, png; Max file size 25 MB, Max files set to 1; Mandatory";Sales Listing Featured Image Link ;(url);Sales_Listing_Featured_Image_Link__c
+;Gallery Images;"Input Type: File Upload; Constraints: Image files - jpeg, png; Max file size 25 MB, Max files set to min 3; Mandatory";Not on SF;;
+;Technical Data Sheet ( Specification Data);"Input Type: File Upload; Constraints: Image files - jpeg, png, pdf; Max file size 25 MB, Max files set to min 1; Mandatory";;;
+;Material name;"Material dropdown selections shown as one material name; Material type/Item/Form/Grading/Colour/Finishing. N/A selections excluded from the name. Mandatory";Material Group (string) AND Material Type (string) and Material (picklist);;Name
+;Material must remain in country of Origin;Radio (Boolean);Not on SF;;
+;Packing;Dropdown: Bags, Bales, Boxes, Bulk Bags, Loose, Octabins/Gaylords, Pallets, Mandatory;Packaging Type ;(picklist);Packaging_Type__c
+;How is the waste stored?;Dropdown : Indoor/Outdoor/Both/Any, Mandatory;Storage Type ;(picklist);Storage_Type__c
+;Weight;Numeric input, Mandatory, Min >3;Material Weight (MT) ;(double);Material_Weight__c
+;Number of loads;Numeric input, Mandatory, Min >1 ;Numer of Loads;(double);Number_of_Loads__c
+;Currency;Dropdown: GBP / EUR / USD , Mandatory ;Indicated Price ;(currency);CurrencyIsoCode
+;Material Availability;Datetime, Min = Today , Mandatory ;Available From Date ;(date);Available_From_Date__c
+;Ongoing Listing;Input Type: Radio Button: Yes/No, Mandatory.;Not on SF;;
+;Listing Renewal Period;Appears if uer selects “Yes” to Ongoing listing. Input Type: Dropdown (Weekly, Fortnightly, Monthly), Mandatory.;Not on SF;;
+;Listing Duration;"Appears if user selects “No” to Ongoing listing. Input Type: Dropdown; Choices: 30 days (default), Custom; Mandatory";Not on SF;;
+;Additional Information;"Input Type: Text Area; Constraints: Max 1000 characters; Optional. Does not allow telephone numbers, email addresses or URLs.";Description ;(textarea);Description__c
+;Status;Dropdown: Approved, Haulage in Progress, Rejected, Pending. Mandatory;Listing Status (picklist);(picklist);Listing_Status__c
+Admin-visible notes (per listing);Notes;"Multiline text; Alphanumeric and support for special characters and punctuation. Max 4000 chars. Supports line breaks. Optional.";;;
+Wanted Listings;Wanted Listing ID;(system generated);WT Listing ID AND Wanted Listing Name ;(string);WT_Listing_ID__c
+;;;Listing Link;(url);Listing_Link__c
+;Buyer full name;Text, Mandatory;Wt Author ID;(string);Wt_Author_ID__c - Probably needs to also reference the SF Account/Contact
+;Buyer company;Text, Mandatory;Company Name;(string);Company_Name__c
+"Buyer info obtained in 6.4.2.2 Create a listing for wanted material
+";Buyer warehouse location (Destination);Dropdown: locations provided during onboarding. Mandatory;Location of Waste;(string);Location_of_Waste__c - Probably needs to also reference the SF Site
+;Material required name;"Material dropdown selections shown as one material name; Material type/Item/Form/Grading/Colour/Finishing. N/A selections excluded from the name. Mandatory";Material Group (string) AND Material Type (string) and Material (picklist);;Name
+;Capacity per Month;"Input Type: Numeric; Constraints: Positive numbers; Mandatory";Not on SF;;
+;Material Flow Index (MFI);"Input Type: Radio buttons; Low (0.1-10), Medium (10-40), High (40+)";MFI Range ;(picklist);MFI_Range__c
+;Quantity Wanted;"Input Type: Numeric; Constraints: Positive numbers; Mandatory";Quantity AND Quantity Metric ;(string);Quantity__c - Quantity_Metric__c  is a separate field
+;Packing;Dropdown: Bags, Bales, Boxes, Bulk Bags, Loose, Octabins/Gaylords, Pallets. Mandatory;How its packaged;(string);How_its_packaged__c
+;How is the waste stored;Dropdown: Indoor, Outdoor, Both/Any. Mandatory;How its Stored ;(string);How_its_Stored__c
+;Material Required From;"Input Type: Date Picker; Constraints: Future dates; Mandatory";;;Available_From__c
+;Ongoing Listing;Input Type: Radio Button: Yes/No, Mandatory.;;;N/A
+;Listing Renewal Period;Appears if the user selects “Yes” to Ongoing listing. Input Type: Dropdown (Weekly, Fortnightly, Monthly), Mandatory.;Frequency ;(picklist);N/A
+;Listing Duration;"Appears if the user selects “No” to Ongoing listing. Input Type: Dropdown; Choices: 30 days (default), Custom; Mandatory";End Date ;(string);N/A
+;Additional Information;"Input Type: Text Area; Constraints: Max 1000 characters; Optional. Does not allow telephone numbers, email addresses or URLs.";Comments AND Post Notes ;(textarea);Comments__c
+;Status;;Listing Status ;(picklist);Listing_Status__c
+Admin-visible notes (per listing);Notes;"Multiline text; Alphanumeric and support for special characters and punctuation. Max 4000 chars. Supports line breaks. Optional.";;;
+Sales & Wanted Listing Approval actions;Listing approval - Approve;Input type: approve button;Listing Status (value: Approved);(picklist);Listing_Status__c
+;Listing approval - Reject;"Radio button: Incomplete documentation, Invalid company registration
+Duplicate account, Unverified contact information, Other (Provide a custom request)";Listing Status (value: Rejected);(picklist);Listing_Status__c
+;Listing approval - More information required;Radio button: Additional company documentation required, Clarification on provided details, Update on business address, Other (Provide a custom request);Listing Status (value: Pending Approval);(picklist);Listing_Status__c
+Bid status;Buyer full name;Text, Mandatory;Buyer Full Name (Object: Offers);Text(100);Buyer_Full_Name__c
+;Buyer company;Text, Mandatory;Buyer Company (Object: Offers);Text(100);Buyer_Company__c
+Buyer info obtained in 6.4.1.2 Bidding on a Listing ;Buyer warehouse location (Destination);Dropdown: locations provided during onboarding. Mandatory;Buyer location (Object: Offers);Text(100);Buyer_Location__c
+"Seller info obtained in 6.4.3.2 Create a listing (sell material)
+";Seller full name;Text, Mandatory;Seller Full Name(Object: Offers);Text(100);Seller_Full_Name__c
+;Seller company;Text, Mandatory;Seller Company (Object: Offers);Text(100);Seller_Company__c
+;Seller warehouse location (Pick-up);Dropdown: locations provided during onboarding, with option to add a new location. Mandatory;Seller Location (Object: Offers);Text(100);Seller_Location__c
+;Material name;"Material dropdown selections shown as one material name; Material type/Item/Form/Grading/Colour/Finishing. N/A selections excluded from the name. Mandatory";Material Name (Object: Offers);Text(255);Material_Name__c
+;Packing;Dropdown: Bags, Bales, Boxes, Bulk Bags, Loose, Octabins/Gaylords, Pallets, Mandatory;Material Packing (Object: Offers);Text (100);Material_Packing__c
+;Weight;Numeric, Mandatory;Material Weight (Object: Offers);Number (16,2);Material_Weight__c
+;Number of loads bid on;Numeric, Maximum cannot exceed number of loads listed. Mandatory;Number of Loads Bid on (Object: Offers);Number (18,0);number_of_loads_bid_on__c
+;Currency;Dropdown, Mandatory;Currency (Object: Offers);Text(10);Currency__c
+;Price per tonne;Numeric, Mandatory;Offered Price Per Unit (Object: Offers);Currency (16,2);Offered_Price_Per_Unit__c
+;Incoterms;Dropdown, Mandatory;Incoterms (Object: Offers);Text (50);Incoterms__c
+;Bid status;Dropdown: Approved, Haulage in Progress, Rejected, Pending. Mandatory;Bid Status (Object: Offers);Picklist;bid_status__c
+;PERN Status;Checkbox(Boolean);Not in SF (Not sure if needs to be added as field in SF);;
+Admin-visible notes (per listing);Notes;"Multiline text; Alphanumeric and support for special characters and punctuation. Max 4000 chars. Supports line breaks. Optional.";;;
+Bid Approval actions;Listing Bid approval - Approve;Input type: approve button;Bid Status (Object: Offers, value: Approved);Picklist;bid_status__c
+;Listing Bid approval - Reject;"Radio button: Incomplete documentation, Invalid company registration
+Duplicate account, Unverified contact information, Other (Provide a custom request)";Bid Status (Object: Offers, value: Rejected);Picklist;bid_status__c
+;;;;;
+HaulageOffers;;;;;
+Function;Wastetrade field;Constraints;Salesforce field ;Constraints;Salesforce API Key
+Haulage Bids;Buyer ID;"Input Type: Text; Constraints: Max 50 characters; Auto-populated from Buyer account; Optional (system stored only).";Buyer User ID (Object: Offers);Text(50);Buyer_User_Id__c
+;Buyer name;"Input Type: Text; Constraints: Max 100 characters; Auto-populated from Buyer account; Optional.";Buyer Full Name (Object: Offers);Text(100);Buyer_Full_Name__c
+;Buyer company;"Input Type: Text; Constraints: Max 100 characters; Auto-populated from Buyer account; Optional.";Buyer Company (Object: Offers);Text(100);Buyer_Company__c
+;Buyer location;"Input Type: Text; Constraints: Max 100 characters; Auto-populated from Buyer address; Optional.";Buyer location (Object: Offers);Text(100);Buyer_Location__c
+;Delivery window;"Input Type: Date picker; Constraints: Must be a valid date; Optional.";Earliest Delivery Date (Object: Offers);Date;Earliest_Delivery_Date__c
+;Delivery window;"Input Type: Date picker; Constraints: Must be a valid date; Optional.";Latest Delivery Date (Object: Offers);Date;Latest_Delivery_Date__c
+;Buyer incoterms;Not in scope Phase 2;Not in SF;;
+;Buyer offer/bid amount;"Input Type: Text; Constraints: Max 255 characters; Optional.";Bid Value (Object: Offers);Text(255);bid_value__c
+;Seller ID;"Input Type: Text; Constraints: Max 50 characters; Auto-populated from Seller profile; Optional.";Seller User ID (Object: Offers);Text(50);Seller_User_Id__c
+;Seller name;"Input Type: Text; Constraints: Max 100 characters; Auto-populated from Seller profile; Optional.";Seller Full Name(Object: Offers);Text(100);Seller_Full_Name__c
+;Seller company;"Input Type: Text; Constraints: Max 100 characters; Auto-populated from Seller account; Optional.";Seller Company (Object: Offers);Text(100);Seller_Company__c
+;Seller location;"Input Type: Text; Constraints: Max 100 characters; Auto-populated from Seller address; Optional.";Seller Location (Object: Offers);Text(100);Seller_Location__c
+;Material name;"Input Type: Text; Constraints: Max 255 characters; Auto-populated from listing; Optional.";Material Name (Object: Offers);Text(255);Material_Name__c
+;Packaging;"Input Type: Text; Constraints: Max 100 characters; Auto-populated from listing; Optional.";Material Packing (Object: Offers);Text (100);Material_Packing__c
+;Incoterms;Input Type: Dropdown. Options: EXW, FAS, FOB, CFR, CIF, DAP, DDP. Optional.;Incoterms (Object: Offers);Text (50);Incoterms__c
+;PERN;Not in scope Phase 2;Not in SF;;
+;Number of loads;"Input Type: Numeric; Constraints: Integer only, no decimals; Mandatory.";Number of Loads Bid on (Object: Offers);Number (18,0);number_of_loads_bid_on__c
+;Loads remaining;"Input Type: Numeric; Constraints: Integer only, no decimals; Auto-updated by system; Optional.";Buyer Loads Remaining (Object: Offers);Number (18,0);buyer_loads_remaining__c
+;Quantity per load (MT);"Input Type: Numeric; Constraints: Up to 2 decimal places (MT); Mandatory.";Quantity (Object: Offers);Number (16,2);Quantity__c
+;Price per tonne;"Input Type: Currency; Constraints: Decimal number, supports 2 decimals; Mandatory.";Offered Price Per Unit (Object: Offers);Currency (16,2);Offered_Price_Per_Unit__c
+;Currency;"Input Type: Text; Constraints: Max 10 characters; Optional (not user-selectable).";Currency (Object: Offers);Text(10);Currency__c
+;Total price shared;"Input Type: Currency; Constraints: System calculated; Read-only.";Total Price (Object: Offers);Currency (16,2);Total_Price__c
+;Haulage Bid status;"Input Type: Dropdown; Constraints: Predefined status values; Read-only.";Haulier Listing Status (Object: Haulage Offers);Picklist;haulier_listing_status__c
+;Haulier ID;Not mentioned in Phase 2;Not in SF;;
+;Haulier name;"Input Type: Text; Constraints: Max 255 characters; Supports multiple carriers.";FC First Name, FC Second Name (Object: Haulage Loads) - the same fields repear as SC (Second carrier), TC (Third carrier) Etc;Text(255);fc_first_name__c, fc_second_name__c
+;Haulier company;"Input Type: Text; Constraints: Max 255 characters; Optional.";FC Company Name (Object: Haulage Loads);Text(255);fc_company_name__c
+;Haulier Trailer Type;"Input Type: Dropdown; Options: Curtain Sider, Containers, Tipper Trucks, Walking Floor; Mandatory.";Trailer Type (Object: Haulage Offers);Picklist;trailer_type__c
+;Are you completing Customs clearance?;"Input Type: Checkbox; Constraints: Yes/No; Mandatory only when customs apply.";Customs Clearance (Haulage Offers);Picklist;Customs_Clearance__c
+;Haulage cost per load;"Input Type: Text/Numeric; Constraints: Numeric; Max 15 characters; Mandatory.";Haulage Cost (Haulage Offers);Text(255);haulage__c
+;Currency;"Input Type: Dropdown; Options: GBP, EUR, USD; Mandatory.";Haulage Currency (Haulage Offers);Text(255);haulage_currency__c
+;Transport Provider;"Input Type: Radio Button; Options: Own haulage, Third party, Mixed; Mandatory.";Transport Provider (Haulage Offers);Picklist;Transport_Provider__c
+;Suggested collection date;"Input Type: Date picker; Constraints: Must be within Buyer delivery window; Mandatory.";Suggested Collection Date (Haulage Offers);Date;suggested_collection_date__c
+;Expected transit time (days);"Input Type: Dropdown; Options: 1, 2-3, 4-5, 6-7, 8-10, 11-14; Mandatory.";Expected Transit Time (Haulage Offers);Picklist;expected__c
+;Demurrage at destination (days);"Input Type: Numeric; Constraints: Must be greater than 20; Mandatory.";Demurrage (Haulage Offers);Picklist;demurrage__c
+;Notes;"Input Type: Text; Constraints: Max 32000 characters; Must not contain phone numbers, emails, URLs; Optional.";Haulage Notes (Haulage Offers);Text(255);haulage_notes__c
+Haulage offer Approval actions;Haulage Bid - Approve;"Input Type: Action Button; Constraints: Marks bid as Approved; No additional input required.";Offer Accepted (Haulage Offers);Checkbox;offer_accepted__c
+Haulage offer Approval actions;Haulage Bid - Reject;"Input Type: Radio Button Group; Options: Incomplete documentation, Invalid company registration, Duplicate account, Unverified contact, Other (free text required); Mandatory.";Offer Rejected (Haulage Offers);Checkbox;offer_rejected__c
+Haulage offer Approval actions;Haulage Bid - More information required;"Input Type: Radio Button Group; Options: Additional documentation required, Clarification on details, Update address, Other (free text required); Mandatory.";Haulage Rejection Reason;Text(255);haulage_rejection_reason__c
+Documents for accepted bids;Document title + Clickable URL per document;;Not in SF;;
+Admin-visible notes (per listing);Notes;"Multiline text; Alphanumeric and support for special characters and punctuation. Max 4000 chars. Supports line breaks. Optional.";;;
+Load Details;Load number;"System generated from total loads/number of loads marked as shipped; Read‑only; Cannot be edited.";Load Number (Object: Haulage Loads);Text (255);load_number__c
+;Collection date;"Input Type: Date picker; Constraints: Valid date format; Mandatory.";Collection Date (Object: Haulage Loads);Date;collection_date__c
+;Shipped date;"Not stored on Salesforce; No input field.";Not in SF;;
+;Gross weight;"Input Type: Text; Constraints: Max 255 characters; Optional.";Gross Weight (Object: Haulage Loads);Text(255);gross_weight__c
+;Pallet weight;"Input Type: Text; Constraints: Max 255 characters; Optional.";Pallet Weight (Object: Haulage Loads);Text(255);pallet_weight__c
+;;;;;
+Samples;;;;;
+;;;;;
+Function;Wastetrade field;Constraints;Salesforce field;Constraints;Salesforce API Key
+Samples;Sample ID;(system generated);;;
+;Status;"Sample Requested
+Sample Approved
+Sample Dispatched
+Sample In Transit
+Customs Cleared
+Sample Delivered
+Customer Feedback Requested
+Feedback Provided";;;
+;Recieved Date;DD/MM/YYYY;;;
+;Sent Date;DD/MM/YYYY;;;
+;Notes;"Multiline text; Alphanumeric and support for special characters and punctuation. Max 4000 chars. Supports line breaks. Optional.";;;
+;;;;;
+MFI;;;;;
+;;;;;
+Function;Wastetrade field;Constraints;Salesforce field;Constraints;Salesforce API Key
+MFI tests;MFI test ID;(system generated);;;
+;Status;"Awaiting Payment
+Pending
+Tested";;;
+;Tested Date;DD/MM/YYYY;;;
+;Notes;"Multiline text; Alphanumeric and support for special characters and punctuation. Max 4000 chars. Supports line breaks. Optional.";;;

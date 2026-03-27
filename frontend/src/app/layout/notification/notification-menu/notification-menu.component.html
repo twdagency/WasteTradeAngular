@@ -1,0 +1,41 @@
+<div class="wrapper">
+  <div class="content">
+    <div class="d-flex justify-content-between">
+      <h2 class="title fw-bold mb-0">Notifications</h2>
+
+      <button mat-icon-button class="close-btn" (click)="handleClose()">
+        <mat-icon>close</mat-icon>
+      </button>
+    </div>
+  </div>
+
+  @if (loading() || viewMoreLoading()) {
+    <app-spinner></app-spinner>
+  } @else {
+    <div class="content">
+      <div class="d-flex justify-content-end">
+        <button (click)="handleReadAll()" class="read-button" [class.overlay-spinner]="markAllAsReadLoading()">MARK ALL AS READ</button>
+      </div>
+    </div>
+
+    <div class="noti-list" #notiList>
+      @for (noti of notifications(); track noti.id) {
+        <app-notification-item [noti]="noti" (read)="onRead(noti)" (unread)="onUnread(noti)"></app-notification-item>
+      } @empty {
+        <p class="text-dark text-center fs-18 py-5">You don't have any notifications yet.</p>
+      }
+    </div>
+
+    @if (canViewMore()) {
+      <div class="d-flex align-items-center justify-content-center">
+        <button (click)="handleViewmore()" class="view-button" [class.overlay-spinner]="viewMoreLoading()">VIEW MORE</button>
+      </div>
+    }
+
+    @if (!hasMoreNoti()) {
+      <div class="d-flex align-items-center justify-content-center">
+        <p class="text-dark fs-18" style="margin-top: 12px; margin-bottom: 24px">No more notifications.</p>
+      </div>
+    }
+  }
+</div>

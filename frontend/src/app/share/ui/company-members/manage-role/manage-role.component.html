@@ -1,0 +1,46 @@
+<button mat-icon-button class="common-modal-close-btn" (click)="handleClose()">
+  <mat-icon>close</mat-icon>
+</button>
+<div class="container manage-modal d-flex flex-column justify-content-between">
+  <h2 class="mb-5 fw-bold">{{ 'Assign Role ' | translate }}</h2>
+  <div class="radio-item">
+    <p class="text-uppercase fw-bold fs-16">{{ 'Choose Role' | translate }} <span>*</span></p>
+    <mat-radio-group
+      class="d-flex flex-column"
+      aria-label="Select an option"
+      [ngModel]="selectedRole()"
+      (ngModelChange)="selectedRole.set($event)"
+    >
+      <mat-radio-button class="bold-label fs-16" [value]="CompanyUserRequestRoleEnum.ADMIN">{{
+        'Company Admin' | translate
+      }}</mat-radio-button>
+      @if (isHaulier) {
+        <mat-radio-button class="bold-label fs-16" [value]="CompanyUserRequestRoleEnum.HAULIER">{{
+          'Haulier' | translate
+        }}</mat-radio-button>
+      } @else {
+        <mat-radio-button class="bold-label fs-16" [value]="CompanyUserRequestRoleEnum.BOTH">{{
+          'Dual(Buyer & Seller)' | translate
+        }}</mat-radio-button>
+        <mat-radio-button class="bold-label fs-16" [value]="CompanyUserRequestRoleEnum.BUYER">{{ 'Buyer' | translate }}</mat-radio-button>
+        <mat-radio-button class="bold-label fs-16" [value]="CompanyUserRequestRoleEnum.SELLER">{{ 'Seller' | translate }}</mat-radio-button>
+      }
+    </mat-radio-group>
+  </div>
+
+  <div class="dialog-actions mt-5 d-flex">
+    <button mat-stroked-button color="primary" class="outlined-button dialog-btn fw-bold" (click)="handleClose()">
+      {{ 'Cancel' | translate }}
+    </button>
+
+    <button
+      mat-flat-button
+      color="primary"
+      class="primary-btn dialog-btn confirm-btn fw-bold"
+      [disabled]="isLoading()"
+      (click)="handleSave()"
+    >
+      {{ 'Save' | translate }}
+    </button>
+  </div>
+</div>

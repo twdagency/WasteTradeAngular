@@ -1,0 +1,56 @@
+<h2 mat-dialog-title class="fw-bold">Preview</h2>
+
+<div (click)="close()" class="cursor-pointer position-absolute close-button">
+  <svg width="24" height="25" viewBox="0 0 24 25" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <circle cx="12" cy="12.1562" r="12" fill="#1D1D1B" />
+    <path d="M7 7.21875L17.8064 18.0251" stroke="white" stroke-width="3" stroke-linecap="round" />
+    <path d="M17.8086 7.15234L7.00222 17.9587" stroke="white" stroke-width="3" stroke-linecap="round" />
+  </svg>
+</div>
+
+@if (safeUrl(); as safeUrl) {
+  <mat-dialog-content>
+    <object [data]="safeUrl" type="application/pdf" class="object">
+      <iframe
+        [src]="safeUrl"
+        width="100%"
+        height="500"
+        frameborder="0"
+        sandbox="allow-scripts allow-same-origin allow-downloads"
+        referrerpolicy="no-referrer"
+        style="border-radius: 8px"
+      ></iframe>
+    </object>
+    <!-- <iframe
+      [src]="safeUrl"
+      width="100%"
+      height="500"
+      frameborder="0"
+      sandbox="allow-scripts allow-same-origin allow-downloads"
+      referrerpolicy="no-referrer"
+      style="border-radius: 8px"
+    ></iframe> -->
+  </mat-dialog-content>
+}
+<mat-dialog-actions align="center">
+  <div
+    mat-stroked-button
+    class="d-flex rounded gap-1 px-4 align-items-center border border-primary primary text-uppercase fw-bold custom-button"
+    (click)="download()"
+  >
+    Download
+    <svg width="25" height="25" viewBox="0 0 25 25" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <g clip-path="url(#clip0_19766_20097)">
+        <path
+          d="M19.5 9.25H15.5V3.25H9.5V9.25H5.5L12.5 16.25L19.5 9.25ZM11.5 11.25V5.25H13.5V11.25H14.67L12.5 13.42L10.33 11.25H11.5ZM5.5 18.25H19.5V20.25H5.5V18.25Z"
+          fill="#03985C"
+        />
+      </g>
+      <defs>
+        <clipPath id="clip0_19766_20097">
+          <rect width="24" height="24" fill="white" transform="translate(0.5 0.25)" />
+        </clipPath>
+      </defs>
+    </svg>
+  </div>
+</mat-dialog-actions>

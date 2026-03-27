@@ -1,0 +1,29 @@
+@if (noti(); as noti) {
+  <div class="notification-item d-flex align-items-start" [class.read]="noti.read" (click)="onItemClick()">
+    <div class="content flex-grow-1">
+      <div class="d-flex justify-content-between header-wrapper">
+        <div class="d-flex items-cente left-header" (click)="onIconOrTitleClick($event)">
+          @if (noti.read) {
+            <mat-icon class="me-1 item-icon">done</mat-icon>
+          } @else {
+            <app-icon iconName="notifications" backgroundColor="#03985C"></app-icon>
+          }
+          <p class="fw-bold mb-0">
+            {{ noti.title }}
+          </p>
+        </div>
+
+        <p class="fs-14 mb-0">{{ noti.time }}</p>
+      </div>
+
+      <p class="mb-1 mt-2">
+        @if (noti.message) {
+          {{ noti.message }}
+        }
+        @if (noti.linkText) {
+          <span (click)="noti.clickLink?.()" class="fw-bold primary cursor-pointer text-decoration-underline">{{ noti.linkText }}</span>
+        }
+      </p>
+    </div>
+  </div>
+}

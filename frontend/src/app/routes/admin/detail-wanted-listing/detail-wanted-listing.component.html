@@ -1,0 +1,163 @@
+<app-admin-layout [title]="'Wanted Listings > Details' | translate">
+  @if (loadingListing()) {
+    <app-spinner></app-spinner>
+  } @else {
+    @if (listingDetail(); as listingDetail) {
+      <div
+        mat-button
+        class="d-inline-flex mb-5 align-items-center justify-content-center py-1 rounded px-2 background-primary text-white text-uppercase fw-bold cursor-pointer button-wrapper"
+        (click)="onBack()"
+      >
+        <mat-icon class="icon">west</mat-icon>
+        <span>{{ 'go back' | translate }}</span>
+      </div>
+
+      <h2 class="fw-bold sub-title">{{ 'Buyer Information' | translate }}</h2>
+
+      <div class="rounded-4 border-thin p-3 p-lg-5 mb-4 buyer-information">
+        <div class="row align-items-start">
+          <div class="col-3">
+            <h2 class="primary fw-bold mb-0">{{ 'Buyer' | translate }}</h2>
+          </div>
+          <div class="col-3">
+            <div class="d-flex flex-column">
+              <div class="w-100 mb-3">
+                <p class="text-uppercase fw-bold mb-2">{{ 'Buyer ID' | translate }}</p>
+                <app-user-summary [userData]="listingDetail?.userInformation" [allowDetails]="true"></app-user-summary>
+              </div>
+              <div class="w-100">
+                <p class="text-uppercase fw-bold mb-2">{{ 'Location/Warehouse' | translate }}</p>
+                <app-location-summary
+                  [locationData]="listingDetail?.buyerDetails?.location"
+                  [allowDetailsModal]="true"
+                ></app-location-summary>
+              </div>
+            </div>
+          </div>
+          <div class="col-3">
+            <p class="text-uppercase fw-bold mb-2">{{ 'Full name' | translate }}</p>
+            <p class="mb-0">{{ listingDetail.userInformation.fullName }}</p>
+          </div>
+          <div class="col-3">
+            <p class="text-uppercase fw-bold mb-2">{{ 'Company' | translate }}</p>
+            <p class="mb-0">{{ listingDetail.userInformation.company }}</p>
+          </div>
+        </div>
+      </div>
+
+      <h2 class="fw-bold sub-title">{{ 'Material Information' | translate }}</h2>
+
+      <div class="main-info-grid mb-4">
+        <div class="image-column">
+          <div class="product-images-container">
+            @if (images.length > 0) {
+              <swiper-container [navigation]="true" autoplay-delay="2500" #swiperContainer [init]="false">
+                @for (image of images; track image) {
+                  <swiper-slide>
+                    <img class="image" src="{{ image }}" loading="lazy" alt="" appFallbackImage />
+                  </swiper-slide>
+                }
+              </swiper-container>
+
+              <div class="pagination d-flex align-items-center justify-content-between gap-2">
+                <mat-icon>linked_camera</mat-icon>
+                {{ slideIndex() + 1 }} / {{ images.length }}
+              </div>
+            } @else {
+              <img class="feature-image" [src]="featureImage" alt="Feature Image" />
+            }
+          </div>
+        </div>
+
+        <div class="details-column border-thin rounded-4 p-4 p-lg-5">
+          <div class="info-item">
+            <p class="text-uppercase fw-bold mb-2">{{ 'Material' | translate }}</p>
+            <p class="mb-0 fw-500">{{ getListingTitle(listingDetail.materialInformation) }}</p>
+          </div>
+
+          <div class="info-item">
+            <p class="text-uppercase fw-bold mb-2">{{ 'Packaging' | translate }}</p>
+            <p class="mb-0 fw-500">{{ mapCodeToPackaging[listingDetail.materialInformation.packaging] }}</p>
+          </div>
+
+          <div class="info-item">
+            <p class="text-uppercase fw-bold mb-2">{{ 'Storage' | translate }}</p>
+            <p class="mb-0 fw-500">{{ listingDetail.listing.wasteStoration | titlecase | translate }}</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="rounded-4 border-thin p-3 pb-0 p-lg-5 pb-lg-4 mb-4 mb-lg-5">
+        <div class="d-flex flex-wrap">
+          <div class="col-6 col-md-3 material-item mb-4">
+            <p class="text-uppercase fw-bold mb-2 mb-xxl-3">{{ 'Listing Date' | translate }}</p>
+            <p class="mb-0">
+              {{ listingDetail.listing.createdAt | date: 'dd/MM/yyyy' }}
+            </p>
+          </div>
+
+          <div class="col-6 col-md-3 material-item mb-4">
+            <p class="text-uppercase fw-bold mb-2 mb-xxl-3">{{ 'Date Required From' | translate }}</p>
+            <p class="mb-0">
+              {{ listingDetail.listing.startDate | date: 'dd/MM/yyyy' }}
+            </p>
+          </div>
+
+          <div class="col-6 col-md-3 material-item mb-4">
+            <p class="text-uppercase fw-bold mb-2 mb-xxl-3">{{ 'Required In' | translate }}</p>
+            <p class="mb-0">
+              {{ mapCountryCodeToName[listingDetail.listing.country] }}
+            </p>
+          </div>
+
+          <div class="col-6 col-md-3 material-item mb-4">
+            <p class="text-uppercase fw-bold mb-2 mb-xxl-3">{{ 'quantity required' | translate }}</p>
+            <p class="mb-0 fw-500">{{ listingDetail.materialInformation.materialWeightWanted | number }} MT</p>
+          </div>
+
+          <div class="col-6 col-md-3 material-item mb-4">
+            <p class="text-uppercase fw-bold mb-2 mb-xxl-3">{{ 'Weight Per Load' | translate }}</p>
+            <p class="mb-0">
+              {{ listingDetail.materialInformation.materialWeightPerUnit }}
+            </p>
+          </div>
+
+          <div class="col-6 col-md-3 material-item mb-4">
+            <p class="text-uppercase fw-bold mb-2 mb-xxl-3">{{ 'Currency' | translate }}</p>
+            <p class="mb-0">
+              {{ listingDetail.listing.currency }}
+            </p>
+          </div>
+
+          <div class="col-6 col-md-3 material-item mb-4">
+            <p class="text-uppercase fw-bold mb-2 mb-xxl-3">{{ 'Guide Price' | translate }}</p>
+            <p class="mb-0">
+              {{ listingDetail.materialInformation.pricePerMetricTonne | number: '1.0-2' }}
+            </p>
+          </div>
+
+          <div class="col-6 col-md-3 material-item mb-4">
+            <p class="text-uppercase fw-bold mb-2 mb-xxl-3">{{ 'Status' | translate }}</p>
+            <p class="mb-0 fw-bold" [style.color]="getListingStatusColor(listingDetail.listing.status)">
+              {{ listingDetail.bidStatus.status | translate | titlecase }}
+            </p>
+          </div>
+
+          <div class="col-6 col-md-4 material-item mb-4">
+            <p class="text-uppercase fw-bold mb-2 mb-xxl-3">{{ 'Admin State' | translate }}</p>
+            <p class="mb-0 fw-500" [style.color]="getListingStateColor(listingDetail.listing.state)">
+              {{ listingDetail.bidStatus.state | translate | titlecase }}
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <app-listing-detail-actions
+        [listingId]="listingId"
+        [listing]="listingDetail"
+        (refresh)="reloadListingDetail()"
+        [canRequestInformation]="false"
+      />
+    }
+  }
+</app-admin-layout>

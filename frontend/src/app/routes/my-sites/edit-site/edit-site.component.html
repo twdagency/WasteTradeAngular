@@ -1,0 +1,459 @@
+<div class="col-12 col-md-8" [class.dialogContainer]="isDialog">
+  @if (!isDialog) {
+    <button mat-flat-button class="px-5 py-2 background-primary text-white d-block d-flex align-items-center mb-4" (click)="onBack()">
+      <mat-icon class="d-flex align-items-center">west</mat-icon>
+      <span class="fw-bold">{{ 'GO TO MY LOCATION' | translate }}</span>
+    </button>
+  }
+  <!-- <div class="d-flex justify-content-between align-items-center mt-5 mb-5">
+      <div class="flex-column">
+        <div class="fw-bold fs-24">ADDRESS NAME</div>
+        <div>10 Downing Street</div>
+      </div>
+      <div class="col-2">
+        <button mat-flat-button class="text-white background-error w-100" (click)="onDeleteLocation()">REMOVE</button>
+      </div>
+    </div> -->
+  <!-- } -->
+  @if (location || mode == 'add' || mode == 'edit') {
+    <form [formGroup]="formGroup">
+      <p class="my-4 fw-bold fs-24" [class.mt-0]="isDialog">
+        {{ isDialog ? ('Add New Location' | translate) : ('Site Point Of Contact' | translate) }}
+      </p>
+      <div class="border-thin py-3 rounded rounded-4 d-flex flex-column justify-content-center">
+        <div class="col-md-9 col-9 mx-auto">
+          <div class="w-100 mb-4">
+            <mat-label class="fw-bold mb-2">{{ 'LOCATION NAME' | translate }}*</mat-label>
+            <mat-form-field appearance="outline" class="w-100">
+              <input matInput placeholder="{{ 'Type here' | translate }}" type="text" formControlName="locationName" />
+              @if (formGroup.get('locationName')?.hasError('required')) {
+                <mat-error>{{ 'This field is required' | translate }}</mat-error>
+              }
+              @if (formGroup.get('locationName')?.hasError('maxlength')) {
+                <mat-error>{{ 'Please shorten your input to 100 characters or under.' | translate }}</mat-error>
+              }
+            </mat-form-field>
+          </div>
+          <div class="row g-3 mb-4">
+            <div class="col-md-2">
+              <mat-label class="fw-bold mb-1">{{ 'PREFIX' | translate }}*</mat-label>
+              <mat-form-field appearance="outline" class="w-100">
+                <mat-select formControlName="prefix" placeholder="{{ 'Please Select' | translate }}">
+                  <mat-option value="dr">{{ 'Dr.' | translate }}</mat-option>
+                  <mat-option value="miss">{{ 'Miss.' | translate }}</mat-option>
+                  <mat-option value="mr">{{ 'Mr.' | translate }}</mat-option>
+                  <mat-option value="mrs">{{ 'Mrs.' | translate }}</mat-option>
+                  <mat-option value="ms">{{ 'Ms.' | translate }}</mat-option>
+                  <mat-option value="mx">{{ 'Mx.' | translate }}</mat-option>
+                  <mat-option value="prof">{{ 'Prof.' | translate }}</mat-option>
+                  <mat-option value="rev">{{ 'Rev.' | translate }}</mat-option>
+                </mat-select>
+                @if (formGroup.get('prefix')?.hasError('required')) {
+                  <mat-error>{{ 'This field is required' | translate }}</mat-error>
+                }
+              </mat-form-field>
+            </div>
+            <div class="col-md-5">
+              <mat-label class="fw-bold mb-2">{{ 'FIRST NAME' | translate }}*</mat-label>
+              <mat-form-field appearance="outline" class="w-100">
+                <input matInput placeholder="e.g. Mark" type="text" formControlName="firstName" />
+                @if (formGroup.get('firstName')?.hasError('required')) {
+                  <mat-error>{{ 'This field is required' | translate }}</mat-error>
+                }
+                @if (formGroup.get('firstName')?.hasError('maxlength')) {
+                  <mat-error>{{ 'Please shorten your input to 100 characters or under.' | translate }}</mat-error>
+                }
+              </mat-form-field>
+            </div>
+            <div class="col-md-5">
+              <label class="fw-bold">{{ 'LAST NAME' | translate }}*</label>
+              <mat-form-field appearance="outline" class="w-100">
+                <input matInput placeholder="e.g. Smith" type="text" formControlName="lastName" />
+                @if (formGroup.get('lastName')?.hasError('required')) {
+                  <mat-error>{{ 'This field is required' | translate }}</mat-error>
+                }
+                @if (formGroup.get('lastName')?.hasError('maxlength')) {
+                  <mat-error>{{ 'Please shorten your input to 100 characters or under.' | translate }}</mat-error>
+                }
+              </mat-form-field>
+            </div>
+          </div>
+          <div class="w-100 mb-4">
+            <mat-label class="fw-bold mb-2">{{ 'POSITION IN COMPANY' | translate }}*</mat-label>
+            <mat-form-field appearance="outline" class="w-100">
+              <input matInput placeholder="{{ 'Type here' | translate }}" type="text" formControlName="positionInCompany" />
+              @if (formGroup.get('positionInCompany')?.hasError('required')) {
+                <mat-error>{{ 'This field is required' | translate }}</mat-error>
+              }
+              @if (formGroup.get('positionInCompany')?.hasError('maxlength')) {
+                <mat-error>{{ 'Please shorten your input to 50 characters or under.' | translate }}</mat-error>
+              }
+            </mat-form-field>
+          </div>
+          <div class="w-100 mb-4">
+            <app-telephone-form-control formControlName="phoneNumber"></app-telephone-form-control>
+          </div>
+        </div>
+      </div>
+
+      <!-- Address -->
+      <p class="my-4 fw-bold fs-24">{{ 'Address' | translate }}</p>
+      <div class="border-thin py-3 rounded rounded-4 w-100 d-flex flex-column justify-content-center">
+        <div class="col-md-9 col-9 mx-auto">
+          <div class="w-100 mb-4">
+            <mat-label class="fw-bold mb-2">{{ 'STREET ADDRESS' | translate }}*</mat-label>
+            <mat-form-field appearance="outline" class="w-100">
+              <input matInput placeholder="{{ 'Type here' | translate }}" type="text" formControlName="street" />
+              @if (formGroup.get('street')?.hasError('required')) {
+                <mat-error>{{ 'This field is required' | translate }}</mat-error>
+              }
+              @if (formGroup.get('street')?.hasError('maxlength')) {
+                <mat-error>{{ 'Please shorten your input to 150 characters or under.' | translate }}</mat-error>
+              }
+            </mat-form-field>
+          </div>
+          <div class="w-100 mb-4">
+            <mat-label class="fw-bold mb-2">{{ 'ADDRESS LINE 2' | translate }}</mat-label>
+            <mat-form-field appearance="outline" class="w-100">
+              <input matInput placeholder="{{ 'Type here' | translate }}" type="text" formControlName="addressLine" />
+              @if (formGroup.get('addressLine')?.hasError('required')) {
+                <mat-error>{{ 'This field is required' | translate }}</mat-error>
+              }
+            </mat-form-field>
+          </div>
+          <div class="row g-3 mb-4">
+            <div class="col-md-6">
+              <mat-label class="fw-bold mb-2">{{ 'POST CODE' | translate }}*</mat-label>
+              <mat-form-field appearance="outline" class="w-100">
+                <input matInput placeholder="{{ 'Type here' | translate }}" type="text" formControlName="postcode" />
+                @if (formGroup.get('postcode')?.hasError('required')) {
+                  <mat-error>{{ 'This field is required' | translate }}</mat-error>
+                }
+                @if (formGroup.get('postcode')?.hasError('maxlength')) {
+                  <mat-error>{{ 'Please shorten your input to 150 characters or under.' | translate }}</mat-error>
+                }
+              </mat-form-field>
+            </div>
+            <div class="col-md-6">
+              <mat-label class="fw-bold mb-2">{{ 'CITY' | translate }}*</mat-label>
+              <mat-form-field appearance="outline" class="w-100">
+                <input matInput placeholder="{{ 'Type here' | translate }}" type="text" formControlName="city" />
+                @if (formGroup.get('city')?.hasError('required')) {
+                  <mat-error>{{ 'This field is required' | translate }}</mat-error>
+                }
+                @if (formGroup.get('city')?.hasError('maxlength')) {
+                  <mat-error>{{ 'Please shorten your input to 150 characters or under.' | translate }}</mat-error>
+                }
+              </mat-form-field>
+            </div>
+          </div>
+          <div class="row g-3 mb-4">
+            <div class="col-md-6">
+              <mat-label class="fw-bold mb-2">{{ 'COUNTY / STATE / REGION' | translate }}*</mat-label>
+              <mat-form-field appearance="outline" class="w-100">
+                <input matInput placeholder="{{ 'Type here' | translate }}" type="text" formControlName="stateProvince" />
+                @if (formGroup.get('stateProvince')?.hasError('required')) {
+                  <mat-error>{{ 'This field is required' | translate }}</mat-error>
+                }
+                @if (formGroup.get('stateProvince')?.hasError('maxlength')) {
+                  <mat-error>{{ 'Please shorten your input to 150 characters or under.' | translate }}</mat-error>
+                }
+              </mat-form-field>
+            </div>
+            <div class="col-md-6">
+              <mat-label class="fw-bold mb-2">{{ 'COUNTRY' | translate }}*</mat-label>
+              <mat-form-field appearance="outline" class="w-100">
+                <mat-select placeholder="{{ 'Please Select' | translate }}" formControlName="country">
+                  @for (item of countryList; track $index; let i = $index) {
+                    <mat-option color="primary" [value]="item.isoCode">{{ item.name }}</mat-option>
+                  }
+                </mat-select>
+                @if (formGroup.get('country')?.hasError('required')) {
+                  <mat-error>{{ 'This field is required' | translate }}</mat-error>
+                }
+              </mat-form-field>
+            </div>
+          </div>
+          <div class="row g-3 mb-4">
+            <app-time-input-form-control formControlName="officeOpenTime" [required]="true">
+              <mat-label class="fw-bold">{{ 'LOCATION OPENING TIME' | translate }}*</mat-label>
+              @if (formGroup.get('officeOpenTime')?.hasError('required')) {
+                <mat-error>{{ 'This field is required' | translate }}</mat-error>
+              }
+            </app-time-input-form-control>
+          </div>
+          <div class="row g-3 mb-4">
+            <app-time-input-form-control formControlName="officeCloseTime" [required]="true">
+              <mat-label class="fw-bold">{{ 'LOCATION CLOSING TIME' | translate }}*</mat-label>
+              @if (formGroup.get('officeCloseTime')?.hasError('required')) {
+                <mat-error>{{ 'This field is required' | translate }}</mat-error>
+              }
+            </app-time-input-form-control>
+          </div>
+        </div>
+      </div>
+
+      <p class="my-4 fw-bold fs-24">{{ 'ADDITIONAL INFORMATION' | translate }}</p>
+      <div class="border-thin py-3 rounded rounded-4 w-100 d-flex flex-column justify-content-center">
+        <div class="col-md-9 col-9 mx-auto">
+          <h6 class="primary">
+            <span class="fw-bold">{{ 'MATERIALS ACCEPTED' | translate }}</span>
+          </h6>
+          <div class="col-12 mb-3">
+            <mat-checkbox
+              class="tri-state-checkbox bold-label"
+              color="primary"
+              [checked]="selectAllMaterial()"
+              (change)="toggleSelectAllMaterials()"
+            >
+              {{ (selectAllMaterial() ? 'Deselect All' : 'Select All') | translate }}
+            </mat-checkbox>
+          </div>
+          @for (material of materialTypes; track $index) {
+            @if (material.materials.length > 0) {
+              <div class="mb-3">
+                <mat-expansion-panel
+                  [expanded]="expandAllMaterials() || expandedMaterialGroup() === material.name"
+                  (expandedChange)="onMaterialPanelToggle(material.name, $event)"
+                >
+                  <mat-expansion-panel-header>
+                    <mat-panel-title>
+                      <div class="fw-bold">{{ material.name | uppercase | translate }}</div>
+                    </mat-panel-title>
+                  </mat-expansion-panel-header>
+                  <div class="col-12 mb-4" style="margin-left: 10px">
+                    <div class="row align-items-center">
+                      @for (item of material.materials; track $index; let i = $index) {
+                        <div class="col-12 col-md-4 mb-2">
+                          <mat-checkbox
+                            color="primary"
+                            class="bold-label"
+                            [checked]="materials.value.includes(item.code)"
+                            (change)="onSelectedMaterial($event, item.code)"
+                          >
+                            {{ item.name | translate }}
+                          </mat-checkbox>
+                        </div>
+                      }
+                    </div>
+                  </div>
+                </mat-expansion-panel>
+              </div>
+            }
+          }
+
+          <div class="mb-3">
+            <mat-expansion-panel [expanded]="showOtherMaterial()" (expandedChange)="showOtherMaterial.set($event)">
+              <mat-expansion-panel-header>
+                <mat-panel-title>
+                  <div class="fw-bold">
+                    <mat-checkbox
+                      color="primary checkbox-pl0"
+                      (change)="showOtherMaterial.set($event.checked)"
+                      [checked]="showOtherMaterial()"
+                    >
+                      <span class="text-wrap fw-bold fs-16">{{ 'Other' | translate }}</span>
+                    </mat-checkbox>
+                  </div>
+                </mat-panel-title>
+              </mat-expansion-panel-header>
+              <div class="col-12">
+                <mat-label class="fw-bold">{{ 'OTHER MATERIAL*' | translate }}</mat-label>
+                <mat-form-field appearance="outline" class="w-100">
+                  <input matInput placeholder="{{ 'Type here' | translate }}" type="text" formControlName="otherMaterial" />
+                  @if (formGroup.get('otherMaterial')?.hasError('required') && formGroup.get('otherMaterial')?.touched) {
+                    <mat-error>{{ 'This field is required' | translate }}</mat-error>
+                  }
+                  @if (formGroup.get('otherMaterial')?.hasError('maxlength')) {
+                    <mat-error>{{ 'Please shorten your input to 100 characters or under.' | translate }}</mat-error>
+                  }
+                </mat-form-field>
+              </div>
+            </mat-expansion-panel>
+          </div>
+          @if (materials.hasError('required') && materials.touched) {
+            <mat-error class="mat-error">{{ 'This field is required' | translate }}</mat-error>
+          }
+
+          <div class="row g-3 mb-4">
+            <mat-label class="mb-0 fw-bold">{{ 'IS THERE A LOADING RAMP ON THIS SITE?*' | translate }}</mat-label>
+            <mat-radio-group
+              class="col-9 col-md-6 d-flex justify-content-between radio-mat-error"
+              name="loadingRamp"
+              formControlName="loadingRamp"
+            >
+              <mat-radio-button class="bold-label col-md-4" [value]="true">{{ 'Yes' | translate }}</mat-radio-button>
+              <mat-radio-button class="bold-label col-md-4" [value]="false">{{ 'No' | translate }}</mat-radio-button>
+            </mat-radio-group>
+            @if (
+              formGroup.get('loadingRamp')?.hasError('required') &&
+              (formGroup.get('loadingRamp')?.touched || formGroup.get('loadingRamp')?.dirty)
+            ) {
+              <mat-error class="mt-0 mat-error">{{ 'This field is required' | translate }}</mat-error>
+            }
+          </div>
+          <div class="row g-3 mb-4">
+            <mat-label class="mb-0 fw-bold">{{ 'HAVE YOU GOT A WEIGHBRIDGE ON THIS SITE?*' | translate }}</mat-label>
+            <mat-radio-group
+              class="col-9 col-md-6 d-flex justify-content-between radio-mat-error"
+              name="weighbridge"
+              formControlName="weighbridge"
+            >
+              <mat-radio-button class="bold-label col-md-4" [value]="true">{{ 'Yes' | translate }}</mat-radio-button>
+              <mat-radio-button class="bold-label col-md-4" [value]="false">{{ 'No' | translate }}</mat-radio-button>
+            </mat-radio-group>
+            @if (
+              formGroup.get('weighbridge')?.hasError('required') &&
+              (formGroup.get('weighbridge')?.touched || formGroup.get('weighbridge')?.dirty)
+            ) {
+              <mat-error class="mt-0 mat-error">{{ 'This field is required' | translate }}</mat-error>
+            }
+          </div>
+          <div class="row g-3 mb-4">
+            <mat-label class="mb-0 fw-bold">{{ 'WHICH CONTAINER TYPES CAN YOU MANAGE ON THIS SITE?*' | translate }}</mat-label>
+            <mat-checkbox
+              class="d-block bold-label"
+              color="primary"
+              (change)="selectAllContainerTypes.set(!selectAllContainerTypes())"
+              [checked]="selectAllContainerTypes()"
+              >{{ selectAllContainerTypes() ? ('Deselect All' | translate) : ('Select All' | translate) }}</mat-checkbox
+            >
+            <div class="row px-3">
+              @for (item of containerTypeList; track $index) {
+                <mat-checkbox
+                  class="col-12 col-md-4 bold-label"
+                  color="primary"
+                  (change)="onSelectedItem($event, item.value)"
+                  [checked]="containerType.value.includes(item.value)"
+                >
+                  {{ item.name | translate }}
+                </mat-checkbox>
+              }
+
+              @if (containerType.invalid && containerType.touched) {
+                <mat-error class="mt-0 mat-error">{{ 'This field is required' | translate }}</mat-error>
+              }
+            </div>
+          </div>
+          <div class="row g-3 mb-4">
+            <mat-label class="mb-0 fw-bold">{{ 'CAN YOU LOAD/UNLOAD MATERIAL YOURSELF ON THIS SITE?*' | translate }}</mat-label>
+            <mat-radio-group
+              class="col-md-6 col-9 d-flex justify-content-between radio-mat-error"
+              name="selfLoadUnLoadCapability"
+              formControlName="selfLoadUnLoadCapability"
+            >
+              <mat-radio-button class="bold-label col-md-4" [value]="true">{{ 'Yes' | translate }}</mat-radio-button>
+              <mat-radio-button class="bold-label col-md-4" [value]="false">{{ 'No' | translate }}</mat-radio-button>
+            </mat-radio-group>
+            @if (
+              formGroup.get('selfLoadUnLoadCapability')?.hasError('required') &&
+              (formGroup.get('selfLoadUnLoadCapability')?.touched || formGroup.get('selfLoadUnLoadCapability')?.dirty)
+            ) {
+              <mat-error class="mt-0 mat-error">{{ 'This field is required' | translate }}</mat-error>
+            }
+          </div>
+
+          <div class="row g-3 mb-4">
+            <mat-label class="mb-0 fw-bold">{{ 'DO YOU HAVE ANY ACCESS RESTRICTIONS?*' | translate }}</mat-label>
+            <mat-radio-group class="col-md-6 col-9 d-flex justify-content-between radio-mat-error" formControlName="haveAccessRestrictions">
+              <mat-radio-button class="bold-label col-md-4" [value]="true" (change)="showAccessRestriction.set(true)"
+                >{{ 'Yes' | translate }}
+              </mat-radio-button>
+              <mat-radio-button class="bold-label col-md-4" [value]="false" (change)="showAccessRestriction.set(false)">
+                {{ 'No' | translate }}
+              </mat-radio-button>
+            </mat-radio-group>
+          </div>
+          @if (showAccessRestriction()) {
+            <div class="col-12 mb-4">
+              <mat-label class="fw-bold mb-2">{{ 'ACCESS RESTRICTIONS DETAILS*' | translate }}</mat-label>
+              <mat-form-field appearance="outline" class="w-100">
+                <input matInput placeholder="Type here" type="text" formControlName="accessRestrictions" />
+                @if (formGroup.get('accessRestrictions')?.hasError('required') && formGroup.get('accessRestrictions')?.touched) {
+                  <mat-error>{{ 'Please provide details about the access restrictions.' | translate }}</mat-error>
+                }
+                @if (formGroup.get('accessRestrictions')?.hasError('maxlength')) {
+                  <mat-error>{{ 'Please shorten your input to 200 characters or under.' | translate }}</mat-error>
+                }
+              </mat-form-field>
+            </div>
+          }
+          <div class="w-100 mb-4">
+            <mat-label class="fw-bold mb-2">{{ 'SITE-SPECIFIC INSTRUCTIONS' | translate }}</mat-label>
+            <mat-form-field appearance="outline" class="w-100">
+              <input matInput placeholder="Type here" type="text" formControlName="siteSpecificInstructions" />
+              @if (formGroup.get('siteSpecificInstructions')?.hasError('required')) {
+                <mat-error>{{ 'This field is required' | translate }}</mat-error>
+              }
+              @if (formGroup.get('siteSpecificInstructions')?.hasError('maxlength')) {
+                <mat-error>{{ 'Please shorten your input to 500 characters or under.' | translate }}</mat-error>
+              }
+            </mat-form-field>
+          </div>
+          <hr style="opacity: 1" />
+          <div class="col-12 mb-4">
+            <mat-label class="mb-0 fw-bold">{{ 'DO YOU HAVE A LICENCE/PERMIT ON-SITE?*' | translate }}</mat-label>
+            <mat-radio-group
+              formControlName="wasteLicence"
+              class="col-md-7 col-9 d-flex justify-content-between radio-mat-error"
+              name="wasteLicence"
+              (change)="onLicenceChange($event)"
+            >
+              <mat-radio-button class="bold-label col-md-4 col-sm-12" [value]="true">{{ 'Yes' | translate }}</mat-radio-button>
+              <mat-radio-button class="bold-label col-md-5 col-sm-9" [value]="false">{{ 'Not Applicable' | translate }}</mat-radio-button>
+            </mat-radio-group>
+            @if (formGroup.get('wasteLicence')?.hasError('required') && formGroup.get('wasteLicence')?.touched) {
+              <mat-error class="mt-0 mat-error">{{ 'This field is required' | translate }}</mat-error>
+            }
+          </div>
+          @if (formGroup.get('wasteLicence')?.value) {
+            <h6 class="mb-4 mt-5 fw-bold">{{ 'UPLOAD WASTE CARRIER LICENCE*' | translate }}</h6>
+            <div class="col-12 mb-4">
+              <app-file-upload
+                (filesAdded)="handleFileReady($event)"
+                [maxFile]="1"
+                (uploadValid)="wasteLicenceValid.set($event)"
+                [expiryDateMode]="'optional'"
+                [notAcceptable]="['.doc', '.docx', '.xls', '.xlsx']"
+                [fileList]="wasteCarrierLicenseDocuments"
+              ></app-file-upload>
+              <p class="small">{{ 'Accepted file types: jpg, png, jpeg, pdf Max. file size: 25 MB, Max. files: 1' | translate }}</p>
+            </div>
+          }
+        </div>
+      </div>
+
+      @if (!isDialog) {
+        <div class="col-5 mt-5">
+          <button
+            mat-flat-button
+            type="submit"
+            class="w-100 fw-bold"
+            [class.overlay-spinner]="submitting()"
+            [disabled]="isSubmitDisabled"
+            (click)="submit()"
+          >
+            {{ (mode == 'add' ? 'ADD NEW LOCATION' : 'UPDATE DETAILS') | translate }}
+          </button>
+        </div>
+      } @else {
+        <div class="col-12 mt-5">
+          <button
+            mat-flat-button
+            type="submit"
+            class="w-100 fw-bold"
+            [class.overlay-spinner]="submitting()"
+            [disabled]="isSubmitDisabled"
+            (click)="submit()"
+          >
+            {{ 'SUBMIT' | translate }}
+          </button>
+        </div>
+      }
+    </form>
+  } @else {
+    <div class="d-flex justify-content-center align-items-center fs-24 mt-3">
+      <p class="text-muted">{{ 'No location found.' | translate }}</p>
+    </div>
+  }
+</div>

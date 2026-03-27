@@ -1,0 +1,180 @@
+<div class="container-fluid p-3 p-md-4 p-lg-4">
+  <div class="d-flex justify-content-between align-items-center w-100">
+    <h2 class="fw-bold flex-grow-1">{{ 'Place a bid' | translate }}</h2>
+    <div (click)="close()" class="cursor-pointer">
+      <app-icon iconName="close"></app-icon>
+    </div>
+  </div>
+
+  <mat-dialog-content>
+    <form [formGroup]="formGroup">
+      <div class="col-12 mb-4">
+        <mat-label class="fw-bold mb-2 d-block text-uppercase">{{ 'warehouse' | translate }} </mat-label>
+        <p class="sub-label mb-2">
+          {{ 'Please ensure that you choose the location that the waste material will be delivered to.' | translate }}
+        </p>
+        <mat-form-field appearance="outline" class="w-100">
+          <mat-select [placeholder]="'Select Warehouse' | translate" formControlName="location">
+            @for (location of locations(); track location.id) {
+              <mat-option [value]="location.id">{{ location.locationName }}</mat-option>
+            }
+          </mat-select>
+          @if (formGroup.get('location')?.hasError('required')) {
+            <mat-error>{{ 'This is a required field.' | translate }}</mat-error>
+          }
+        </mat-form-field>
+      </div>
+
+      <div class="col-12 mb-4 mt-3">
+        <mat-label class="fw-bold mb-1 text-uppercase">{{ 'offer valid until' | translate }}</mat-label>
+        <p class="sub-label mb-2">
+          {{ 'Please ensure that you choose the location that the waste material will be delivered to.' | translate }}
+        </p>
+        <mat-form-field appearance="outline" class="w-100">
+          <input
+            matInput
+            readonly
+            [matDatepicker]="offerValidDate"
+            [min]="todayDate"
+            formControlName="offerValidDate"
+            (click)="offerValidDate.open()"
+          />
+          <mat-datepicker-toggle matIconSuffix [for]="offerValidDate"></mat-datepicker-toggle>
+          <mat-datepicker #offerValidDate></mat-datepicker>
+        </mat-form-field>
+      </div>
+
+      <div class="col-12 mb-4 mt-3">
+        <mat-label class="fw-bold mb-1 text-uppercase">{{ 'earliest delivery date' | translate }}</mat-label>
+        <p class="sub-label mb-2">
+          {{ 'Please ensure that you choose the location that the waste material will be delivered to.' | translate }}
+        </p>
+        <mat-form-field appearance="outline" class="w-100">
+          <input
+            matInput
+            readonly
+            [min]="todayDate"
+            [matDatepicker]="earliestDeliveryDate"
+            formControlName="earliestDeliveryDate"
+            (click)="earliestDeliveryDate.open()"
+          />
+          <mat-datepicker-toggle matIconSuffix [for]="earliestDeliveryDate"></mat-datepicker-toggle>
+          <mat-datepicker #earliestDeliveryDate></mat-datepicker>
+        </mat-form-field>
+      </div>
+
+      <div class="col-12 mb-4 mt-3">
+        <mat-label class="fw-bold mb-1 text-uppercase">{{ 'Latest Delivery Date' | translate }}</mat-label>
+        <p class="sub-label mb-2">
+          {{ 'Please ensure that you choose the location that the waste material will be delivered to.' | translate }}
+        </p>
+        <mat-form-field appearance="outline" class="w-100">
+          <input
+            matInput
+            readonly
+            [matDatepicker]="latestDeliveryDate"
+            formControlName="latestDeliveryDate"
+            (click)="latestDeliveryDate.open()"
+          />
+          <mat-datepicker-toggle matIconSuffix [for]="latestDeliveryDate"></mat-datepicker-toggle>
+          <mat-datepicker #latestDeliveryDate></mat-datepicker>
+        </mat-form-field>
+
+        @if (formGroup.errors?.['invalidRange']) {
+          <mat-error class="fs-12 px-3">
+            {{ 'Latest delivery date cannot be earlier than earliest delivery date.' | translate }}
+          </mat-error>
+        }
+      </div>
+
+      <div class="col-md-12 mb-4">
+        <label class="fw-bold mb-2 text-uppercase">{{ 'number of loads bid on' | translate }}</label>
+        <p class="sub-label mb-2">{{ 'Please enter a number greater than or equal to 1.' | translate }}</p>
+        <mat-form-field appearance="outline" class="w-100">
+          <input matInput type="number" [placeholder]="'Type here' | translate" formControlName="loadBidOn" />
+          @if (formGroup.get('loadBidOn')?.hasError('required')) {
+            <mat-error>{{ 'This is a required field.' | translate }}</mat-error>
+          }
+          @if (formGroup.get('loadBidOn')?.hasError('min')) {
+            <mat-error>{{ 'Please enter a number greater than or equal to 1.' | translate }}</mat-error>
+          }
+          @if (formGroup.get('loadBidOn')?.hasError('max')) {
+            <mat-error>{{ 'Number of loads cannot exceed the available quantity.' | translate }}</mat-error>
+          }
+        </mat-form-field>
+      </div>
+
+      <div class="col-12 mb-4">
+        <mat-label class="fw-bold mb-2 d-block text-uppercase">{{ 'currency' | translate }} </mat-label>
+        <mat-form-field appearance="outline" class="w-100">
+          <mat-select formControlName="currency" placeholder="Please Select">
+            <mat-option [value]="Currency.gbp">{{ '£/GBP' | translate }}</mat-option>
+            <mat-option [value]="Currency.usd">{{ '$/USD' | translate }}</mat-option>
+            <mat-option [value]="Currency.eur">{{ '€/EURO' | translate }}</mat-option>
+          </mat-select>
+          @if (formGroup.get('currency')?.hasError('required')) {
+            <mat-error>{{ 'This is a required field.' | translate }}</mat-error>
+          }
+        </mat-form-field>
+      </div>
+
+      <div class="col-md-12 mb-4">
+        <label class="fw-bold mb-2 text-uppercase">{{ 'Price Per Metric Tonne' | translate }}</label>
+        <mat-form-field appearance="outline" class="w-100">
+          <input matInput type="number" [placeholder]="'Type here' | translate" formControlName="pricePerMetric" />
+          @if (formGroup.get('pricePerMetric')?.hasError('required')) {
+            <mat-error>{{ 'This is a required field.' | translate }}</mat-error>
+          }
+        </mat-form-field>
+      </div>
+
+      <div class="col-12 mb-4">
+        <mat-label class="fw-bold mb-2 d-block text-uppercase">{{ 'incoterms' | translate }} </mat-label>
+        <mat-form-field appearance="outline" class="w-100">
+          <mat-select [placeholder]="'Please select...' | translate" formControlName="incoterms">
+            <mat-option value="EXW">{{ 'EXW' | translate }}</mat-option>
+            <mat-option value="FCA">{{ 'FCA' | translate }}</mat-option>
+            <mat-option value="FAS">{{ 'FAS' | translate }}</mat-option>
+            <mat-option value="FOB">{{ 'FOB' | translate }}</mat-option>
+            <mat-option value="CFR">{{ 'CFR' | translate }}</mat-option>
+            <mat-option value="CIF">{{ 'CIF' | translate }}</mat-option>
+            <mat-option value="CPT">{{ 'CPT' | translate }}</mat-option>
+            <mat-option value="CIP">{{ 'CIP' | translate }}</mat-option>
+            <mat-option value="DAP">{{ 'DAP' | translate }}</mat-option>
+            <mat-option value="DPU">{{ 'DPU' | translate }}</mat-option>
+            <mat-option value="DDP">{{ 'DPU' | translate }}</mat-option>
+          </mat-select>
+          @if (formGroup.get('incoterms')?.hasError('required')) {
+            <mat-error>{{ 'This is a required field.' | translate }}</mat-error>
+          }
+        </mat-form-field>
+      </div>
+
+      @if (isShowShippingPort) {
+        <div class="col-12 mb-4">
+          <mat-label class="fw-bold mb-2 d-block text-uppercase">{{ 'shipping port' | translate }} </mat-label>
+          <mat-form-field appearance="outline" class="w-100">
+            <textarea matInput formControlName="shippingPort" class="w-100"></textarea>
+
+            @if (formGroup.get('shippingPort')?.hasError('required')) {
+              <mat-error>{{ 'This is a required field.' | translate }}</mat-error>
+            }
+
+            @if (formGroup.get('shippingPort')?.hasError('maxlength')) {
+              <mat-error>{{ 'Shipping port cannot exceed 100 characters.' | translate }}</mat-error>
+            }
+          </mat-form-field>
+        </div>
+      }
+
+      <button
+        mat-flat-button
+        class="text-uppercase fw-bold text-white background-primary submit-button w-100 mt-4"
+        [class.overlay-spinner]="submitting()"
+        (click)="submit()"
+      >
+        {{ 'bid now' | translate }}
+      </button>
+    </form>
+  </mat-dialog-content>
+</div>

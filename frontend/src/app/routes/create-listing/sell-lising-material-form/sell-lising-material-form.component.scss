@@ -1,0 +1,26 @@
+.blur {
+  filter: grayscale(0.8);
+  opacity: 0.3;
+  cursor: not-allowed;
+  user-select: none;
+}
+
+.submit-button {
+  max-width: 455px;
+  height: 62px;
+  margin: 0 auto;
+}
+
+.other-button {
+  padding: 0 16px;
+  height: 48px;
+  line-height: 48px;
+  cursor: pointer;
+
+  &:hover {
+    background-color: var(
+      --mat-option-hover-state-layer-color,
+      color-mix(in srgb, var(--mat-sys-on-surface) calc(var(--mat-sys-hover-state-layer-opacity) * 100%), transparent)
+    );
+  }
+}

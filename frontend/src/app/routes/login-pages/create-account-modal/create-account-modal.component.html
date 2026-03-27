@@ -1,0 +1,45 @@
+<div class="create-account-modal container-fluid p-0">
+  <!-- Close button -->
+  <div class="close-button position-absolute top-0 end-0 m-3" [mat-dialog-close]="false">
+    <app-icon iconName="close"></app-icon>
+  </div>
+
+  <div class="row g-0">
+    <!-- Left side with image - Hidden on mobile, visible from md up -->
+    <div class="col-md-6 d-none d-md-block">
+      <img src="assets/images/create-account-bg.jpg" alt="Workers using tablet" class="img-fluid h-100 w-100 object-fit-cover" />
+    </div>
+
+    <!-- Right side with content -->
+    <div class="col-12 col-md-6">
+      <div class="p-4 p-lg-5 d-flex justify-content-between flex-column h-100">
+        <div>
+          <h1 class="fw-bold mb-3">{{ 'Create an Account' | translate }}</h1>
+
+          <p class="primary mb-5 fw-bold">{{ 'Discover a more sustainable future with our recycling platform.' | translate }}</p>
+
+          <p class="text-body fw-500 mb-4">
+            {{
+              "Whether you're a seller, buyer, or haulier, join us to connect, trade, and transport recyclable materials efficiently."
+                | translate
+            }}
+          </p>
+        </div>
+
+        <div class="d-grid gap-3 mt-auto">
+          <button
+            mat-flat-button
+            class="w-100 py-4 fw-bold background-primary text-uppercase custom-button"
+            (click)="registerAsBuyerSeller()"
+          >
+            {{ 'Register as Buyer/Seller' | translate }}
+          </button>
+
+          <button mat-stroked-button class="w-100 py-2 fw-bold custom-button border-primary primary" (click)="registerAsHaulier()">
+            {{ 'REGISTER AS A HAULIER' | translate }}
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

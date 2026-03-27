@@ -1,0 +1,48 @@
+.manage-modal {
+  padding: 60px;
+  height: 100%;
+}
+
+.item {
+  justify-content: center;
+}
+
+span {
+  color: #e84f63;
+}
+
+.dialog-message {
+  p {
+    font-size: 32px;
+    color: #333;
+    margin: 0;
+    font-weight: 700;
+  }
+}
+
+.dialog-actions {
+  display: flex;
+  gap: 12px;
+  justify-content: flex-end;
+
+  button .mat-stroked-button {
+    border-color: #28a745;
+  }
+
+  button .mat-flat-button {
+    background-color: #28a745;
+    color: white;
+  }
+}
+
+.dialog-btn {
+  width: 50%;
+  height: 62px;
+  border: none;
+  border-radius: 5px;
+  font-size: 16px;
+}
+
+:host::ng-deep mat-radio-button label {
+  font-size: 16px;
+}

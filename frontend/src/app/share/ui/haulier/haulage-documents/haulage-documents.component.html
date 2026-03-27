@@ -1,0 +1,52 @@
+<div class="p-0 h-100">
+  <div class="d-flex justify-content-between align-items-center w-100 p-4">
+    <h2 class="fw-bold flex-grow-1">{{ 'View Documents' | translate }}</h2>
+    <div (click)="dialogRef.close()" class="cursor-pointer">
+      <app-icon iconName="close"></app-icon>
+    </div>
+  </div>
+  <mat-dialog-content class="dialog-scrollable p-0">
+    @if (loading()) {
+      <app-spinner></app-spinner>
+    } @else {
+      @if (tableData().length > 0) {
+        <mat-table [dataSource]="tableData()" class="border border-primary border-start-0 border-end-0">
+          <ng-container matColumnDef="title">
+            <mat-header-cell *matHeaderCellDef class="fw-bold text-uppercase col-md-4">
+              {{ 'Document Title' | translate }}
+            </mat-header-cell>
+            <mat-cell *matCellDef="let element" class="col-md-4">
+              <span class="text-truncate" [title]="element.documentTitle">
+                {{ element.documentTitle }}
+              </span>
+            </mat-cell>
+          </ng-container>
+
+          <ng-container matColumnDef="link">
+            <mat-header-cell *matHeaderCellDef class="fw-bold text-uppercase col-md-8">
+              {{ 'Link' | translate }}
+            </mat-header-cell>
+            <mat-cell
+              *matCellDef="let element"
+              class="col-md-8 primary text-underline cursor-pointer fw-bold"
+              (click)="openLink(element.documentUrl)"
+            >
+              <span class="text-truncate" [title]="element.documentUrl">
+                {{ element.documentUrl }}
+              </span>
+            </mat-cell>
+          </ng-container>
+
+          <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+          <mat-row *matRowDef="let row; columns: displayedColumns"></mat-row>
+        </mat-table>
+      } @else {
+        <div class="d-flex justify-content-center align-items-center fs-24 mt-5">
+          <p class="text-muted">
+            {{ 'No documents found.' | translate }}
+          </p>
+        </div>
+      }
+    }
+  </mat-dialog-content>
+</div>

@@ -1,0 +1,24 @@
+<app-common-layout [title]="'Offers made' | translate">
+  <mat-tab-group
+    class="d-block mb-4 mb-lg-5 common-tab"
+    [selectedIndex]="activeTab()"
+    (selectedTabChange)="selectTab($event)"
+    animationDuration="0ms"
+  >
+    @for (tab of listTabOffer; track tab.label) {
+      <mat-tab label="{{ tab.label | translate }}"> </mat-tab>
+    }
+  </mat-tab-group>
+
+  @if (loading()) {
+    <app-spinner></app-spinner>
+  } @else if (items()) {
+    @if (items()?.length) {
+      <app-buying-offer-table [page]="page()" [totalItems]="totalItems()" [items]="items()!" (pageChange)="onPageChange($event)" />
+    } @else {
+      @if (emptyProps(); as emptyProps) {
+        <app-empty-offer [title]="emptyProps.title | translate" [content]="emptyProps.content | translate" [buttons]="emptyProps.buttons" />
+      }
+    }
+  }
+</app-common-layout>

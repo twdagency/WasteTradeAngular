@@ -1,0 +1,128 @@
+<div class="w-100">
+  <div class="border-thin rounded-4 p-3 p-md-4 mt-4 mb-3">
+    <div class="row justify-content-between">
+      @if (purchase?.offer; as offer) {
+        <app-assign-admin class="col-auto" [dataId]="offer.id" [dataType]="dataType" [assignAdmin]="offer.assignAdmin"></app-assign-admin>
+      }
+      <!-- BUYER Section -->
+      <div class="col">
+        <div class="fw-bold mb-3">{{ 'BUYER' | translate }}</div>
+        <app-user-summary [userData]="purchase?.buyer?.user" [allowDetails]="true"></app-user-summary>
+        <p class="mb-1">{{ purchase?.buyer?.user?.firstName }} {{ purchase?.buyer?.user?.lastName }}</p>
+        <p class="mb-1">{{ purchase?.buyer?.company?.name }}</p>
+        <app-location-summary [locationData]="purchase?.buyer?.location" [allowDetailsModal]="true"></app-location-summary>
+      </div>
+
+      <!-- SELLER Section -->
+      <div class="col">
+        <div class="fw-bold mb-3">{{ 'SELLER' | translate }}</div>
+        <app-user-summary [userData]="purchase?.seller?.user" [allowDetails]="true"></app-user-summary>
+        <p class="mb-1 text-break">{{ purchase?.seller?.user?.firstName }} {{ purchase?.seller?.user?.lastName }}</p>
+        <p class="mb-1">{{ purchase?.seller?.company?.name }}</p>
+        <app-location-summary [locationData]="purchase?.seller?.location" [allowDetailsModal]="true"></app-location-summary>
+      </div>
+
+      <div class="col d-flex flex-column justify-content-between">
+        <div class="">
+          <div class="fw-bold mb-3">{{ 'MATERIAL' | translate }}</div>
+          <p class="mb-1 clickable text-uppercase" (click)="viewMaterialDetail()">{{ getMaterialName() }}</p>
+        </div>
+
+        <div class="">
+          <div class="fw-bold mb-3">{{ 'AMOUNT' | translate }}</div>
+          <p class="mb-1">{{ purchase?.offer?.offeredPricePerUnit | currency: 'GBP' : 'symbol' : '1.2-2' : 'en-GB' }}</p>
+        </div>
+      </div>
+
+      <!-- Mobile separator -->
+      <div class="col-12 d-md-none">
+        <hr class="my-2" />
+      </div>
+
+      <div class="col d-flex flex-column justify-content-between">
+        <div class="">
+          <div class="fw-bold mb-3">{{ 'BID DATE' | translate }}</div>
+          <p class="mb-1">{{ purchase?.offer?.createdAt | date: 'dd/MM/YYYY' }}</p>
+        </div>
+        <div class="">
+          <div class="fw-bold mb-3">{{ 'VALID UNTIL' | translate }}</div>
+          <p class="mb-1">{{ purchase?.offer?.expiresAt | date: 'dd/MM/YYYY' }}</p>
+        </div>
+      </div>
+
+      <div class="col d-flex flex-column justify-content-between">
+        <div class="">
+          <div class="fw-bold mb-3">{{ 'NO.LOADS BID ON' | translate }}</div>
+          <p class="mb-1">
+            {{ purchase?.offer?.quantity | number: '1.0-0' }} of {{ purchase?.listing?.remainingQuantity | number: '1.0-0' }}
+          </p>
+        </div>
+        <div class="">
+          <div class="fw-bold mb-3">{{ 'PACKING' | translate }}</div>
+          <p class="mb-1">{{ getPackingName(purchase?.listing?.materialPacking) }}</p>
+        </div>
+      </div>
+
+      <div class="col d-flex flex-column justify-content-between">
+        <div class="">
+          <div class="fw-bold mb-3">{{ 'NO.HAULAGE OFFERS' | translate }}</div>
+          <p
+            class="mb-1"
+            [class.clickable]="(purchase?.offer?.haulageOffersCount ?? 0) > 0"
+            (click)="(purchase?.offer?.haulageOffersCount ?? 0) > 0 && onHaulageOffersClick()"
+          >
+            {{ purchase?.offer?.haulageOffersCount || 0 }}
+          </p>
+        </div>
+        <div class="">
+          <div class="fw-bold mb-3">{{ 'WEIGHT PER LOAD' | translate }}</div>
+          <p class="mb-1">{{ purchase?.listing?.materialWeightPerUnit | number: '1.0-2' }}MT</p>
+        </div>
+      </div>
+
+      <div class="col d-flex flex-column justify-content-between">
+        <div class="">
+          <div class="fw-bold mb-3">{{ 'STATUS' | translate }}</div>
+          @if (purchase?.offer; as offer) {
+            <p class="mb-1" [style.color]="getOfferStatusColor(offer.status)">{{ offer.status | titlecase | translate }}</p>
+          }
+        </div>
+        <div class="">
+          <div class="fw-bold mb-3">{{ 'ADMIN STATE' | translate }}</div>
+          @if (purchase?.offer; as offer) {
+            <div class="d-flex align-items-center gap-1 mb-1">
+              <mat-icon [style.color]="getOfferStateColor(offer.state)">fiber_manual_record</mat-icon>
+              <span class="small" [style.color]="getOfferStateColor(offer.state)">{{
+                mapOfferStateToLabel(offer.state) | titlecase | translate
+              }}</span>
+            </div>
+          }
+        </div>
+      </div>
+
+      <!-- Mobile separator -->
+      <div class="col-12 d-lg-none">
+        <hr class="my-2" />
+      </div>
+
+      <!-- Button Section -->
+      <div class="d-flex align-items-center align-self-center flex-column gap-2 h-100 justify-content-center col-auto">
+        @if (purchase?.offer?.hasAcceptedHaulageOffer && purchase?.offer?.acceptedHaulageOfferId) {
+          <button mat-stroked-button class="border-success text-success py-4 fw-bold" style="min-width: 165px" (click)="onViewLoads()">
+            {{ 'VIEW LOADS' | translate }}
+          </button>
+        }
+
+        <button mat-stroked-button class="border-primary primary py-4 fw-bold" style="min-width: 165px" (click)="onViewDetail()">
+          {{ 'VIEW DETAILS' | translate }}
+        </button>
+
+        @if (purchase) {
+          <app-notes-btn
+            [inputData]="{ id: purchase.offer.id, adminNote: purchase.offer.adminNote, dataType: AdminNoteDataType.OFFERS }"
+          ></app-notes-btn>
+        }
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,7 @@
+<app-common-layout [title]="mode === 'create' ? ('Create Listing' | translate) : ('Edit Listing' | translate)">
+  @if (type == 'sell') {
+    <app-sell-lising-material-form [mode]="mode" [listingId]="listingId"></app-sell-lising-material-form>
+  } @else {
+    <app-list-wanted-material-form></app-list-wanted-material-form>
+  }
+</app-common-layout>

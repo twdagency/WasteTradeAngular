@@ -1,0 +1,68 @@
+<app-admin-layout [title]="'Audit Trail' | translate">
+  <div class="d-flex justify-content-between">
+    <div
+      mat-button
+      class="d-inline-flex align-items-center py-1 rounded px-2 background-primary text-white text-uppercase fw-bold cursor-pointer button-wrapper"
+      (click)="onBack()"
+    >
+      <mat-icon class="icon">west</mat-icon>
+      <span>{{ 'go back' | translate }}</span>
+    </div>
+    <button
+      mat-flat-button
+      [class.overlay-spinner]="exporting()"
+      class="d-inline-flex align-items-center py-1 rounded px-2 background-dark text-white text-uppercase fw-bold cursor-pointer button-wrapper fs-16"
+      (click)="exportAuditTrail()"
+    >
+      <span>{{ 'export' | translate }}</span>
+    </button>
+  </div>
+
+  <app-filter
+    [onlyFilter]="true"
+    [displayFilter]="['dateRange', 'loggedUserName', 'loggedCompanyName', 'loggedUserRole', 'action']"
+    (filterChanged)="onFilterChange($event)"
+    [defaultExcludeSold]="false"
+    [customFilterLabels]="customFilterLabel"
+  ></app-filter>
+
+  <div class="position-relative overflow-auto w-100">
+    @if (loading()) {
+      <app-spinner></app-spinner>
+    } @else {
+      @if (items().length > 0) {
+        <div class="flex-grow-1">
+          <app-audit-trail-detail [items]="items()"></app-audit-trail-detail>
+        </div>
+
+        <app-pagination
+          [pageNumber]="page()"
+          [totalCount]="totalItem()"
+          (pageChange)="onPageChange($event)"
+          [size]="pageSize()"
+        ></app-pagination>
+      } @else {
+        @if (this.items().length === 0 && this.totalItem() === 0) {
+          <div class="fs-24 empty-message-container pt-4">
+            <p class="text-muted text-center">
+              {{ 'No audit trail data found.' | translate }}
+            </p>
+          </div>
+        }
+
+        @if (items().length == 0 && totalItem() > 0) {
+          <div class="fs-24 empty-message-container pt-4">
+            <p class="text-muted text-center">{{ 'No  audit trails are currently available for display.' | translate }}</p>
+          </div>
+          <app-pagination
+            [pageNumber]="page()"
+            [totalCount]="totalItem()"
+            [size]="pageSize()"
+            (pageChange)="onPageChange($event)"
+          ></app-pagination>
+        }
+      }
+    }
+    <hr />
+  </div>
+</app-admin-layout>

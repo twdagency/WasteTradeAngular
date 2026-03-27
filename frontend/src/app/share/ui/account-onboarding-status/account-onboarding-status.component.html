@@ -1,0 +1,142 @@
+<div class="col-md-12 mt-5 mx-auto">
+  <div class="border border-2 border-radius bg-white border-dark rounded py-md-3 px-md-5 px-1 py-1">
+    <div class="d-flex justify-content-between position-relative">
+      <div class="d-flex flex-column align-items-center" style="z-index: 1">
+        <div class="rounded-circle badge success-badge d-flex justify-content-center align-items-center">1</div>
+        <span class="mt-2 text-center primary fw-bold">{{ 'REGISTRATION' | translate }}</span>
+      </div>
+
+      <div class="border border-1 background-primary position-absolute" style="height: 5px; top: 12px; left: 40px; right: 50%"></div>
+
+      <div class="d-flex flex-column align-items-center" style="z-index: 1">
+        <div
+          class="rounded-circle badge d-flex justify-content-center align-items-center"
+          [class.success-badge]="type == 'completed'"
+          [class.success-outline-badge]="type == 'completing'"
+          [class.error-badge]="type == 'pending'"
+        >
+          2
+        </div>
+        <span
+          class="mt-2 text-center fw-bold"
+          [class.primary]="type == 'completed' || type === 'completing'"
+          [class.error]="type == 'pending'"
+        >
+          {{ 'COMPLETE ACCOUNT' | translate }}
+        </span>
+      </div>
+
+      <div
+        class="border border-1 position-absolute"
+        [class.background-primary]="type == 'completed'"
+        [class.background-dark]="type == 'pending' || type === 'completing'"
+        style="height: 5px; top: 12px; left: 50%; right: 50px"
+      ></div>
+
+      <div class="d-flex flex-column align-items-center" style="z-index: 1">
+        <div
+          class="rounded-circle badge d-flex justify-content-center align-items-center"
+          [class.success-badge]="type == 'completed'"
+          [class.pending-badge]="type == 'pending' || type === 'completing'"
+        >
+          3
+        </div>
+        <span class="mt-2 text-center fw-bold" [class.primary]="type == 'completed'">{{ 'PENDING REVIEW' | translate }}</span>
+      </div>
+    </div>
+  </div>
+
+  @if (!showStatusOnly) {
+    <div class="border rounded background-primary h-100 text-white p-4 mt-3">
+      @if (type == 'completed') {
+        <mat-icon class="w-100 text-center" style="font-size: 90px; height: 90px">check_circle</mat-icon>
+      } @else {
+        <mat-icon class="w-100 text-center" style="font-size: 90px; height: 90px">error</mat-icon>
+      }
+
+      <div class="text-center mt-3">
+        <span class="fw-bold fs-40">
+          {{ type == 'pending' ? ('Thank you for registering!' | translate) : ('Thank you for completing your account!' | translate) }}
+        </span>
+      </div>
+
+      @if (type == 'pending') {
+        <div class="d-flex justify-content-center mt-4">
+          @if (isHaulier) {
+            <div class="d-flex align-items-center justify-content-center col-10 py-3 px-4 rounded background-on-error">
+              <div class="col-md-1 col-2 d-flex justify-content-center me-3">
+                <mat-icon class="error" style="font-size: 40px; height: 40px; width: 40px">error</mat-icon>
+              </div>
+              <div class="text-dark fw-500 fs-16 col-md-10 col-10">
+                {{ 'You can browse the portal, but bids will not be approved until your documents have been verified' | translate }}
+              </div>
+            </div>
+          } @else {
+            <div
+              class="d-flex align-items-center justify-content-center col-md-10 col-12 border border-2 border-error py-3 px-4 rounded background-on-error rounded rounded-4"
+            >
+              <div class="text-center error fs-16 fw-bold">
+                {{
+                  'Thank you for completing your account. You can now begin bidding and selling. Meanwhile, our admin team is in the process of verifying your account details. We will send you an email once the account is verified.'
+                    | translate
+                }}
+              </div>
+            </div>
+          }
+        </div>
+
+        @if (isHaulier) {
+          <div class="w-100 row mt-4 g-3 mx-auto d-flex justify-content-center">
+            <div class="col-md-4 col-8">
+              <button class="w-100 dark-btn fw-bold" mat-flat-button (click)="navigateTo(ROUTES_WITH_SLASH.availableLoads)">
+                {{ 'HAULIER DASHBOARD' | translate }}
+              </button>
+            </div>
+          </div>
+        } @else {
+          <div class="w-100 mt-4 g-3 mx-auto d-flex justify-content-center flex-column align-items-center">
+            <div class="col-md-4 col-12 mb-4">
+              <button class="w-100 primary white-btn fw-bold p-4" mat-flat-button (click)="onBack()" style="white-space: nowrap">
+                {{ 'UPLOAD YOUR COMPANY DOCUMENTATION' | translate }}
+              </button>
+            </div>
+            <div class="col-md-4 col-12">
+              <button class="w-100 dark-btn fw-bold p-4" mat-flat-button (click)="goToPlatform()">
+                {{ 'GO TO THE MARKETPLACE' | translate }}
+              </button>
+            </div>
+          </div>
+        }
+      } @else {
+        <div class="text-white col-md-8 col-12 mx-auto text-center fw-bold">
+          {{
+            'You can now begin bidding and selling. Meanwhile, our admin team is in the process of verifying your account details. We will send you an email once the account is verified.'
+              | translate
+          }}
+        </div>
+
+        <div class="d-flex justify-content-center w-100 mt-5">
+          <a (click)="navigateTo('/buy')" class="text-white fw-bold">{{ 'Go to the platform' | translate }}</a>
+        </div>
+
+        <div class="d-flex flex-column align-items-center mt-4">
+          <div class="mb-3 resp-width-576">
+            <button class="w-100 primary white-btn fw-bold" mat-flat-button (click)="navigateTo('/buy')">
+              {{ 'BUY MATERIAL' | translate }}
+            </button>
+          </div>
+          <div class="mb-3 resp-width-576">
+            <button class="w-100 stroked-white-btn fw-bold" mat-stroked-button (click)="navigateTo('/sell')">
+              {{ 'SELL MATERIAL' | translate }}
+            </button>
+          </div>
+          <div class="resp-width-576">
+            <button class="w-100 dark-btn fw-bold" mat-flat-button (click)="navigateTo('/wanted')">
+              {{ 'LIST WANTED MATERIAL' | translate }}
+            </button>
+          </div>
+        </div>
+      }
+    </div>
+  }
+</div>

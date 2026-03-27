@@ -1,0 +1,79 @@
+<button mat-icon-button class="common-modal-close-btn" (click)="handleClose()">
+  <mat-icon>close</mat-icon>
+</button>
+<div class="container remove-modal d-flex flex-column justify-content-between">
+  <h2 class="fw-bold">
+    {{ 'Remove ' | translate }} {{ data.item.firstName
+    }}{{ ' from your company? They’ll lose access to company listings, offers, and company level information/documents. ' | translate }}
+  </h2>
+  <div class="item">
+    <h2 class="mb-2 fw-bold">{{ 'Reassign ownship ' | translate }}</h2>
+
+    <p class="mt-1 fw-medium reassign">
+      {{ 'Reassign listings/offers/samples/MFI items to another member now' | translate }}
+    </p>
+
+    <p class="mt-2 mb-2 text-uppercase fw-bold fs-16">{{ 'Assignee' | translate }} <span>*</span></p>
+    <mat-form-field appearance="outline" class="w-100 assignee-field">
+      <mat-select
+        [formControl]="selectControl"
+        [compareWith]="compareUserById"
+        [placeholder]="'Select' | translate"
+        panelClass="user-search-panel"
+        (openedChange)="onSelectOpened($event)"
+      >
+        <mat-select-trigger>
+          @if (selectControl.value) {
+            {{ selectControl.value.firstName }} {{ selectControl.value.lastName }}
+          }
+        </mat-select-trigger>
+        <div class="search-box">
+          <mat-icon class="search-icon">search</mat-icon>
+          <input
+            #searchInput
+            type="text"
+            [formControl]="searchControl"
+            [placeholder]="'Search User name, User ID, or User email...' | translate"
+            (keydown)="$event.stopPropagation()"
+          />
+        </div>
+        <div class="search-result">
+          @if (loading()) {
+            <div class="d-flex justify-content-center align-items-center py-2">
+              <app-spinner></app-spinner>
+            </div>
+          }
+          @for (user of filteredUsers(); track user.id) {
+            <mat-option [value]="user" class="user-option">
+              <span class="fw-bold user-name">{{ user.firstName }} {{ user.lastName }}</span>
+              <span class="user-details">{{ user.id }}; {{ formatRole(user.companyRole) | titlecase }}; {{ user.email }}</span>
+            </mat-option>
+          }
+          @if (!loading() && filteredUsers().length === 0) {
+            <mat-option disabled value="">
+              {{ 'No user found' | translate }}
+            </mat-option>
+          }
+        </div>
+      </mat-select>
+      <mat-icon matSuffix>arrow_drop_down</mat-icon>
+    </mat-form-field>
+  </div>
+  <div class="dialog-actions mt-3 d-flex">
+    <button mat-stroked-button color="primary" class="outlined-button text-uppercase dialog-btn fw-bold" (click)="handleClose()">
+      {{ 'Cancel' | translate }}
+    </button>
+
+    <div class="dialog-btn">
+      <button
+        mat-flat-button
+        color="primary"
+        class="primary-btn text-uppercase w-100 h-100 confirm-btn fw-bold"
+        [disabled]="submitting() || !selectControl.value"
+        (click)="handleConfirm()"
+      >
+        {{ 'Confirm' | translate }}
+      </button>
+    </div>
+  </div>
+</div>

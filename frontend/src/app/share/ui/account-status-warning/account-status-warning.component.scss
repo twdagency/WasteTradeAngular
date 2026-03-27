@@ -1,0 +1,21 @@
+.warning-bar {
+  padding: 10px 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-weight: 500;
+  line-height: 22px;
+  color: #1d1d1b;
+  flex-wrap: wrap;
+}
+
+mat-icon {
+  margin-right: 20px;
+  font-size: 29px;
+  width: 29px;
+  height: 29px;
+}
+
+.warning-bar {
+  background-color: #feeed7;
+}

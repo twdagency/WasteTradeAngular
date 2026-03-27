@@ -1,0 +1,16 @@
+@import 'variables';
+:host ::ng-deep .mat-mdc-table {
+  display: table !important;
+  width: 100% !important;
+  table-layout: fixed !important;
+}
+
+:host ::ng-deep .mat-mdc-row,
+.mat-mdc-cell {
+  background-color: white !important;
+  border-bottom-color: $primary !important;
+}
+
+:host ::ng-deep .mat-mdc-header-cell {
+  border-bottom-color: $primary !important;
+}

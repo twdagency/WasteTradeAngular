@@ -1,0 +1,75 @@
+@import 'variables';
+
+// style for telephone form control
+.phone-input {
+  .no-outline {
+    .mdc-text-field {
+      border-bottom-left-radius: 0 !important;
+      border-bottom-right-radius: 0 !important;
+      border-top-left-radius: 0 !important;
+      border-top-right-radius: 0 !important;
+    }
+
+    .mdc-line-ripple {
+      display: none !important;
+    }
+  }
+
+  .left-side {
+    border-bottom: 1px solid black;
+    border-top: 1px solid black;
+    border-left: 1px solid black;
+
+    border-bottom-left-radius: 4px;
+    border-top-left-radius: 4px;
+
+    .mdc-text-field--filled:not(.mdc-text-field--disabled) {
+      background-color: $grey !important;
+
+      border-top-left-radius: 4px !important;
+      border-bottom-left-radius: 4px !important;
+      border-top-right-radius: 0 !important;
+      border-bottom-right-radius: 0 !important;
+    }
+  }
+
+  .right-side {
+    background-color: white;
+    border-bottom: 1px solid black;
+    border-top: 1px solid black;
+    border-right: 1px solid black;
+
+    border-bottom-right-radius: 4px;
+    border-top-right-radius: 4px;
+
+    .mdc-text-field--filled:not(.mdc-text-field--disabled) {
+      background-color: white !important;
+
+      border-top-right-radius: 4px !important;
+      border-bottom-right-radius: 4px !important;
+      border-top-left-radius: 0 !important;
+      border-bottom-left-radius: 0 !important;
+    }
+
+    .mat-mdc-form-field-focus-overlay {
+      background-color: white !important;
+    }
+  }
+}
+
+.input-disabled {
+  pointer-events: none;
+  .mat-mdc-text-field-wrapper {
+    background-color: $input-disabled-background;
+    border-radius: $border-radius-tiny;
+
+    &:not(.mdc-text-field--invalid) {
+      border: inherit solid $black;
+    }
+
+    &.mdc-text-field--invalid {
+      border: 1px solid inherit;
+      box-shadow: none;
+    }
+  }
+}

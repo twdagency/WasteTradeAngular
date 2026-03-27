@@ -1,0 +1,5 @@
+<app-common-layout [title]="'Selling Offers > Detail' | translate">
+  @if (offerId(); as offerId) {
+    <app-received-offer-detail [offerId]="offerId" />
+  }
+</app-common-layout>

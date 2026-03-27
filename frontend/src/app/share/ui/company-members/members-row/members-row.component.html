@@ -1,0 +1,96 @@
+@if (member(); as member) {
+  <div class="item border border-thin shadow-sm rounded-4 mb-3">
+    <div class="row">
+      <div class="col-md-10">
+        <div class="row g-4">
+          <div class="col-md-3">
+            <div class="fw-bold small text-uppercase">{{ 'Prefix' | translate }}</div>
+            <div class="text-break">{{ member.prefix || '-' | titlecase }}</div>
+          </div>
+
+          <div class="col-md-3">
+            <div class="fw-bold small text-uppercase">{{ 'First Name' | translate }}</div>
+            <div class="text-break">{{ member.firstName }}</div>
+          </div>
+
+          <div class="col-md-3">
+            <div class="fw-bold small text-uppercase">{{ 'Last Name' | translate }}</div>
+            <div class="text-break">{{ member.lastName }}</div>
+          </div>
+
+          <div class="col-md-3">
+            <div class="fw-bold small text-uppercase">{{ 'Status' | translate }}</div>
+
+            <div
+              class="fw-semibold text-break text-capitalize"
+              [ngClass]="{
+                'status-active': member.status === 'active',
+                'status-pending': member.status === 'pending',
+              }"
+            >
+              {{ member.status | translate }}
+            </div>
+          </div>
+
+          <div class="col-md-3">
+            <div class="fw-bold small text-uppercase">{{ 'Job Title' | translate }}</div>
+            <div class="text-break">{{ member.jobTitle || '-' }}</div>
+          </div>
+
+          <div class="col-md-3">
+            <div class="fw-bold small text-uppercase">{{ 'Email Address' | translate }}</div>
+            <div class="text-break">{{ member.email }}</div>
+          </div>
+
+          <div class="col-md-3">
+            <div class="fw-bold small text-uppercase">{{ 'Role' | translate }}</div>
+            <div class="text-break text-capitalize">{{ isPending() ? '-' : member.formatRole }}</div>
+          </div>
+
+          <div class="col-md-3"></div>
+        </div>
+      </div>
+
+      <div class="col-md-2 d-flex flex-column justify-content-center gap-3">
+        @if (member.status === 'pending') {
+          <button
+            mat-stroked-button
+            color="primary"
+            class="text-uppercase incoming-btn bg-white fw-bold py-2 px-0"
+            (click)="openResentModal(member)"
+          >
+            {{ 'Resend invitation' | translate }}
+          </button>
+        }
+
+        @if (!isPending()) {
+          <button
+            mat-stroked-button
+            class="text-uppercase border-success incoming-btn text-success bg-white fw-bold py-2"
+            style="min-width: 160px"
+            (click)="openManageModal()"
+          >
+            {{ 'Manage Role' | translate }}
+          </button>
+        }
+
+        <div
+          matTooltip="{{
+            cantRemoveAdmin() ? ('You’re the only Company Admin. Add another Company Admin before leaving the company.' | translate) : ''
+          }}"
+          [matTooltipDisabled]="!cantRemoveAdmin()"
+        >
+          <button
+            mat-stroked-button
+            class="text-uppercase border-danger incoming-btn text-danger bg-white fw-bold py-2 w-100"
+            style="min-width: 160px"
+            [disabled]="cantRemoveAdmin()"
+            (click)="openRemoveModal(member)"
+          >
+            {{ 'Remove User' | translate }}
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+}

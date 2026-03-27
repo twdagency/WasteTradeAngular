@@ -1,0 +1,20 @@
+<div class="wrapper">
+  <div class="d-flex justify-content-between align-items-center w-100">
+    <h4 class="mb-5 fw-bold fs-2">{{ props.title | translate }}</h4>
+    <div class="dialog-close-button" (click)="dialogRef.close(false)">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="12" cy="12" r="12" fill="#1D1D1B" />
+        <path d="M7 7.06641L17.8064 17.8728" stroke="white" stroke-width="3" stroke-linecap="round" />
+        <path d="M17.8086 7L7.00222 17.8064" stroke="white" stroke-width="3" stroke-linecap="round" />
+      </svg>
+    </div>
+  </div>
+  <div class="d-flex gap-3 justify-content-center col-12">
+    <button mat-stroked-button class="text-uppercase border-primary primary w-100 fw-bold py-3" (click)="onCancel()">
+      {{ props.cancelLabel || 'Cancel' | translate }}
+    </button>
+    <button mat-flat-button class="action-button w-100 fw-bold text-uppercase" (click)="onOk()">
+      {{ props.confirmLabel || 'Confirm' | translate }}
+    </button>
+  </div>
+</div>

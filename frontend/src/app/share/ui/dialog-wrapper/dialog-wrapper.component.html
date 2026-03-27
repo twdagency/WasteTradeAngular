@@ -1,0 +1,14 @@
+<div class="container-fluid p-3 p-md-4 p-lg-4 bg-white h-100">
+  <div class="d-flex justify-content-between align-items-center w-100 py-0" mat-dialog-title>
+    <h2 class="fw-bold flex-grow-1" [hidden]="!wrapperData?.title">{{ wrapperData?.title | translate }}</h2>
+    <div (click)="close()" class="cursor-pointer">
+      <app-icon iconName="close"></app-icon>
+    </div>
+  </div>
+
+  <mat-dialog-content class="dialog-scrollable">
+    @if (childComponent) {
+      <ng-container #child></ng-container>
+    }
+  </mat-dialog-content>
+</div>

@@ -1,0 +1,20 @@
+.button-wrapper {
+  height: 42px;
+  width: 120px;
+  justify-content: center;
+}
+
+.custom-button {
+  text-transform: uppercase;
+  font-weight: bold !important;
+  border-width: 3px !important;
+  max-height: 52px;
+  min-height: 52px;
+  padding: 15px 50px;
+  min-width: 160px;
+  font-size: 16px !important;
+}
+
+.shipped-button {
+  padding: 10px 20px !important;
+}

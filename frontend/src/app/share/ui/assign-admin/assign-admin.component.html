@@ -1,0 +1,32 @@
+<div
+  class="assign-wrapper"
+  [matTooltip]="'Set responsible admin.' | translate"
+  matTooltipPosition="above"
+  matTooltipClass="tooltip-with-arrow"
+>
+  <mat-form-field appearance="outline" class="assign-select {{ hasError() ? 'select-error' : '' }}">
+    <mat-select
+      placeholder="{{ 'Select' | translate }}"
+      (selectionChange)="onAssignChange($event.value)"
+      [value]="selectedValue()"
+      [disabled]="submitting()"
+    >
+      <mat-select-trigger>
+        {{ 'Select' | translate }}
+      </mat-select-trigger>
+      <mat-option [value]="null">{{ 'Unassigned' | translate }}</mat-option>
+      @for (assign of assignees(); track $index) {
+        <mat-option [value]="assign.id">{{ assign.lastName }} {{ assign.firstName }}</mat-option>
+      }
+    </mat-select>
+  </mat-form-field>
+</div>
+
+@if (hasError()) {
+  <p class="error-message">{{ 'We couldn’t update the assignee. Try again.' | translate }}</p>
+} @else {
+  <div class="current">
+    <p class="mb-0 mt-2 fw-500">{{ 'Currently:' | translate }}</p>
+    <p class="fw-bold mb-0">{{ assigneeName() || ('Unassigned' | translate) }}</p>
+  </div>
+}

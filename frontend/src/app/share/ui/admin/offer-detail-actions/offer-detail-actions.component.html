@@ -1,0 +1,39 @@
+@if (canAction()) {
+  <div class="d-flex flex-wrap gap-2">
+    <button
+      mat-flat-button
+      class="custom-button"
+      (click)="onApprove()"
+      [disabled]="submitting()"
+      [class.overlay-spinner]="submitting() == 'accept'"
+    >
+      {{ 'Approve' | translate }}
+    </button>
+    <button
+      mat-flat-button
+      class="custom-button background-error"
+      (click)="onReject()"
+      [disabled]="submitting()"
+      [class.overlay-spinner]="submitting() == 'reject'"
+    >
+      {{ 'Reject' | translate }}
+    </button>
+    <!-- <button
+      matButton="outlined"
+      class="custom-button rounded primary border border-primary"
+      style="border-width: 3px"
+      (click)="onRequestMoreInformation()"
+    >
+      Request more information
+    </button> -->
+  </div>
+} @else {
+  <span
+    [matTooltip]="'You can only make an offer once it is accepted by the trader' | translate"
+    [matTooltipDisabled]="canMakeHaulierOffer()"
+  >
+    <button mat-flat-button class="custom-button" (click)="makeHaulierOffer()" [disabled]="!canMakeHaulierOffer()">
+      {{ 'Make a Haulage Offer' | translate }}
+    </button>
+  </span>
+}

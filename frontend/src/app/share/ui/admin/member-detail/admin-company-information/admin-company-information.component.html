@@ -1,0 +1,93 @@
+@if (company(); as company) {
+  <div class="col-12 overflow-hidden">
+    <h4 class="fw-bold mb-4">{{ 'Company Information' | translate }}</h4>
+    <div class="d-flex flex-column flex-lg-row gap-4">
+      <div
+        class="border-thin rounded-4 p-3 p-md-4 p-lg-5 d-flex flex-column flex-md-row justify-content-between col-12 overflow-hidden gap-4"
+      >
+        <div class="col-12 col-md-8 col-lg-9 d-flex flex-column justify-content-between overflow-hidden flex-grow-1 min-w-0">
+          <div class="row g-3 mb-4 mx-0">
+            <div class="col-12 col-sm-4 px-2">
+              <div class="fw-bold mb-1 text-uppercase d-flex gap-2 align-items-center">
+                @if (!company.name) {
+                  <mat-icon class="error">info_rounded</mat-icon>
+                }
+                {{ 'COMPANY NAME' | translate }}
+              </div>
+              <div class="">{{ company.name || '-' }}</div>
+            </div>
+
+            <div class="col-12 col-sm-4 px-2">
+              <div class="fw-bold mb-1 text-uppercase d-flex gap-2 align-items-center">
+                @if (!company.companyType) {
+                  <mat-icon class="error">info_rounded</mat-icon>
+                }
+                {{ 'COMPANY TYPE' | translate }}
+              </div>
+              <div class="">{{ company.companyType || '-' | titlecase }}</div>
+            </div>
+
+            <div class="col-12 col-sm-4 px-2">
+              <div class="fw-bold d-flex align-items-center gap-2 mb-1 text-uppercase">
+                @if (!company.vatNumber) {
+                  <mat-icon class="error">info_rounded</mat-icon>
+                }
+                VAT
+              </div>
+              <div class="">{{ company.vatNumber || '-' }}</div>
+            </div>
+
+            <!-- <div class="col-12 col-sm-4 px-2">
+              <div class="fw-bold mb-1 text-uppercase d-flex gap-1 align-items-center" >COMPANY INTEREST</div>
+              <div class="">{{ company.companyInterest || '-' | titlecase }}</div>
+            </div> -->
+          </div>
+
+          <div class="row g-3 mx-0 mb-4">
+            <div class="col-12 col-sm-4 px-2">
+              <div class="fw-bold mb-1 text-uppercase d-flex gap-2 align-items-center">
+                @if (!company.registrationNumber) {
+                  <mat-icon class="error">info_rounded</mat-icon>
+                }
+                {{ 'COMPANY REGISTRATION NUMBER' | translate }}
+              </div>
+              <div class="">{{ company.registrationNumber || '-' }}</div>
+            </div>
+
+            <div class="col-12 col-sm-4 px-2">
+              <div class="fw-bold mb-1 text-uppercase d-flex gap-2 align-items-center">
+                @if (!company.email) {
+                  <mat-icon class="error">info_rounded</mat-icon>
+                }
+                {{ 'Company EMAIL' | translate }}
+              </div>
+              <div class="">{{ company.email || '-' }}</div>
+            </div>
+
+            <div class="col-12 col-sm-4 px-2">
+              <div class="fw-bold mb-1 text-uppercase d-flex gap-2 align-items-center">
+                @if (!company.phoneNumber) {
+                  <mat-icon class="error">info_rounded</mat-icon>
+                }
+                {{ 'Company Telephone' | translate }}
+              </div>
+              <div class="">{{ company.phoneNumber || '-' }}</div>
+            </div>
+          </div>
+
+          <div class="w-100">
+            <div class="col-12 col-sm-4 px-2">
+              <div class="fw-bold mb-1 text-uppercase d-flex gap-2 align-items-center">
+                @if (!location()) {
+                  <mat-icon class="error">info_rounded</mat-icon>
+                }
+                {{ 'Business address' | translate }}
+              </div>
+              <div class="">{{ location() }}</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+}

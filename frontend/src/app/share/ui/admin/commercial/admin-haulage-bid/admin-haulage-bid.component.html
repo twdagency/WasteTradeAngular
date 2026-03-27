@@ -1,0 +1,14 @@
+<app-list-container
+  [fetchFn]="adminHaulageService.getHaulageBids.bind(adminHaulageService)"
+  [displayFilter]="['dateRange', 'materialType']"
+  [pageSize]="20"
+  [emptyMessage]="'No haulage offers found. Check back later.'"
+  [isCountryFilter]="false"
+  [isCountryFilter]="true"
+  [listingType]="'haulage'"
+  [paramKey]="'offerId'"
+>
+  <ng-template let-item>
+    <app-haulage-bid-listing-item [bid]="getTransformedBid(item)"></app-haulage-bid-listing-item>
+  </ng-template>
+</app-list-container>

@@ -1,0 +1,32 @@
+@if (canShow()) {
+  @if (isOwnListing()) {
+    @if (isNearingExpiry() && !isExpired() && canManualRenew()) {
+      <div class="warning owner-warning mb-4">
+        <div class="d-flex w-100 align-items-center gap-2">
+          <mat-icon>info_outline</mat-icon>
+          {{ 'Listing expires in {{daysUntilExpiry}} day(s)' | translate: { daysUntilExpiry: daysUntilExpiry() } }}
+        </div>
+        <div class="w-100">
+          {{ 'This listing is about to expire, do you want to' | translate }}
+          <a class="text-uppercase primary cursor-pointer text-underline" (click)="openRenewModal()"> {{ 'Renew' | translate }} </a>
+          {{ 'it?' | translate }}
+        </div>
+      </div>
+    }
+    @if (isExpired() && canManualRenew()) {
+      <div class="warning owner-warning mb-4">
+        <div class="d-flex w-100 align-items-center gap-2">
+          <mat-icon>error_outline</mat-icon>
+          {{ 'Listing has expired' | translate }}
+        </div>
+        <div class="w-100">
+          {{ 'This listing has expired.' | translate }}
+          <a class="text-uppercase primary cursor-pointer text-underline" (click)="openRenewModal()"> {{ 'Renew' | translate }} </a>
+          {{ 'to make it available again.' | translate }}
+        </div>
+      </div>
+    }
+  } @else if (isNearingExpiry() && !isExpired()) {
+    <div class="warning guest-warning mb-4">{{ 'Listing nearing expiry' | translate }}</div>
+  }
+}

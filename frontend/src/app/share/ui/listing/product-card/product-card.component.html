@@ -1,0 +1,105 @@
+@if (product) {
+  <div class="card border-thin rounded-4 shadow-sm product-card" role="button">
+    <div class="card-body p-3">
+      <div class="row g-3">
+        <div class="col-12 col-md-6">
+          <div class="mb-2">
+            <app-product-status [product]="product" />
+          </div>
+          <div class="rounded-4 w-100">
+            <img
+              [src]="featureImage"
+              [alt]="product.title"
+              appFallbackImage
+              style="object-fit: cover; background-color: #f5f5f5"
+              class="img-fluid w-100 rounded product-image rounded-4"
+              loading="lazy"
+            />
+          </div>
+        </div>
+
+        <div class="col-12 col-md-6">
+          <div class="d-flex justify-content-between align-items-start mb-3">
+            <h5
+              class="product-title card-title fw-bold text-wrap flex-grow-1 me-2 mb-0 fs-24 line-clamp"
+              title="{{ getListingTitle(product) }}"
+            >
+              {{ getListingTitle(product) | translate }}
+            </h5>
+            <mat-icon class="text-muted flex-shrink-0">star_outline</mat-icon>
+          </div>
+
+          <div class="d-flex align-items-center mb-3">
+            <div class="me-3 flex-shrink-0">
+              <mat-icon
+                class="primary background-on-primary rounded-circle d-flex justify-content-center align-items-center flex-shrink-0"
+                style="width: 28px; font-size: 24px; height: 28px"
+                >location_on</mat-icon
+              >
+            </div>
+            <div class="flex-grow-1">
+              <small class="d-block fs-16">{{ 'Material Location' | translate }}</small>
+              <div class="fw-bold fs-16">{{ mapCountryCodeToName[product.country] || product.location_other }}</div>
+            </div>
+          </div>
+
+          <div class="d-flex flex-column gap-3 mb-3">
+            <div class="d-flex align-items-center">
+              <div class="me-3 flex-shrink-0">
+                <img
+                  src="assets/images/kettlebell.svg"
+                  appFallbackImage
+                  loading="lazy"
+                  style="width: 28px; height: 28px"
+                  alt="Quantity icon"
+                />
+              </div>
+              <div class="flex-grow-1">
+                <div class="d-block fs-16">{{ 'Average Weight per Load' | translate }}</div>
+                <div class="fw-bold fs-16">
+                  @if (product.materialWeightPerUnit || product.materialWeightWanted) {
+                    {{ product.materialWeightPerUnit ?? product.materialWeightWanted | number: '1.0-2' }} {{ 'MT' | translate }}
+                  }
+                </div>
+              </div>
+            </div>
+          </div>
+
+          @if (materialInterest) {
+            <div class="d-flex align-items-center">
+              <div class="me-3 flex-shrink-0">
+                <img src="assets/images/icons/interest.svg" alt="" />
+              </div>
+              <small class="d-block fs-16 secondary">{{ 'Material of Interest' | translate }}</small>
+            </div>
+          }
+          @if (deletable && isOwnListing()) {
+            <div
+              [matTooltip]="
+                product.hasPendingOffer
+                  ? ('You can’t delete this listing because there is an existing offer on it.' | translate)
+                  : product.state === ListingState.PENDING
+                    ? (' (*) You cannot delete the listing because it is in the Approval Process' | translate)
+                    : ''
+              "
+              [matTooltipDisabled]="!product.hasPendingOffer && product.state !== ListingState.PENDING"
+              [matTooltipPosition]="'above'"
+              class="ms-auto"
+              style="width: fit-content"
+            >
+              <button
+                type="button"
+                class="delete-button"
+                (click)="onDelete($event)"
+                [disabled]="product.hasPendingOffer || product.state === ListingState.PENDING"
+                [class.button-disabled]="product.hasPendingOffer || product.state === ListingState.PENDING"
+              >
+                <img src="assets/images/icons/mdOutlineDelete.svg" alt="Delete" />
+              </button>
+            </div>
+          }
+        </div>
+      </div>
+    </div>
+  </div>
+}

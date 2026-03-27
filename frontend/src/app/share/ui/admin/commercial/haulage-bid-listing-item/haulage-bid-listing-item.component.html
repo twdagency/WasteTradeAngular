@@ -1,0 +1,77 @@
+@if (bid(); as bid) {
+  <div class="w-100">
+    <div class="border-thin rounded-4 p-4 p-md-4 mb-3">
+      <div class="row gy-4 justify-content-between">
+        <app-assign-admin
+          class="col-auto"
+          [dataId]="bid.haulageOfferId"
+          [dataType]="dataType"
+          [assignAdmin]="bid.assignAdmin"
+        ></app-assign-admin>
+
+        <div class="col-6 col-md-2">
+          <div class="mb-3">
+            <div class="fw-bold text-uppercase mb-2">{{ 'Bid Date' | translate }}</div>
+            <p class="mb-1 fw-500">{{ bid?.bidDate | date: 'dd/MM/YYYY' }}</p>
+          </div>
+          <div>
+            <div class="fw-bold text-uppercase mb-2">{{ 'Material ' | translate }}</div>
+            <p class="mb-1 text-break me-5 clickable" (click)="viewMaterialDetail()">{{ bid?.materialName }}</p>
+          </div>
+        </div>
+
+        <div class="col-6 col-md-2">
+          <div class="mb-3">
+            <div class="fw-bold text-uppercase mb-2">{{ 'Buyer Offer' | translate }}</div>
+            <p class="mb-1 fw-500">{{ bid?.buyerOffer }}</p>
+          </div>
+          <div>
+            <div class="fw-bold text-uppercase mb-2">{{ 'Haulage Offer' | translate }}</div>
+            <p class="mb-1 fw-500">{{ bid?.haulageOffer }}</p>
+          </div>
+        </div>
+
+        <div class="col-6 col-md-2">
+          <div class="mb-3">
+            <div class="fw-bold text-uppercase mb-2">{{ 'Seller Offer' | translate }}</div>
+            <p class="mb-1 fw-500">£{{ bid?.sellerOffer[0] | number: '1.0-2' }}/MT</p>
+            <p class="mb-1 fw-500">€{{ bid?.sellerOffer[1] | number: '1.0-2' }}/MT</p>
+          </div>
+          <div>
+            <div class="fw-bold text-uppercase mb-2">{{ 'Seller Total' | translate }}</div>
+            <p class="mb-1 fw-500">£{{ bid?.sellerTotal[0] | number: '1.0-2' }}/MT</p>
+            <p class="mb-1 fw-500">€{{ bid?.sellerTotal[1] | number: '1.0-2' }}/MT</p>
+          </div>
+        </div>
+
+        <div class="col-6 col-md-2 d-flex flex-column justify-content-between">
+          <div class="">
+            <div class="fw-bold text-uppercase mb-2">{{ 'Haulier' | translate }}</div>
+            <p class="mb-1 fw-500">{{ haulier()?.username }}</p>
+            <p class="mb-1 fw-500">{{ haulier()?.firstName }} {{ haulier()?.lastName }}</p>
+            <p class="mb-1 fw-500">{{ haulier()?.companyName }}</p>
+          </div>
+
+          <div class="">
+            <div class="fw-bold text-uppercase mb-2">{{ 'Status' | translate }}</div>
+            <p class="mb-1 fw-500" [style]="{ color: bid.color }">{{ bid?.formattedStatus }}</p>
+          </div>
+        </div>
+
+        <div class="col-12 d-lg-none">
+          <hr class="my-2" />
+        </div>
+
+        <div class="d-flex flex-column gap-2 h-100 align-items-center align-self-center justify-content-center col-6 col-md-2">
+          <button mat-stroked-button class="border-primary primary py-4 fw-bold" (click)="onViewDetail()" style="min-width: 165px">
+            {{ 'VIEW DETAILS' | translate }}
+          </button>
+
+          <app-notes-btn
+            [inputData]="{ id: bid.haulageOfferId, adminNote: bid.adminNote, dataType: AdminNoteDataType.HAULAGE_OFFERS }"
+          ></app-notes-btn>
+        </div>
+      </div>
+    </div>
+  </div>
+}

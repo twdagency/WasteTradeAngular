@@ -1,0 +1,74 @@
+.custom-dialog {
+  max-width: 90vw;
+
+  width         : 900px;
+  padding       : 60px;
+  position      : relative;
+  border-radius : 20px;
+  background    : white;
+  display       : flex;
+  flex-direction: column;
+  gap           : 20px;
+
+  .close-btn {
+    position: absolute;
+    top     : 8px;
+    right   : 8px;
+  }
+
+  .dialog-message {
+    p {
+      font-size  : 32px;
+      color      : #333;
+      margin     : 0;
+      font-weight: 700;
+    }
+  }
+
+  .dialog-actions {
+    display        : flex;
+    gap            : 12px;
+    justify-content: flex-end;
+
+    button .mat-stroked-button {
+      border-color: #28a745;
+    }
+
+    button .mat-flat-button {
+      background-color: #28a745;
+      color           : white;
+    }
+  }
+}
+
+.dialog-btn {
+  width        : 50%;
+  height       : 62px;
+  border       : none;
+  border-radius: 5px;
+  font-size    : 16px;
+}
+
+.cancel-btn {
+  border          : 1px solid #03985c;
+  background-color: #fff;
+  color           : #03985c;
+}
+
+.confirm-btn {
+  background-color: #06985c;
+  color           : #fff;
+}
+
+.close-btn {
+  width           : 28px;
+  height          : 28px;
+  background-color: #000;
+  color           : #fff;
+  border-radius   : 50%;
+  display         : flex;
+  align-items     : center;
+  justify-content : center;
+  padding         : 0;
+  min-width       : 0;
+}

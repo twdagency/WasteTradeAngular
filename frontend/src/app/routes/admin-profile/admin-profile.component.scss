@@ -1,0 +1,20 @@
+.cus-btn {
+  width: 101px;
+  background-color: #fff;
+  padding: 8px 16px;
+  border-radius: 5px;
+}
+
+.info-box {
+  box-shadow: 3px 3px 5px 0px rgba(61, 61, 61, 0.05);
+
+  border: 1px solid rgba(6, 152, 92, 0.25) !important;
+  padding: 56px 60px !important;
+}
+
+.info-box::after {
+  content: '';
+  display: block;
+  height: 0.25px;
+  background-color: #06985c;
+}

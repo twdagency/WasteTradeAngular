@@ -1,0 +1,222 @@
+// Materials
+@use '@angular/material' as mat;
+@use 'styles/materials/color-pallets_theme-colors.scss' as my-theme;
+
+// Import functions, variables, and mixins needed by other Bootstrap files
+@import 'bootstrap/scss/functions';
+@import 'bootstrap/scss/variables';
+$enable-dark-mode: false;
+@import 'bootstrap/scss/mixins';
+@import 'bootstrap/scss/maps';
+// Import Bootstrap Reboot
+@import 'bootstrap/scss/root'; // Contains :root CSS variables used by other Bootstrap files
+@import 'bootstrap/scss/reboot';
+// Import Bootstrap features
+@import 'bootstrap/scss/alert';
+@import 'bootstrap/scss/containers';
+@import 'bootstrap/scss/grid';
+@import 'bootstrap/scss/card';
+@import 'bootstrap/scss/helpers';
+@import 'bootstrap/scss/utilities';
+@import 'bootstrap/scss/utilities/api';
+
+@import 'styles/elements';
+@import 'styles/materials';
+@import 'styles/variables';
+@import 'styles/themes';
+@import 'styles/material-icon';
+
+@include mat.core();
+
+html,
+body {
+  height: 100%;
+  width: 100%;
+}
+
+html {
+  @include mat.theme(
+    (
+      color: (
+        primary: my-theme.$primary-palette,
+        tertiary: my-theme.$tertiary-palette,
+      ),
+      typography: Barlow,
+      density: 0,
+    )
+  );
+
+  --mdc-outlined-button-label-text-color: #1d1d1b;
+  --mdc-outlined-button-outline-width: 2px;
+}
+
+body {
+  margin: 0;
+  font-family: Barlow, 'Helvetica Neue', sans-serif;
+  color: --var(on-surface);
+}
+
+input::placeholder {
+  color: #1d1d1b80 !important;
+}
+
+.auto-hide-scrollbar {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+.mat-mdc-form-field-subscript-wrapper,
+.mat-mdc-form-field-error {
+  margin: 0 !important;
+  padding: 0;
+}
+
+.cursor-pointer {
+  cursor: pointer;
+}
+
+.bold-label .mdc-label {
+  font-weight: 700 !important;
+}
+
+.dialog-close-button {
+  cursor: pointer;
+  position: absolute;
+  top: 15px;
+  right: 15px;
+}
+
+.line-clamp {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.add-admin-dialog-container {
+  .mat-mdc-dialog-title {
+    height: 0;
+    position: static;
+  }
+
+  .mat-mdc-dialog-surface {
+    border-radius: 20px;
+  }
+
+  .mat-mdc-dialog-content {
+    max-height: 100%;
+  }
+
+  .cursor-pointer {
+    position: absolute;
+    right: 16px;
+    top: 8px;
+  }
+}
+
+.mat-role-option-disabled-option {
+  .mdc-list-item__primary-text {
+    width: 100% !important;
+  }
+
+  &.mat-mdc-option.mdc-list-item--disabled {
+    pointer-events: unset;
+  }
+}
+
+// Target the tooltip surface specifically
+.custom-role-tooltip {
+  background-color: #333333 !important;
+  color: #ffffff !important;
+  border-radius: 4px !important;
+  padding: 16px 20px !important;
+  font-size: 12px !important;
+  font-weight: 400 !important;
+  max-width: 250px !important;
+  text-align: center !important;
+  position: relative !important;
+  margin-bottom: 8px !important;
+
+  .mdc-tooltip__surface {
+    padding: 0 !important;
+  }
+
+  &::after {
+    content: '';
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 0;
+    height: 0;
+    border-left: 6px solid transparent;
+    border-right: 6px solid transparent;
+    border-top: 8px solid #333333;
+    z-index: 1;
+  }
+}
+
+.asterisk {
+  color: #e84f63;
+}
+
+.mat-mdc-form-field-type-mat-select .mdc-text-field--disabled {
+  background-color: #d9d9d9;
+}
+
+.date-picker-input {
+  .mat-mdc-text-field-wrapper {
+    padding: 0 !important;
+  }
+
+  .mat-datepicker-input {
+    height: 34px !important;
+    bottom: 22px !important;
+    padding-left: 15px !important;
+    padding-right: 15px !important;
+  }
+}
+
+.common-modal-close-btn {
+  width: 28px !important;
+  height: 28px !important;
+  background-color: #000 !important;
+  color: #fff !important;
+  border-radius: 20px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  padding: 0 !important;
+  min-width: 0 !important;
+  position: absolute !important;
+  right: 10px !important;
+  top: 10px !important;
+}
+
+.clickable {
+  cursor: pointer;
+  color: $primary;
+  font-weight: bold;
+  text-decoration: underline;
+}
+
+.tooltip-with-arrow .mdc-tooltip__surface {
+  padding: 16px 20px;
+  position: relative;
+  overflow: unset;
+
+  &::after {
+    content: '';
+    position: absolute;
+    top: 100%; /* Position arrow below the tooltip */
+    left: 50%;
+    transform: translateX(-50%);
+    border-width: 7px;
+    border-style: solid;
+    border-color: #333333 transparent transparent transparent;
+  }
+}

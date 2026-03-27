@@ -1,0 +1,149 @@
+.merge-modal {
+  padding: 60px;
+
+  .title {
+    margin-bottom: 48px;
+    font-weight: 700;
+    font-size: 32px;
+  }
+
+  .section-title {
+    font-size: 16px;
+    font-weight: 700;
+    margin-bottom: 16px;
+    color: #1d1d1b;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  .company-search-section {
+    margin-bottom: 48px;
+
+    .search-description {
+      font-size: 16px;
+      color: #939797;
+      margin: 8px 0;
+    }
+  }
+
+  .company-search-field {
+    .mat-mdc-form-field-subscript-wrapper {
+      display: none;
+    }
+  }
+
+  .choose-master-section {
+    .section-title {
+      font-size: 16px;
+      font-weight: 700;
+      color: #1d1d1b;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 16px;
+    }
+
+    .master-radio-group {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      margin-bottom: 12px;
+
+      .master-radio-option {
+        .radio-label {
+          font-size: 16px;
+          font-weight: 700;
+          color: #1d1d1b;
+          margin-left: 0;
+        }
+
+        .mdc-radio {
+          --mdc-radio-selected-focus-icon-color: #007b5d;
+          --mdc-radio-selected-hover-icon-color: #007b5d;
+          --mdc-radio-selected-icon-color: #007b5d;
+          --mdc-radio-selected-pressed-icon-color: #007b5d;
+        }
+      }
+    }
+
+    .master-description {
+      font-weight: 500;
+      color: #939797;
+      margin: 0 0 0 8px;
+    }
+  }
+
+  .dialog-actions {
+    .dialog-btn {
+      min-height: 62px;
+      width: 50%;
+    }
+  }
+}
+
+.common-modal-close-btn {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  z-index: 10;
+}
+
+// Global styles for the mat-select panel
+::ng-deep .company-search-panel {
+  border: 1px solid #1d1d1b;
+  border-radius: 5px;
+  margin: 8px 0;
+
+  .search-box {
+    display: flex;
+    align-items: center;
+    padding: 8px 16px;
+    border: 1px solid #1d1d1b;
+    border-radius: 4px;
+    margin: 8px 16px;
+    background: #fff;
+
+    .search-icon {
+      color: #666;
+      margin-right: 8px;
+      font-size: 20px;
+      width: 20px;
+      height: 20px;
+    }
+
+    input {
+      flex: 1;
+      border: none;
+      outline: none;
+      font-size: 14px;
+
+      &::placeholder {
+        color: #999;
+      }
+    }
+  }
+
+  .search-result {
+    height: 200px;
+    overflow: auto;
+  }
+
+  .company-option {
+    .mat-option-text {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .company-name {
+      color: #1d1d1b;
+      margin-right: 12px;
+      display: inline-block;
+    }
+
+    .company-details {
+      color: #b1b1aa;
+      font-weight: 500;
+    }
+  }
+}

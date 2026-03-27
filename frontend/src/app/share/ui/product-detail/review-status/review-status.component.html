@@ -1,0 +1,31 @@
+@switch (state) {
+  @case (ListingState.PENDING) {
+    <div class="border py-3 rounded rounded-4 background-dark text-center text-white mb-4">
+      <div class="mb-2 fw-bold">{{ 'REVIEW STATUS' | translate }}</div>
+      <div class="w-100 d-flex justify-content-center align-items-center gap-1 item-content">
+        <mat-icon>pause_circle_outline</mat-icon>
+        <span>{{ 'Pending' | translate }}</span>
+      </div>
+    </div>
+  }
+
+  @case (ListingState.APPROVED) {
+    <div class="border rounded py-3 rounded rounded-4 background-primary text-center text-white mb-4">
+      <div class="mb-2 fw-bold">{{ 'REVIEW STATUS' | translate }}</div>
+      <div class="fw-500 w-100 d-flex justify-content-center align-items-center gap-1 item-content">
+        <mat-icon class="icon">check_circle_outline</mat-icon>
+        <span>{{ 'Approved' | translate }}</span>
+      </div>
+    </div>
+  }
+
+  @case (ListingState.REJECTED) {
+    <div class="border rounded py-3 rounded rounded-4 background-error text-center text-white mb-4">
+      <div class="mb-2 fw-bold">{{ 'REVIEW STATUS' | translate }}</div>
+      <div class="fw-500 w-100 d-flex justify-content-center align-items-center gap-1 item-content">
+        <mat-icon class="icon">highlight_off</mat-icon>
+        <span>{{ 'Rejected' | translate }}</span>
+      </div>
+    </div>
+  }
+}

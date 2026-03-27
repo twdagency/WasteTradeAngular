@@ -1,0 +1,49 @@
+<div class="container-fluid p-3 p-md-4 p-lg-4">
+  <div class="d-flex justify-content-between align-items-center w-100">
+    <h2 class="fw-bold flex-grow-1">{{ 'Request Information' | translate }}</h2>
+
+    <div class="dialog-close-button" (click)="close()">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="12" cy="12" r="12" fill="#1D1D1B" />
+        <path d="M7 7.06641L17.8064 17.8728" stroke="white" stroke-width="3" stroke-linecap="round" />
+        <path d="M17.8086 7L7.00222 17.8064" stroke="white" stroke-width="3" stroke-linecap="round" />
+      </svg>
+    </div>
+  </div>
+
+  <mat-dialog-content>
+    <form [formGroup]="formGroup">
+      <div class="col-12 mb-4 flex-column">
+        <mat-checkbox class="bold-label w-100 fs-16" formControlName="requestPictures">{{ 'More pictures' | translate }}</mat-checkbox>
+        <mat-checkbox class="bold-label w-100 fs-16" formControlName="requestSpecSheets">{{
+          'Specification data sheets' | translate
+        }}</mat-checkbox>
+        <mat-checkbox class="bold-label w-100 fs-16" formControlName="requestDescription">{{
+          'Additional description' | translate
+        }}</mat-checkbox>
+      </div>
+      <div class="col-12 mb-4">
+        <div class="fw-bold fs-16">{{ 'MESSAGE' | translate }}</div>
+        <mat-form-field appearance="outline" class="w-100">
+          <textarea matInput rows="5" style="resize: none" formControlName="freeText"></textarea>
+          @if (formGroup.get('freeText')?.hasError('maxlength')) {
+            <mat-error>{{ 'Your message is too long. Please limit it to 1000 characters.' | translate }}</mat-error>
+          }
+        </mat-form-field>
+      </div>
+    </form>
+  </mat-dialog-content>
+  <mat-dialog-actions>
+    <div class="d-flex justify-content-between align-items-center gap-3 col-md-12 col-12s">
+      <button
+        mat-flat-button
+        [disabled]="formGroup.invalid || formGroup.pristine"
+        class="text-uppercase primary-btn w-100 fw-bold py-3"
+        [class.overlay-spinner]="submitting()"
+        (click)="submit()"
+      >
+        {{ 'SUBMIT' | translate }}
+      </button>
+    </div>
+  </mat-dialog-actions>
+</div>

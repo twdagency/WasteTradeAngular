@@ -1,0 +1,123 @@
+<div class="container-fluid p-3 p-md-4 p-lg-4">
+  <div class="d-flex justify-content-between align-items-center w-100">
+    <h2 class="fw-bold flex-grow-1">{{ 'Company Documents' | translate }}</h2>
+    <div (click)="close()" class="cursor-pointer">
+      <app-icon iconName="close"></app-icon>
+    </div>
+  </div>
+
+  <mat-dialog-content>
+    <form [formGroup]="formGroup">
+      <div class="col-md-9 col-12 mb-4">
+        <mat-label class="fw-bold mb-1 d-block fs-16">{{ 'WHICH PERMIT/LICENCE DO YOU HAVE?*' | translate }}</mat-label>
+        <mat-radio-group class="d-flex justify-content-between flex-wrap" formControlName="documentType">
+          <mat-radio-button class="bold-label col-md-auto col-9 fs-16" value="environmental_permit">{{
+            'Environmental Permit' | translate
+          }}</mat-radio-button>
+          <mat-radio-button class="bold-label col-md-auto col-9 fs-16" value="waste_exemption">{{
+            'Waste Exemptions' | translate
+          }}</mat-radio-button>
+          <mat-radio-button class="bold-label col-md-auto col-9 fs-16" value="other">{{ 'Other' | translate }}</mat-radio-button>
+        </mat-radio-group>
+      </div>
+      <div class="col-12 mb-4" [hidden]="!(documentType.value == CompanyDocumentType.EnvironmentalPermit)">
+        <h6 class="mt-5 mb-4 fw-bold">{{ 'UPLOAD AS ENVIRONMENTAL PERMIT*' | translate }}</h6>
+        <app-file-upload
+          [maxFile]="6"
+          (filesAdded)="handleFileReady($event, 'document', CompanyDocumentType.EnvironmentalPermit)"
+          (uploadValid)="documentValid.set($event)"
+          [notAcceptable]="['.doc', '.xls', '.xlsx']"
+          [expiryDateMode]="'optional'"
+          [fileList]="environmentPermitDocuments"
+          [maxFileSize]="5 * 1024 * 1024"
+        ></app-file-upload>
+        <p>{{ 'Accepted file types: pdf, docx, png, jpeg, Max. file size: 5 MB, Max. files: 6' | translate }}</p>
+      </div>
+
+      <div class="col-12 mb-4" [hidden]="!(documentType.value == CompanyDocumentType.WasteExemption)">
+        <h6 class="mt-5 mb-4 fw-bold">{{ 'UPLOAD AS WASTE EXEMPTIONS*' | translate }}</h6>
+        <app-file-upload
+          [maxFile]="6"
+          (filesAdded)="handleFileReady($event, 'document', CompanyDocumentType.WasteExemption)"
+          (uploadValid)="documentValid.set($event)"
+          [notAcceptable]="['.doc', '.xls', '.xlsx']"
+          [expiryDateMode]="'optional'"
+          [fileList]="wasteExemptionDocuments"
+          [maxFileSize]="5 * 1024 * 1024"
+        ></app-file-upload>
+        <p>{{ 'Accepted file types: pdf, docx, png, jpeg, Max. file size: 5 MB, Max. files: 6' | translate }}</p>
+      </div>
+
+      @if (documentType.value == 'other') {
+        <div class="col-md-12 mb-3">
+          <label class="fw-bold fs-16">{{ 'OTHER DOCUMENT DESCRIPTION*' | translate }}</label>
+          <mat-form-field appearance="outline" class="w-100">
+            <input matInput placeholder="{{ 'Type here' | translate }}" type="text" formControlName="otherDocumentType" />
+            @if (formGroup.get('otherDocumentType')?.hasError('required')) {
+              <mat-error>{{ 'This field is required' | translate }}</mat-error>
+            }
+          </mat-form-field>
+        </div>
+      }
+      <div class="col-12 mb-4" [hidden]="!(documentType.value == 'other')">
+        <h6 class="mt-5 mb-3 fw-bold text-uppercase">{{ 'Other Document Upload*' | translate }}</h6>
+        <app-file-upload
+          [maxFile]="6"
+          (filesAdded)="handleFileReady($event, 'document', 'other')"
+          (uploadValid)="documentValid.set($event)"
+          [notAcceptable]="['.doc', '.xls', '.xlsx']"
+          [expiryDateMode]="'optional'"
+          [fileList]="otherDocuments"
+          [maxFileSize]="5 * 1024 * 1024"
+        ></app-file-upload>
+        <p>{{ 'Accepted file types: pdf, docx, png, jpeg, Max. file size: 5 MB, Max. files: 6' | translate }}</p>
+      </div>
+
+      <div class="col-md-7 col-12 mb-4">
+        <mat-label class="mb-0 fw-bold fs-16">{{ 'DO YOU HAVE A WASTE CARRIER LICENCE?*' | translate }}</mat-label>
+        <mat-radio-group
+          formControlName="wasteLicence"
+          class="d-flex justify-content-between col-9"
+          name="wasteLicence"
+          (change)="onLicenceChange($event)"
+        >
+          <mat-radio-button class="bold-label fs-16" [value]="true">{{ 'Yes' | translate }}</mat-radio-button>
+          <mat-radio-button class="bold-label fs-16" [value]="false">{{ 'Not Applicable' | translate }}</mat-radio-button>
+        </mat-radio-group>
+        @if (formGroup.get('wasteLicence')?.hasError('required') && formGroup.get('wasteLicence')?.touched) {
+          <mat-error class="mt-0 mat-error">{{ 'This field is required' | translate }}</mat-error>
+        }
+      </div>
+      @if (formGroup.get('wasteLicence')?.value) {
+        <h6 class="mb-4 mt-5 fw-bold">{{ 'UPLOAD WASTE CARRIER LICENCE*' | translate }}</h6>
+        <div class="col-12 mb-4">
+          <app-file-upload
+            (filesAdded)="handleFileReady($event, 'licence', CompanyDocumentType.WasteCarrierLicense)"
+            [maxFile]="1"
+            (uploadValid)="wasteLicenceValid.set($event)"
+            [expiryDateMode]="'optional'"
+            [notAcceptable]="['.doc', '.xls', '.xlsx']"
+            [fileList]="wasteCarrierLicenseDocuments"
+          ></app-file-upload>
+          <p>{{ 'Accepted file types: pdf, docx, png, jpeg, Max. file size: 5 MB, Max. files: 1' | translate }}</p>
+        </div>
+      }
+    </form>
+  </mat-dialog-content>
+  <mat-dialog-actions>
+    <div class="d-flex justify-content-md-between justify-content-center flex-column flex-md-row align-items-center w-100">
+      <button mat-stroked-button class="text-uppercase outline-primary-btn mb-3 mb-md-0 col-md-6 col-12 fs-16" (click)="close()">
+        {{ 'Discard Changes' | translate }}
+      </button>
+      <button
+        mat-flat-button
+        [disabled]="isSubmitDisabled || formGroup.pristine"
+        class="text-uppercase primary-btn fw-bold ms-md-2 col-md-6 col-12 me-2 me-md-0 fs-16"
+        [class.overlay-spinner]="submitting()"
+        (click)="submit()"
+      >
+        {{ 'Save Changes' | translate }}
+      </button>
+    </div>
+  </mat-dialog-actions>
+</div>

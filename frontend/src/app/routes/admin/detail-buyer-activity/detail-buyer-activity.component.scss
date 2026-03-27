@@ -1,0 +1,37 @@
+@import 'variables';
+
+.button-wrapper {
+  height: 42px;
+  width: 120px;
+}
+
+.icon {
+  line-height: 24px;
+  font-size: 16px;
+}
+
+.row-item {
+  margin-bottom: 40px;
+}
+
+.sub-title {
+  margin-bottom: 36px;
+}
+
+@media screen and (min-width: 1440px) {
+  .material-item {
+    margin-bottom: 40px !important;
+  }
+
+  .seller-information {
+    margin-bottom: 36px !important;
+  }
+
+  .buyer-information {
+    margin-bottom: 80px !important;
+  }
+}
+
+.seller-side {
+  background-color: #f6f6f6;
+}

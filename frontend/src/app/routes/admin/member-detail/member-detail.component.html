@@ -1,0 +1,78 @@
+<app-admin-layout [title]="'Members Account' | translate">
+  @if (loadingUser()) {
+    <app-spinner></app-spinner>
+  } @else {
+    @if (user(); as user) {
+      <div class="d-flex flex-wrap gap-3 mb-5 justify-content-between align-items-center">
+        <div
+          mat-button
+          class="d-none d-lg-inline-flex align-items-center py-1 rounded px-2 background-primary text-white text-uppercase cursor-pointer fw-bold button-wrapper"
+          (click)="onBack()"
+        >
+          <mat-icon class="icon">west</mat-icon>
+          <span>{{ 'go back' | translate }}</span>
+        </div>
+
+        <app-member-detail-actions [user]="user" (refresh)="refresh()" />
+      </div>
+
+      <div class="{{ activeTab() !== undefined ? 'd-none' : 'd-flex flex-column' }} d-lg-none">
+        @for (item of listTab; track item.title) {
+          @if (!user.company?.isHaulier || (item.title !== 'Material preferences' && item.title !== 'Locations')) {
+            <div class="d-flex gap-2 p-3 list-item" (click)="selectTab(item.title)">
+              <mat-icon fontSet="material-icons-outlined">{{ item.icon }}</mat-icon>
+              <p class="mb-0 flex-fill fw-bold text-uppercase">{{ item.title }}</p>
+              <mat-icon>chevron_right</mat-icon>
+            </div>
+          }
+        }
+      </div>
+
+      <div class="{{ activeTab() !== undefined ? 'd-block' : 'd-none d-lg-block' }}">
+        <mat-tab-group [selectedIndex]="activeTab()" animationDuration="0ms" class="common-tab" (selectedTabChange)="onTabChange($event)">
+          <mat-tab label="Profile">
+            <app-tab-container (back)="closeTab()">
+              <app-admin-personal-information [userDetail]="user" />
+            </app-tab-container>
+          </mat-tab>
+
+          <mat-tab label="company info">
+            <app-tab-container (back)="closeTab()">
+              <app-admin-company-information [company]="user?.company" />
+            </app-tab-container>
+          </mat-tab>
+
+          @if (!user.company?.isHaulier) {
+            <mat-tab label="Material preferences">
+              <app-tab-container (back)="closeTab()">
+                <app-admin-material-preference [favoriteMaterials]="user?.company?.favoriteMaterials" />
+              </app-tab-container>
+            </mat-tab>
+          }
+
+          <mat-tab label="Company documents">
+            <app-tab-container (back)="closeTab()">
+              <app-admin-company-document [user]="user" />
+            </app-tab-container>
+          </mat-tab>
+
+          @if (!user.company?.isHaulier) {
+            <mat-tab label="locations">
+              <app-tab-container (back)="closeTab()">
+                <app-admin-member-location [locations]="user?.company?.locations" />
+              </app-tab-container>
+            </mat-tab>
+          }
+
+          @if (user.companyId) {
+            <mat-tab label="Members">
+              <app-tab-container (back)="closeTab()">
+                <app-admin-members (reFetchMemberDetail)="refresh()" [user]="user" />
+              </app-tab-container>
+            </mat-tab>
+          }
+        </mat-tab-group>
+      </div>
+    }
+  }
+</app-admin-layout>

@@ -1,0 +1,46 @@
+<div class="d-flex flex-column">
+  <mat-label class="fw-bold fs-16">
+    {{ label | translate }}
+    @if (isRequired) {
+      <span class="asterisk">*</span>
+    }
+  </mat-label>
+  <div class="d-flex flex-column phone-input">
+    <div class="d-flex rounded">
+      <div class="col-5" [class.col-md-3]="!isHalf" [class.col-md-4]="isHalf">
+        <mat-form-field appearance="fill" class="w-100 no-outline left-side">
+          <mat-select [formControl]="countryCodeControl">
+            <mat-select-trigger>
+              @if (countryCodeControl.value; as selected) {
+                <div class="d-flex align-items-center">
+                  <i class="fi {{ selected.flagClass }}"></i>
+                  <span class="ms-1">{{ selected.code }}</span>
+                </div>
+              }
+            </mat-select-trigger>
+            @for (item of countryList; track $index) {
+              <mat-option [value]="item">
+                <i class="fi {{ item.flagClass }}"></i>
+                {{ item.code }}
+              </mat-option>
+            }
+          </mat-select>
+        </mat-form-field>
+      </div>
+
+      <div class="col-7" [class.col-md-9]="!isHalf" [class.col-md-8]="isHalf">
+        <mat-form-field appearance="fill" class="w-100 no-outline bg-white right-side">
+          <input matInput placeholder="ex. 741234480" type="text" [formControl]="telephoneControl" />
+        </mat-form-field>
+      </div>
+    </div>
+    <div>
+      @if (telephoneControl.hasError('required') && telephoneControl.touched) {
+        <mat-error>{{ 'This field is required' | translate }}</mat-error>
+      }
+      @if (telephoneControl.hasError('maxlength') || telephoneControl.hasError('pattern')) {
+        <mat-error>{{ 'Invalid telephone number. Please enter a valid number' | translate }}</mat-error>
+      }
+    </div>
+  </div>
+</div>

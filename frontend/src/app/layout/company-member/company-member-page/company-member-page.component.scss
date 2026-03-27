@@ -1,0 +1,8 @@
+.inv-btn {
+  display: flex;
+  justify-content: flex-end;
+}
+
+:host ::ng-deep .common-tab mat-tab-header .mat-mdc-tab-labels {
+  max-width: 280px;
+}

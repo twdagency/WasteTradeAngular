@@ -1,0 +1,21 @@
+@import 'variables';
+
+.action-button {
+  height: 70px;
+  font-size: 20px;
+}
+
+.underlink {
+  font-size: 20px;
+}
+
+.button-delete {
+  background-color: #e84f63;
+}
+
+.edit-button-disabled {
+  opacity: 40% !important;
+  border-color: $primary !important;
+  color: $primary !important;
+  background-color: $grey !important;
+}

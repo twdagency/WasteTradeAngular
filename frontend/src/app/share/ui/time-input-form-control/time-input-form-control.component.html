@@ -1,0 +1,36 @@
+<ng-content select="mat-label"></ng-content>
+
+<div class="flex-column">
+  <div class="d-flex col-md-3 col-6 align-items-center" [formGroup]="formGroup">
+    <div class="col-md-6 col-6">
+      <mat-form-field appearance="outline" class="w-100">
+        <input matInput type="number" formControlName="hour" [max]="maxHour" min="0" />
+        <mat-hint class="fw-bold text-start p-0">{{ 'Hour' | translate }}</mat-hint>
+      </mat-form-field>
+    </div>
+    <div class="d-flex align-items-start justify-content-center px-2 fs-4 fw-bold">
+      <div class="" style="height: 65px">:</div>
+    </div>
+    <div class="col-md-6 col-6">
+      <mat-form-field appearance="outline" class="w-100">
+        <input matInput type="number" formControlName="minute" [max]="maxMinute" min="0" />
+        <mat-hint class="fw-bold text-start p-0">{{ 'Minute' | translate }}</mat-hint>
+      </mat-form-field>
+    </div>
+  </div>
+  @if (
+    (formGroup.get('hour')?.hasError('required') && formGroup.touched) ||
+    (formGroup.get('minute')?.hasError('required') && formGroup.touched)
+  ) {
+    <div class="error">{{ 'This field is required' | translate }}</div>
+  }
+  @if (formGroup.get('hour')?.hasError('min') || formGroup.get('minute')?.hasError('min')) {
+    <div class="error">{{ 'This field cannot be a negative number.' | translate }}</div>
+  }
+  @if (formGroup.get('hour')?.hasError('max')) {
+    <div class="error">{{ 'Hour cannot be greater than 23.' | translate }}</div>
+  }
+  @if (formGroup.get('minute')?.hasError('max')) {
+    <div class="error">{{ 'Minute cannot be greater than 59.' | translate }}</div>
+  }
+</div>

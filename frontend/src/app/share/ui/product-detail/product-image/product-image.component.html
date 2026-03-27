@@ -1,0 +1,20 @@
+<div class="product-images-container position-relative border-on-primary">
+  @if (images.length > 0) {
+    <swiper-container [navigation]="true" autoplay-delay="500000" #swiperContainer>
+      @for (image of images; track image) {
+        <swiper-slide>
+          <img class="image" src="{{ image }}" loading="lazy" alt="" appFallbackImage />
+        </swiper-slide>
+      }
+    </swiper-container>
+
+    <div class="pagination d-flex align-items-center justify-content-between gap-2">
+      <mat-icon>linked_camera</mat-icon>
+      {{ slideIndex() + 1 }} / {{ images.length }}
+    </div>
+  } @else {
+    <div class="feature-image-wrapper">
+      <img class="feature-image" [class.admin-view]="isAdminView" [src]="featureImage" alt="Feature Image" />
+    </div>
+  }
+</div>

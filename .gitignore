@@ -1,0 +1,50 @@
+# Dependencies
+node_modules/
+
+# Environment files (contain secrets)
+.env
+.env.local
+.env.*.local
+
+# Build outputs
+dist/
+tmp/
+out-tsc/
+
+# IDE
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+.idea/
+*.sublime-workspace
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Docker volumes
+data_postgresql/
+
+# Original zip archives and SQL dump
+*.zip
+*.sql
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+pnpm-debug.log*
+
+# Angular cache
+.angular/
+
+# Coverage
+coverage/
+.nyc_output/
+
+# Misc
+.pnpm-store/
+.eslintcache
+*.tsbuildinfo

@@ -1,0 +1,123 @@
+<div class="container-fluid p-3 p-md-4 p-lg-4">
+  <div class="d-flex justify-content-between align-items-center w-100" mat-dialog-title>
+    <h2 class="fw-bold flex-grow-1">{{ 'Social' | translate }}</h2>
+    <div (click)="close()" class="cursor-pointer">
+      <app-icon iconName="close"></app-icon>
+    </div>
+  </div>
+
+  <mat-dialog-content class="overflow-x-hidden">
+    <form [formGroup]="formGroup">
+      <div class="col-md-11 mb-4">
+        <mat-label class="fw-bold fs-16">FACEBOOK PROFILE URL</mat-label>
+        <mat-form-field appearance="outline" class="w-100">
+          <input matInput placeholder="{{ 'Type here' | translate }}" type="text" formControlName="facebookUrl" />
+          @if (formGroup.get('facebookUrl')?.hasError('pattern')) {
+            <mat-error>{{ 'Please enter a valid URL.' | translate }}</mat-error>
+          }
+        </mat-form-field>
+      </div>
+      <div class="col-md-11 mb-4">
+        <mat-label class="fw-bold fs-16">INSTAGRAM PROFILE URL</mat-label>
+        <mat-form-field appearance="outline" class="w-100">
+          <input matInput placeholder="{{ 'Type here' | translate }}" type="text" formControlName="instagramUrl" />
+          @if (formGroup.get('instagramUrl')?.hasError('pattern')) {
+            <mat-error>{{ 'Please enter a valid URL.' | translate }}</mat-error>
+          }
+        </mat-form-field>
+      </div>
+      <div class="col-md-11 mb-4">
+        <mat-label class="fw-bold fs-16">LINKEDIN PROFILE URL</mat-label>
+        <mat-form-field appearance="outline" class="w-100">
+          <input matInput placeholder="{{ 'Type here' | translate }}" type="text" formControlName="linkedinUrl" />
+          @if (formGroup.get('linkedinUrl')?.hasError('pattern')) {
+            <mat-error>{{ 'Please enter a valid URL.' | translate }}</mat-error>
+          }
+        </mat-form-field>
+      </div>
+      <div class="col-md-11 mb-4">
+        <mat-label class="fw-bold fs-16">X PROFILE URL</mat-label>
+        <mat-form-field appearance="outline" class="w-100">
+          <input matInput placeholder="{{ 'Type here' | translate }}" type="text" formControlName="xUrl" />
+          @if (formGroup.get('xUrl')?.hasError('pattern')) {
+            <mat-error>{{ 'Please enter a valid URL.' | translate }}</mat-error>
+          }
+        </mat-form-field>
+      </div>
+
+      <div formArrayName="additionalSocialMediaUrls">
+        @if (additionalUrls.length > 0) {
+          @for (social of additionalUrls.controls; track $index; let i = $index) {
+            <div class="col-md-11 mb-4" [formGroupName]="i">
+              <mat-label class="fw-bold fs-16 text-uppercase">{{ social.get('name')?.value }} PROFILE URL</mat-label>
+              <mat-form-field appearance="outline" class="w-100">
+                <input matInput placeholder="{{ 'Type here' | translate }}" type="text" formControlName="url" />
+                @if (social.get('url')?.hasError('pattern')) {
+                  <mat-error>{{ 'Please enter a valid URL.' | translate }}</mat-error>
+                }
+              </mat-form-field>
+            </div>
+          }
+        }
+      </div>
+      <div class="mb-4 border rounded p-3 col-md-11">
+        <h3 class="mb-4">{{ 'Add new social url' | translate }}</h3>
+        <div class="row g-3">
+          <form [formGroup]="newUrl">
+            <div class="col-md-12 mb-3">
+              <mat-label class="fw-bold fs-16">{{ 'NAME' | translate }}</mat-label>
+              <mat-form-field appearance="outline" class="w-100">
+                <input matInput placeholder="e.g. Instagram, LinkedIn" type="text" formControlName="name" />
+                @if (newUrl.get('name')?.hasError('required')) {
+                  <mat-error>{{ 'This field is required' | translate }}</mat-error>
+                }
+              </mat-form-field>
+            </div>
+
+            <div class="col-md-12 mb-3">
+              <mat-label class="fw-bold fs-16">{{ 'URL' | translate }}</mat-label>
+              <mat-form-field appearance="outline" class="w-100">
+                <input matInput placeholder="https://example.com" type="url" formControlName="url" />
+                @if (newUrl.get('url')?.hasError('required')) {
+                  <mat-error>{{ 'This field is required' | translate }}</mat-error>
+                }
+                @if (newUrl.get('url')?.hasError('pattern')) {
+                  <mat-error>{{ 'Please enter a valid URL.' | translate }}</mat-error>
+                }
+              </mat-form-field>
+            </div>
+
+            <div class="w-100">
+              <button
+                mat-raised-button
+                color="primary"
+                type="button"
+                class="text-uppercase fw-bold"
+                (click)="addUrlGroup()"
+                [disabled]="newUrl.pristine || newUrl.invalid"
+              >
+                {{ 'Add Social Link' | translate }}
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </form>
+  </mat-dialog-content>
+  <mat-dialog-actions>
+    <div class="d-flex justify-content-md-between justify-content-center flex-column flex-md-row align-items-center w-100">
+      <button mat-stroked-button class="text-uppercase outline-primary-btn mb-3 mb-md-0 col-md-6 col-12 fs-16" (click)="close()">
+        {{ 'Discard Changes' | translate }}
+      </button>
+      <button
+        mat-flat-button
+        [disabled]="formGroup.invalid || formGroup.pristine"
+        class="text-uppercase primary-btn fw-bold ms-md-2 col-md-6 col-12 me-2 me-md-0 fs-16"
+        [class.overlay-spinner]="submitting()"
+        (click)="submit()"
+      >
+        {{ 'Save Changes' | translate }}
+      </button>
+    </div>
+  </mat-dialog-actions>
+</div>

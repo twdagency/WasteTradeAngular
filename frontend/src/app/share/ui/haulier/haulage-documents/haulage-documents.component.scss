@@ -1,0 +1,14 @@
+@import 'variables';
+
+.header-background {
+  background-color: $empty-state;
+}
+
+.mat-mdc-table .mat-mdc-header-row .mat-mdc-header-cell {
+  background-color: $grey;
+  border-bottom-color: $primary !important;
+}
+
+.mat-mdc-table .mat-mdc-row .mat-mdc-cell {
+  border-color: $primary !important;
+}

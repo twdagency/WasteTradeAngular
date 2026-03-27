@@ -1,0 +1,19 @@
+<div class="w-100 mt-4 mb-5 background-grey">
+  <div class="col-md-6 col-12 flex-column text-center justify-content-center align-items-center mx-auto p-5">
+    <div
+      class="rounded-pill d-flex justify-content-center align-items-center mx-auto"
+      style="width: 70px; height: 70px; background-color: #939797"
+    >
+      <mat-icon class="text-white d-flex justify-content-center align-items-center" style="font-size: 40px; width: 50px; height: 50px"
+        >search_off</mat-icon
+      >
+    </div>
+    <div class="w-100 fw-bold fs-32 mt-4">{{ 'Not finding what you need?' | translate }}</div>
+    <div class="w-100 fs-20 mt-4">
+      {{ (type == 'wanted' ? 'Click the button to list a required material' : 'Click the button to list your material') | translate }}
+    </div>
+    <button mat-stroked-button class="fw-bold primary px-5 py-4 mt-5 border-primary bg-white" [routerLink]="ROUTES.createWantedListing">
+      {{ 'LIST WANTED MATERIAL' | translate }}
+    </button>
+  </div>
+</div>

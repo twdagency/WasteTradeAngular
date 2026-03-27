@@ -1,0 +1,129 @@
+.remove-modal {
+  border-radius: 20px;
+  padding: 60px;
+  height: 100%;
+
+  h2 {
+    margin: 0;
+  }
+}
+
+.dialog-btn {
+  width: 50%;
+  height: 62px;
+  border: none;
+  border-radius: 5px;
+  font-size: 16px;
+}
+
+.cancel-btn {
+  border: 1px solid #03985c;
+  background-color: #fff;
+  color: #03985c;
+}
+
+.dialog-message {
+  p {
+    font-size: 32px;
+    color: #333;
+    margin: 0;
+    font-weight: 700;
+  }
+}
+
+.dialog-actions {
+  display: flex;
+  gap: 12px;
+  justify-content: flex-end;
+
+  button .mat-stroked-button {
+    border-color: #28a745;
+  }
+
+  button .mat-flat-button {
+    background-color: #28a745;
+    color: white;
+  }
+}
+
+.dialog-btn {
+  width: 50%;
+  height: 62px;
+  border: none;
+  border-radius: 5px;
+  font-size: 16px;
+}
+
+span {
+  color: #e84f63;
+}
+
+.reassign {
+  font-size: 20px;
+}
+
+.assignee-field {
+  ::ng-deep .mat-mdc-select-arrow-wrapper {
+    display: none;
+  }
+}
+
+::ng-deep .user-search-panel {
+  border: 1px solid #1d1d1b;
+  border-radius: 5px;
+  margin: 8px 0;
+
+  .search-box {
+    display: flex;
+    align-items: center;
+    padding: 8px 16px;
+    border: 1px solid #1d1d1b;
+    border-radius: 4px;
+    margin: 8px 16px;
+    background: #fff;
+
+    .search-icon {
+      color: #666;
+      margin-right: 8px;
+      font-size: 20px;
+      width: 20px;
+      height: 20px;
+    }
+
+    input {
+      flex: 1;
+      border: none;
+      outline: none;
+      font-size: 14px;
+
+      &::placeholder {
+        color: #999;
+      }
+    }
+  }
+
+  .search-result {
+    height: 200px;
+    overflow: auto;
+  }
+
+  .user-option {
+    .mat-option-text {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .user-name {
+      color: #1d1d1b;
+      margin-right: 12px;
+      display: inline-block;
+    }
+
+    .user-details {
+      color: #b1b1aa;
+      font-weight: 500;
+    }
+  }
+}

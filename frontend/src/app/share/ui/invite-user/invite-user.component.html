@@ -1,0 +1,100 @@
+<div class="container invite-modal">
+  <button mat-icon-button class="close-btn" (click)="handleClose()">
+    <mat-icon>close</mat-icon>
+  </button>
+  <h2 class="mb-4 fw-bold">{{ 'Invite User' | translate }}</h2>
+
+  <form [formGroup]="inviteForm" class="invite-form">
+    <div>
+      <label class="form-label"> {{ 'EMAIL ADDRESS' | translate }} <span>*</span> </label>
+
+      <mat-form-field appearance="outline" class="w-100">
+        <input matInput type="email" formControlName="email" />
+
+        @if (inviteForm.get('email')?.hasError('required')) {
+          <mat-error>
+            {{ 'Please complete all required fields.' | translate }}
+          </mat-error>
+        }
+
+        @if (inviteForm.get('email')?.hasError('email') || inviteForm.get('email')?.hasError('maxlength')) {
+          <mat-error>
+            {{ 'Please enter a valid email address.' | translate }}
+          </mat-error>
+        }
+      </mat-form-field>
+    </div>
+
+    <div class="row">
+      <div class="col-md-6 col-first-name">
+        <label class="form-label"> {{ 'FIRST NAME' | translate }} <span>*</span> </label>
+
+        <mat-form-field appearance="outline" class="w-100">
+          <input matInput formControlName="firstName" />
+
+          @if (inviteForm.get('firstName')?.hasError('required')) {
+            <mat-error>
+              {{ 'Please complete all required fields.' | translate }}
+            </mat-error>
+          }
+
+          @if (inviteForm.get('firstName')?.hasError('maxlength')) {
+            <mat-error>
+              {{ 'Enter a valid name, max 50 characters.' | translate }}
+            </mat-error>
+          }
+        </mat-form-field>
+      </div>
+
+      <div class="col-md-6">
+        <label class="form-label"> {{ 'LAST NAME' | translate }} <span>*</span> </label>
+
+        <mat-form-field appearance="outline" class="w-100">
+          <input matInput formControlName="lastName" />
+
+          @if (inviteForm.get('lastName')?.hasError('required')) {
+            <mat-error>
+              {{ 'Please complete all required fields.' | translate }}
+            </mat-error>
+          }
+
+          @if (inviteForm.get('lastName')?.hasError('maxlength')) {
+            <mat-error>
+              {{ 'Enter a valid name, max 50 characters.' | translate }}
+            </mat-error>
+          }
+        </mat-form-field>
+      </div>
+    </div>
+
+    <div class="mb-4">
+      <label class="form-label"> {{ 'ROLE' | translate }} <span>*</span> </label>
+
+      <mat-form-field appearance="outline" class="w-100">
+        <mat-select formControlName="role">
+          @for (role of roles; track role.code) {
+            <mat-option [value]="role.code">
+              {{ role.name | translate }}
+            </mat-option>
+          }
+        </mat-select>
+
+        @if (inviteForm.get('role')?.hasError('required')) {
+          <mat-error>
+            {{ 'Please complete all required fields.' | translate }}
+          </mat-error>
+        }
+      </mat-form-field>
+    </div>
+
+    <button
+      mat-stroked-button
+      color="primary"
+      class="w-100 py-2 primary-btn submit-btn"
+      [disabled]="inviteForm.invalid || submitting()"
+      (click)="submit()"
+    >
+      {{ 'SEND INVITE' | translate }}
+    </button>
+  </form>
+</div>

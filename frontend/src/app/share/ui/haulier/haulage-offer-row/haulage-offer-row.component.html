@@ -1,0 +1,75 @@
+<div class="p-2 border border-thin p-3 shadow-lg mb-3 rounded-4">
+  <div class="row g-3">
+    <div class="col d-flex flex-column">
+      <div class="text-uppercase fw-bold text-nowrap small mb-1">{{ 'Material' | translate }}</div>
+      <div class="text-break">{{ item?.materialName | titlecase }}</div>
+    </div>
+
+    <div class="col d-flex flex-column">
+      <div class="text-uppercase fw-bold text-nowrap small mb-1">{{ 'Packaging' | translate }}</div>
+      <div class="text-break">{{ item?.materialPacking | titlecase }}</div>
+    </div>
+
+    <div class="col d-flex flex-column">
+      <div class="text-uppercase fw-bold text-nowrap small mb-1">{{ 'Pickup location' | translate }}</div>
+      <div class="small">{{ item.pickupLocation }}</div>
+    </div>
+
+    <div class="col d-flex flex-column">
+      <div class="text-uppercase fw-bold text-nowrap small mb-1">{{ 'Destination' | translate }}</div>
+      <div class="text-break small">{{ item.destination }}</div>
+    </div>
+
+    <div class="col d-flex flex-column">
+      <div class="text-uppercase fw-bold text-nowrap small mb-1">{{ 'No.Loads' | translate }}</div>
+      <div class="text-break">{{ item.noLoads | number: '1.0-0' }}</div>
+    </div>
+
+    <div class="col d-flex flex-column">
+      <div class="text-uppercase fw-bold text-nowrap small mb-1">{{ 'Quantity per load' | translate }}</div>
+      <div class="text-break">{{ item.quantityPerLoad }} MT</div>
+    </div>
+
+    <div class="col d-flex flex-column">
+      <div class="text-uppercase fw-bold text-nowrap small mb-1">{{ 'Haulage total' | translate }}</div>
+      <div class="text-break">{{ item.haulageTotal }} MT</div>
+    </div>
+
+    <div class="col d-flex flex-column">
+      <div class="text-uppercase fw-bold text-nowrap small mb-1">{{ 'Delivery Window' | translate }}</div>
+      <div class="small">
+        <p class="mb-0">{{ item.earliestDeliveryDate | date: 'dd/MM/yyyy' }} -</p>
+        <p>{{ item.latestDeliveryDate | date: 'dd/MM/yyyy' }}</p>
+      </div>
+    </div>
+
+    <div class="col d-flex flex-column">
+      <div class="text-uppercase fw-bold text-nowrap small mb-1">{{ 'Offer status' | translate }}</div>
+      <div class="text-break fw-bold" [style]="{ color: getStatusColor(item.status) }">{{ mapCodeToStatus[item.status] }}</div>
+    </div>
+
+    <div class="col-auto d-flex align-items-center">
+      <div class="d-flex flex-column gap-2">
+        <button
+          mat-stroked-button
+          type="button"
+          class="border-primary primary py-4 fw-bold"
+          (click)="goToPage()"
+          style="max-width: 165px; min-width: 165px"
+        >
+          VIEW DETAILS
+        </button>
+
+        @if (
+          item.status == HaulierOffersStatus.ACCEPTED ||
+          item.status == HaulierOffersStatus.PARTIALLY_SHIPPED ||
+          item.status == HaulierOffersStatus.SHIPPED
+        ) {
+          <button mat-flat-button type="button" class="btn btn-primary py-4 fw-bold" (click)="viewDocuments()" style="max-width: 165px">
+            VIEW DOCUMENTS
+          </button>
+        }
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,17 @@
+<div class="mt-5">
+  @if (!hideResultCount) {
+    <p class="fw-bold">{{ items.length }} {{ 'RESULTS OF' | translate }} {{ totalItems }}</p>
+  }
+  <div class="row px-1">
+    @for (item of items; track $index) {
+      <div class="col-md-6 mb-4" (click)="selectItem.emit(item)">
+        <app-product-card
+          [deletable]="deletable"
+          (delete)="delete.emit(item)"
+          [product]="item"
+          [materialInterest]="isMaterialInterest(item.materialItem)"
+        ></app-product-card>
+      </div>
+    }
+  </div>
+</div>

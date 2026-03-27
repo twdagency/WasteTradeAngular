@@ -1,0 +1,34 @@
+<app-common-layout [title]="'Wanted Material' | translate" class="d-flex flex-column min-vh-100">
+  <app-filter
+    [displayFilter]="['country', 'materialType', 'materialItem', 'materialPacking', 'wasteStoration', 'showFullfilledListing', 'sortBy']"
+    (filterChanged)="onFilterChange($event)"
+    (searchTerm)="searchTerm.set($event)"
+  ></app-filter>
+
+  <div class="flex-grow-1 position-relative overflow-y-auto overflow-x-hidden">
+    @if (loading()) {
+      <app-spinner></app-spinner>
+    } @else {
+      @if (items().length > 0) {
+        <div class="flex-grow-1">
+          <app-product-grid [items]="items()" [totalItems]="totalItem()" (selectItem)="onSelect($event)"></app-product-grid>
+        </div>
+        <app-pagination [pageNumber]="page()" [totalCount]="totalItem()" (pageChange)="onPageChange($event)"></app-pagination>
+      } @else {
+        @if (this.items().length === 0 && this.totalItem() === 0) {
+          <app-unsuccessful-search></app-unsuccessful-search>
+        }
+
+        @if (items().length == 0 && totalItem() > 0) {
+          <div class="fs-24 empty-message-container pt-4">
+            <p class="text-muted text-center">{{ 'No  materials are currently available for display.' | translate }}</p>
+          </div>
+          <app-pagination [pageNumber]="page()" [totalCount]="totalItem()" (pageChange)="onPageChange($event)"></app-pagination>
+        }
+      }
+    }
+    <hr />
+  </div>
+
+  <app-listing-footer class="mt-auto"></app-listing-footer>
+</app-common-layout>

@@ -1,0 +1,6 @@
+<div class="note-wrapper" matTooltip="View/Add internal notes." matTooltipClass="tooltip-with-arrow" matTooltipPosition="above">
+  <button mat-stroked-button class="note-btn py-4 fw-bold" style="min-width: 165px; height: 60px" (click)="openNotesModal()">
+    <mat-icon>edit_note</mat-icon>
+    {{ noteContent() ? ('NOTE ADDED' | translate) : ('NOTES' | translate) }}
+  </button>
+</div>

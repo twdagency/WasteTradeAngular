@@ -1,0 +1,8 @@
+@import '../variables';
+
+.mat-expansion-panel {
+  background-color: white !important;
+  box-shadow: none !important;
+  border: 1px solid $black;
+  border-radius: $border-radius-tiny;
+}

@@ -1,0 +1,52 @@
+<div class="w-100">
+  <div class="cursor-pointer border-thin rounded-4 p-item p mb-3" (click)="onViewDetail()">
+    <div class="row gy-3 align-items-center">
+      <div class="col-12 col-md-6 col-lg">
+        <div class="fw-bold text-uppercase mb-1">{{ 'First name' | translate }}</div>
+        <p class="mb-0 fw-500 text-truncate">{{ user.firstName }}</p>
+      </div>
+
+      <div class="col-12 col-md-6 col-lg">
+        <div class="fw-bold text-uppercase mb-1">{{ 'Last name' | translate }}</div>
+
+        <p class="mb-0 fw-500 text-truncate">{{ user.lastName }}</p>
+      </div>
+
+      <div class="col-12 col-md-6 col-lg-2">
+        <div class="fw-bold text-uppercase mb-1">{{ 'Date of creation' | translate }}</div>
+
+        <p class="mb-0 fw-500 text-truncate">{{ user.dateOfCreation }}</p>
+      </div>
+
+      <div class="col-12 col-md-6 col-lg-2">
+        <div class="fw-bold text-uppercase mb-1">{{ 'Email address' | translate }}</div>
+
+        <p class="mb-0 fw-500 text-truncate">{{ user.emailAddress }}</p>
+      </div>
+
+      <div class="col-12 col-md-6 col-lg">
+        <div class="fw-bold text-uppercase mb-1">{{ 'Role' | translate }}</div>
+
+        <p class="mb-0 fw-500 text-truncate">{{ MapRoleToName[user.role] }}</p>
+      </div>
+
+      <div class="col-12 col-1d-6 col-lg">
+        <div class="fw-bold text-uppercase mb-1">{{ 'Status' | translate }}</div>
+        <p
+          class="mb-0 fw-500 text-truncate text-capitalize"
+          [ngStyle]="{
+            color: user.status === 'active' ? '#03985C' : '#B1B1AA',
+          }"
+        >
+          {{ user.status }}
+        </p>
+      </div>
+
+      <div class="col-12 col-lg-auto d-flex justify-content-center justify-content-lg-end">
+        <button mat-stroked-button class="border-primary primary fw-bold" [style]="{ height: '62px' }">
+          {{ 'VIEW DETAILS' | translate }}
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

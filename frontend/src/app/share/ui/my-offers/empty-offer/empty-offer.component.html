@@ -1,0 +1,29 @@
+<div class="wrapper d-flex align-items-center flex-column gap-md-5 rounded">
+  <app-icon backgroundColor="#939797" iconName="ballot"></app-icon>
+
+  <h1>{{ title }}</h1>
+
+  <p class="content">{{ content }}</p>
+
+  <div class="d-flex flex-column align-items-center mt-4 w-100" style="gap: 37px">
+    @for (button of buttons; track button.label) {
+      @if (button.type === 'stroke') {
+        <button
+          mat-stroked-button
+          class="fw-bold primary border-primary border rounded big-btn text-uppercase button"
+          (click)="button.onClick()"
+        >
+          {{ button.label | translate }}
+        </button>
+      } @else {
+        <button
+          mat-flat-button
+          class="fw-bold background-primary text-white rounded text-uppercase big-btn button"
+          (click)="button.onClick()"
+        >
+          {{ button.label | translate }}
+        </button>
+      }
+    }
+  </div>
+</div>

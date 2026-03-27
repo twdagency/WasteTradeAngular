@@ -1,0 +1,20 @@
+<div class="inv-btn">
+  <button
+    mat-flat-button
+    class="background-primary w-100 p-2 h-100 fs-16 fw-bold mb-4"
+    style="max-width: 140px"
+    (click)="openInviteModal()"
+  >
+    {{ 'INVITE USER' | translate }}
+  </button>
+</div>
+
+<div class="{{ activeTab() !== undefined ? 'd-block' : 'd-none d-lg-block' }}">
+  <mat-tab-group class="common-tab" [selectedIndex]="activeTab()" animationDuration="0ms" (selectedTabChange)="onTabChange($event)">
+    @for (item of listTab; track $index) {
+      <mat-tab label="{{ item.title | translate }}"></mat-tab>
+    }
+  </mat-tab-group>
+
+  <router-outlet></router-outlet>
+</div>

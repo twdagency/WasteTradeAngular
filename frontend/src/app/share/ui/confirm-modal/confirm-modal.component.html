@@ -1,0 +1,10 @@
+<div class="wrapper">
+  <h4 class="mb-5">{{ props.title | translate }}</h4>
+
+  <div class="d-flex gap-3 justify-content-center">
+    <button mat-stroked-button class="action-button border-primary primary text-uppercase" (click)="onCancel()">
+      {{ props.cancelLabel || 'Cancel' | translate }}
+    </button>
+    <button mat-flat-button class="action-button" (click)="onOk()">{{ props.confirmLabel || 'OK' | translate }}</button>
+  </div>
+</div>

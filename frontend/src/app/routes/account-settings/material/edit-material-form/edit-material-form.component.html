@@ -1,0 +1,102 @@
+<div class="container-fluid p-3 p-md-4 p-lg-4">
+  <div class="d-flex justify-content-between align-items-center w-100" mat-dialog-title>
+    <h2 class="fw-bold flex-grow-1">{{ 'Material Preferences' | translate }}</h2>
+    <div (click)="close()" class="cursor-pointer">
+      <app-icon iconName="close"></app-icon>
+    </div>
+  </div>
+
+  <mat-dialog-content>
+    <form [formGroup]="formGroup">
+      <div class="col-12 mb-3">
+        <mat-checkbox
+          class="bold-label fs-16"
+          color="primary"
+          [checked]="selectAllMaterial()"
+          (change)="toggleSelectAllMaterials()"
+          >{{ selectAllMaterial() ? ('Deselect All' | translate) : ('Select All' | translate) }}</mat-checkbox
+        >
+      </div>
+      @for (material of materialType; track $index) {
+        @if (material.materials.length > 0) {
+          <div class="mb-3">
+            <mat-expansion-panel
+              [expanded]="expandAllMaterials() || expandedMaterialGroup() === material.name"
+              (expandedChange)="onMaterialPanelToggle(material.name, $event)"
+            >
+              <mat-expansion-panel-header>
+                <mat-panel-title>
+                  <div class="fw-bold text-uppercase fs-16">{{ material.name | translate }}</div>
+                </mat-panel-title>
+              </mat-expansion-panel-header>
+              <div class="col-12 mb-4" style="margin-left: 10px">
+                <div class="row align-items-center">
+                  @for (item of material.materials; track $index; let i = $index) {
+                    <div class="col-12 col-md-4 mb-2">
+                      <mat-checkbox
+                        color="primary"
+                        class="bold-label"
+                        (change)="onSelectedMaterial($event, item.code)"
+                        [checked]="favoriteMaterials.value.includes(item.code)"
+                      >
+                        {{ item.name | translate }}
+                      </mat-checkbox>
+                    </div>
+                  }
+                </div>
+              </div>
+            </mat-expansion-panel>
+          </div>
+        }
+      }
+      <div class="mb-3">
+        <mat-expansion-panel
+          [expanded]="showOtherMaterial()"
+          (expandedChange)="showOtherMaterial.set($event)"
+          (closed)="formGroup.markAsDirty()"
+        >
+          <mat-expansion-panel-header>
+            <mat-panel-title>
+              <div class="fw-bold">
+                <mat-checkbox color="primary checkbox-pl0" (change)="showOtherMaterial.set($event.checked)" [checked]="showOtherMaterial()">
+                  <span class="text-wrap fw-bold fs-16">{{ 'Other' | translate }}</span>
+                </mat-checkbox>
+              </div>
+            </mat-panel-title>
+          </mat-expansion-panel-header>
+          <div class="col-12">
+            <mat-label class="fw-bold">{{ 'OTHER MATERIAL*' | translate }}</mat-label>
+            <mat-form-field appearance="outline" class="w-100">
+              <input matInput placeholder="{{ 'Type here' | translate }}" type="text" formControlName="otherMaterial" />
+              @if (formGroup.get('otherMaterial')?.hasError('required') && formGroup.get('otherMaterial')?.touched) {
+                <mat-error>{{ 'This field is required' | translate }}</mat-error>
+              }
+              @if (formGroup.get('otherMaterial')?.hasError('maxlength')) {
+                <mat-error>{{ 'Other Material cannot exceed 100 characters' | translate }}</mat-error>
+              }
+            </mat-form-field>
+          </div>
+        </mat-expansion-panel>
+      </div>
+      @if (favoriteMaterials.hasError('required') && favoriteMaterials.touched) {
+        <span class="error">{{ 'This field is required' | translate }}</span>
+      }
+    </form>
+  </mat-dialog-content>
+  <mat-dialog-actions>
+    <div class="d-flex justify-content-md-between justify-content-center flex-column flex-md-row align-items-center w-100">
+      <button mat-stroked-button class="text-uppercase outline-primary-btn mb-3 mb-md-0 col-md-6 col-12 fs-16" (click)="close()">
+        {{ 'Discard Changes' | translate }}
+      </button>
+      <button
+        mat-flat-button
+        [disabled]="formGroup.invalid || formGroup.pristine"
+        class="text-uppercase primary-btn fw-bold ms-md-2 col-md-6 col-12 me-2 me-md-0 fs-16"
+        [class.overlay-spinner]="submitting()"
+        (click)="submit()"
+      >
+        {{ 'Save Changes' | translate }}
+      </button>
+    </div>
+  </mat-dialog-actions>
+</div>

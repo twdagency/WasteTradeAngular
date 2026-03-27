@@ -1,0 +1,94 @@
+@import 'variables';
+
+$lg: 1400px;
+
+:host {
+  display: flex;
+  min-height: 100vh;
+  flex-direction: column;
+
+  .wrapper {
+    flex: 1;
+  }
+}
+
+.wrapper {
+  @media screen and (min-width: $lg) {
+    display: flex;
+  }
+}
+
+.content-container {
+  max-width: 1375px;
+  margin: 0 auto;
+  padding: 0 13px;
+
+  @media screen and (min-width: 768px) {
+    padding: 0 20px;
+  }
+}
+
+.title {
+  font-size: 32px;
+
+  @media screen and (min-width: $lg) {
+    font-size: 40px;
+  }
+}
+
+.right-box {
+  gap: 25px;
+}
+
+.icon-wrapper {
+  display: flex;
+  gap: 4px;
+  align-items: center;
+  text-decoration: none;
+  color: $black;
+  cursor: pointer;
+}
+
+.icon-item {
+  width: 29px;
+  height: 29px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 50%;
+  border: 2px solid #3d3e3e;
+
+  mat-icon {
+    font-size: 15px !important;
+    width: 15px;
+    height: 15px;
+  }
+}
+
+app-header,
+:host::ng-deep app-header app-sidebar {
+  display: flex;
+}
+
+.content-wrapper {
+  margin: 20px 0;
+
+  @media screen and (min-width: 992px) {
+    margin-top: 70px;
+    margin-bottom: 48px;
+  }
+}
+
+.header-desktop {
+  display: none;
+
+  @media screen and (min-width: $lg) {
+    display: flex;
+  }
+}
+
+.safe-width {
+  @media screen and (min-width: $lg) {
+    width: calc(100% - 250px) !important;
+  }
+}

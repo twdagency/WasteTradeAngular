@@ -1,0 +1,86 @@
+@import 'variables';
+
+$lg-break-point: 1400px;
+
+.wrapper {
+  @media screen and (min-width: $lg-break-point) {
+    display: flex;
+  }
+}
+
+.content-container {
+  max-width: 1375px;
+  margin: 0 auto;
+  padding: 0 13px;
+
+  @media screen and (min-width: 768px) {
+    padding: 0 20px;
+  }
+
+  @media screen and (min-width: $lg-break-point) {
+    max-width: calc(100% - 276px);
+  }
+}
+
+.title {
+  font-size: 32px;
+
+  @media screen and (min-width: 1440px) {
+    font-size: 40px;
+  }
+}
+
+.right-box {
+  gap: 32px;
+}
+
+.icon-wrapper {
+  display: flex;
+  gap: 4px;
+  align-items: center;
+  text-decoration: none;
+  color: $black;
+  cursor: pointer;
+}
+
+.icon-item {
+  width: 29px;
+  height: 29px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 50%;
+  border: 2px solid #3d3e3e;
+
+  mat-icon {
+    font-size: 15px !important;
+    width: 15px;
+    height: 15px;
+  }
+}
+
+.content-wrapper {
+  margin: 40px 0;
+
+  @media screen and (min-width: 992px) {
+    margin-top: 70px;
+    margin-bottom: 48px;
+  }
+}
+
+.header-desktop {
+  display: none;
+
+  @media screen and (min-width: $lg-break-point) {
+    display: flex;
+  }
+}
+
+:host::ng-deep app-header app-sidebar {
+  display: block;
+  height: 100%;
+
+  .sidebar-wrapper {
+    height: 100%;
+  }
+}

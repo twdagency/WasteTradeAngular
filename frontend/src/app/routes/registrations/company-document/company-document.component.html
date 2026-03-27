@@ -1,0 +1,237 @@
+<app-un-auth-layout>
+  <app-account-onboarding-status [showStatusOnly]="true" [type]="'completing'"></app-account-onboarding-status>
+  <div class="col-md-12 mx-auto d-flex justify-content-between g-3 my-5 row">
+    <div class="" style="width: 320px">
+      <div>
+        <div class="d-flex justify-content-between">
+          <mat-icon class="primary">check_circle</mat-icon>
+          <div class="w-75 mx-auto fw-bold">{{ 'COMPANY INFORMATION' | translate }}</div>
+          <mat-icon class="text-empty">remove</mat-icon>
+        </div>
+        <hr />
+        <div class="d-flex justify-content-between">
+          <mat-icon></mat-icon>
+          <div class="w-75 fw-bold mx-auto">{{ 'COMPANY DOCUMENTS' | translate }}</div>
+          <mat-icon>add</mat-icon>
+        </div>
+        <hr />
+        <div class="d-flex justify-content-between">
+          <mat-icon></mat-icon>
+          <div class="w-75 mx-auto fw-bold text-empty">{{ 'SITE LOCATION' | translate }}</div>
+          <mat-icon class="text-empty">remove</mat-icon>
+        </div>
+      </div>
+    </div>
+    <div class="" style="width: 830px">
+      <form [formGroup]="formGroup">
+        <div class="border border-dark boder-2 p-4 border-radius bg-white">
+          <h3 class="text-center my-2 fw-bold fs-40">{{ 'Company Documents' | translate }}</h3>
+          <div class="px-2 py-3 background-primary d-flex align-items-center mb-4 rounded-4 justify-content-center">
+            <div class="col-1 text-center d-flex align-items-center justify-content-center">
+              <mat-icon class="material-icons-outlined text-white">error_outline</mat-icon>
+            </div>
+            <div class="fw-500 fs-16 text-white">
+              {{
+                'Ensure uploaded documents are up-to-date versions and licence numbers are correct, errors may delay verification (*Required Field).'
+                  | translate
+              }}
+            </div>
+          </div>
+
+          <div class="col-12 mb-4">
+            <mat-label class="fw-bold mb-1">{{ 'COMPANY TYPE' | translate }} <span class="asterisk">*</span></mat-label>
+            <mat-form-field appearance="outline" class="w-100">
+              <mat-select formControlName="companyType" placeholder="{{ 'Please Select' | translate }}">
+                <mat-option value="manufacturer">{{ 'Manufacturer' | translate }}</mat-option>
+                <mat-option value="processor">{{ 'Processor' | translate }}</mat-option>
+                <mat-option value="recycler">{{ 'Recycler' | translate }}</mat-option>
+                <mat-option value="broker">{{ 'Broker' | translate }}</mat-option>
+                <mat-option value="waste_producer">{{ 'Waste Producer' | translate }}</mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+
+          <div class="col-12 mb-4">
+            <div class="d-flex align-items-center justify-content-between mb-1">
+              <mat-label class="fw-bold mb-1 d-block"
+                >{{ 'WHICH PERMIT/LICENCE DO YOU HAVE?' | translate }} <span class="asterisk">*</span></mat-label
+              >
+              <app-tooltip></app-tooltip>
+            </div>
+            <div class="d-flex flex-column">
+              <div>
+                <mat-checkbox
+                  class="bold-label col-md-auto col-12"
+                  formControlName="environmentalPermit"
+                  (change)="onDocumentTypeChange('environmentalPermit', $event.checked); onSelectUploadLater.set(false)"
+                  >{{ 'Environmental Permit' | translate }}
+                </mat-checkbox>
+
+                <div class="mb-4 pl-input" [hidden]="!environmentalPermit.value">
+                  <h6 class="mt-2 mb-2 fw-bold">{{ 'UPLOAD DOCUMENT' | translate }} <span class="asterisk">*</span></h6>
+                  <app-file-upload
+                    [maxFile]="6"
+                    (filesAdded)="handleFileReady($event, 'document', CompanyDocumentType.EnvironmentalPermit)"
+                    (uploadValid)="documentValid.set($event)"
+                    [notAcceptable]="['.doc', '.docx', '.xls', '.xlsx']"
+                    [expiryDateMode]="'optional'"
+                    [fileList]="environmentPermitDocuments"
+                  ></app-file-upload>
+                  <p>{{ 'Accepted file types: jpg, png, jpeg, pdf, Max. file size: 25 MB, Max. files: 6' | translate }}</p>
+                </div>
+              </div>
+
+              <div>
+                <mat-checkbox
+                  class="bold-label col-md-auto col-12"
+                  formControlName="wasteExemption"
+                  (change)="onDocumentTypeChange('wasteExemption', $event.checked); onSelectUploadLater.set(false)"
+                  >{{ 'Waste Exemptions' | translate }}
+                </mat-checkbox>
+
+                <div class="mb-4 pl-input" [hidden]="!wasteExemption.value">
+                  <h6 class="mt-2 mb-2 fw-bold">{{ 'UPLOAD DOCUMENT' | translate }} <span class="asterisk">*</span></h6>
+                  <app-file-upload
+                    [maxFile]="6"
+                    (filesAdded)="handleFileReady($event, 'document', CompanyDocumentType.WasteExemption)"
+                    (uploadValid)="documentValid.set($event)"
+                    [notAcceptable]="['.doc', '.docx', '.xls', '.xlsx']"
+                    [expiryDateMode]="'optional'"
+                    [fileList]="wasteExemptionDocuments"
+                  ></app-file-upload>
+                  <p>{{ 'Accepted file types: jpg, png, jpeg, pdf, Max. file size: 25 MB, Max. files: 6' | translate }}</p>
+                </div>
+              </div>
+
+              <div>
+                <mat-checkbox
+                  class="bold-label col-md-auto col-12"
+                  formControlName="other"
+                  (change)="onDocumentTypeChange('other', $event.checked); onSelectUploadLater.set(false)"
+                  >{{ 'Other' | translate }}
+                </mat-checkbox>
+
+                <div [hidden]="uploadLater.value">
+                  @if (other.value) {
+                    <div class="mb-4 pl-input">
+                      <label class="fw-bold">{{ 'DOCUMENT DESCRIPTION' | translate }} <span class="asterisk">*</span></label>
+                      <mat-form-field appearance="outline" class="w-100">
+                        <input matInput placeholder="{{ 'Type here' | translate }}" type="text" formControlName="otherDocumentType" />
+                        @if (formGroup.get('otherDocumentType')?.hasError('required')) {
+                          <mat-error>{{ 'This field is required' | translate }}</mat-error>
+                        }
+                      </mat-form-field>
+                    </div>
+
+                    <div class="mb-4 pl-input">
+                      <h6 class="mt-2 mb-2 fw-bold text-uppercase">{{ 'UPLOAD DOCUMENT' | translate }} <span class="asterisk">*</span></h6>
+                      <app-file-upload
+                        [maxFile]="6"
+                        (filesAdded)="handleFileReady($event, 'document', 'other')"
+                        (uploadValid)="documentValid.set($event)"
+                        [notAcceptable]="['.doc', '.docx', '.xls', '.xlsx']"
+                        [expiryDateMode]="'optional'"
+                        [fileList]="otherDocuments"
+                      ></app-file-upload>
+                      <p>{{ 'Accepted file types: jpg, png, jpeg, pdf, Max. file size: 25 MB, Max. files: 6' | translate }}</p>
+                    </div>
+                  }
+                </div>
+              </div>
+
+              <mat-checkbox
+                class="bold-label w-100"
+                formControlName="uploadLater"
+                (change)="onDocumentTypeChange('uploadLater', $event.checked); onSelectUploadLater.set($event.checked)"
+                >{{ 'Upload Later' | translate }}
+              </mat-checkbox>
+            </div>
+          </div>
+
+          <div class="col-12 mb-4" [hidden]="!uploadLater.value">
+            <div class="d-flex align-items-center justify-content-arround col-10 border rounded-4 w-100 p-2 error-message">
+              <div class="col-1 text-center d-flex align-items-center justify-content-center">
+                <mat-icon class="material-icons-outlined text-white error">error_outline</mat-icon>
+              </div>
+              <div class="error fw-bold fw-500 fs-16">
+                {{
+                  'You can start buying and selling material now, but please note that all transactions will be pending until you upload your company documentation.'
+                    | translate
+                }}
+              </div>
+            </div>
+          </div>
+
+          <hr style="opacity: 1" />
+
+          <div class="col-12 mb-4">
+            <mat-label class="mb-0 fw-bold"
+              >{{ 'DO YOU HAVE A WASTE CARRIER LICENCE?' | translate }} <span class="asterisk">*</span></mat-label
+            >
+            <mat-radio-group
+              formControlName="wasteLicence"
+              class="d-flex justify-content-between col-9"
+              name="wasteLicence"
+              (change)="onLicenceChange($event)"
+            >
+              <mat-radio-button class="bold-label" [value]="true"> {{ 'Yes' | translate }} </mat-radio-button>
+              <mat-radio-button class="bold-label" [value]="false"> {{ 'Not Applicable' | translate }} </mat-radio-button>
+            </mat-radio-group>
+            @if (formGroup.get('wasteLicence')?.hasError('required') && formGroup.get('wasteLicence')?.touched) {
+              <mat-error class="mt-0 mat-error"> {{ 'This field is required' | translate }} </mat-error>
+            }
+          </div>
+
+          @if (formGroup.get('wasteLicence')?.value) {
+            <h6 class="mb-4 mt-5 fw-bold">{{ 'UPLOAD WASTE CARRIER LICENCE' | translate }} <span class="asterisk">*</span></h6>
+            <div class="col-12 mb-4">
+              <app-file-upload
+                (filesAdded)="handleFileReady($event, 'licence', CompanyDocumentType.WasteCarrierLicense)"
+                [maxFile]="1"
+                (uploadValid)="wasteLicenceValid.set($event)"
+                [expiryDateMode]="'optional'"
+                [fileList]="wasteCarrierLicenseDocuments"
+              ></app-file-upload>
+              <p class="small">
+                {{ 'Accepted file types: jpg, png, jpeg, pdf, doc, xls, docx, Max. file size: 25 MB, Max. files: 1' | translate }}
+              </p>
+            </div>
+          }
+          <hr style="opacity: 1" />
+          <div class="col-12 mb-4">
+            <mat-label class="mb-0 fw-bold">{{ 'BOX CLEARING?' | translate }} <span class="asterisk">*</span></mat-label>
+            <mat-radio-group formControlName="boxClearingAgent" class="d-flex justify-content-between col-6" name="boxClearingAgent">
+              <mat-radio-button [value]="true" class="bold-label">{{ 'Yes' | translate }}</mat-radio-button>
+              <mat-radio-button [value]="false" class="bold-label">{{ 'No' | translate }}</mat-radio-button>
+            </mat-radio-group>
+            @if (formGroup.get('boxClearingAgent')?.hasError('required') && formGroup.get('boxClearingAgent')?.touched) {
+              <mat-error class="mt-0 mat-error">{{ 'This field is required' | translate }}</mat-error>
+            }
+          </div>
+        </div>
+        <div class="w-100 row mt-4 g-3 mx-auto d-flex justify-content-between align-items-center">
+          <div class="col-3">
+            <button mat-stroked-button type="button" class="w-100 fw-bold" (click)="onBack()">{{ 'PREVIOUS' | translate }}</button>
+          </div>
+          <div class="col-5 fw-bold text-decoration-underline cursor-pointer text-center primary" (click)="saveAndResumeLater()">
+            {{ 'SAVE AND RESUME LATER' | translate }}
+          </div>
+          <div class="col-3">
+            <button
+              [disabled]="isSubmitDisabled"
+              type="submit"
+              [class.background-primary]="!isSubmitDisabled"
+              [class.text-white]="!isSubmitDisabled"
+              [class.overlay-spinner]="submitting()"
+              mat-flat-button
+              class="w-100 p-2 fw-bold"
+              (click)="send('/site-location')"
+            >
+              {{ 'NEXT' | translate }}
+            </button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</app-un-auth-layout>

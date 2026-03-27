@@ -1,0 +1,246 @@
+<div class="col-12 overflow-hidden">
+  <h4 class="fw-bold mt-3 mb-4">{{ 'Company Information' | translate }}</h4>
+  <div class="d-flex flex-column flex-lg-row gap-4">
+    <div
+      class="border border-primary rounded-4 p-3 p-md-4 p-lg-5 d-flex flex-column flex-md-row justify-content-between col-12 col-lg-8 overflow-hidden gap-4"
+    >
+      <div class="col-12 col-md-8 col-lg-9 d-flex flex-column justify-content-between overflow-hidden flex-grow-1 min-w-0">
+        <div class="row g-3 mb-4 mx-0">
+          <div class="col-12 col-sm-4 px-2">
+            <div class="fw-bold mb-1">{{ 'COMPANY NAME' | translate }}</div>
+            <div class="">{{ company?.name || '-' }}</div>
+          </div>
+          <div class="col-12 col-sm-4 px-2">
+            <div class="fw-bold mb-1">{{ 'WEBSITE' | translate }}</div>
+            <a
+              class="pe-2 text-break text-decoration-none text-black cursor-pointer"
+              target="_blank"
+              [href]="safeUrl(company?.website ?? '')"
+              >{{ company?.website || '-' }}</a
+            >
+          </div>
+          <div class="col-12 col-sm-4 px-2">
+            <div class="fw-bold mb-1">{{ 'COMPANY INTEREST' | translate }}</div>
+            <div class="">{{ company?.companyInterest || '-' | titlecase }}</div>
+          </div>
+        </div>
+
+        <div class="row g-3 mx-0 mb-4">
+          <div class="col-12 col-sm-4 px-2">
+            <div class="fw-bold mb-1">{{ 'COMPANY TYPE' | translate }}</div>
+            <div class="">{{ company?.companyType ? (MAP_COMPANY_TYPE_TO_LABEL[company!.companyType!] | translate) : '-' }}</div>
+          </div>
+          <div class="col-12 col-sm-4 px-2">
+            <div class="fw-bold d-flex align-items-center gap-2 mb-1">
+              @if (company?.vatNumber == '') {
+                <mat-icon class="error">info_rounded</mat-icon>
+              }
+              {{ 'VAT' | translate }}
+            </div>
+            <div class="">{{ company?.vatNumber || '-' }}</div>
+          </div>
+          <div class="col-12 col-sm-4 px-2">
+            <div class="fw-bold mb-1">{{ 'COMPANY REGISTRATION NUMBER' | translate }}</div>
+            <div class="">{{ company?.registrationNumber || '-' }}</div>
+          </div>
+        </div>
+
+        <div class="w-100">
+          <div class="col-12 px-2">
+            <div class="fw-bold mb-1">{{ 'COMPANY DESCRIPTION' | translate }}</div>
+            <div class="company-desc">{{ company?.description || '-' || '' }}</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div appPermissionTooltip="setting.cantEditCompanyInfo">
+      <button
+        mat-stroked-button
+        class="d-flex align-items-center justify-content-center"
+        style="max-width: 200px"
+        (click)="openEditCompanyInfo()"
+        appPermissionDisable="setting.cantEditCompanyInfo"
+      >
+        <img
+          src="assets/images/edit_24px.svg"
+          appFallbackImage
+          loading="lazy"
+          alt="Edit icon"
+          style="height: 1em; width: auto; vertical-align: baseline; margin-right: 5px"
+        />
+        <span class="fw-bold fs-16">{{ 'EDIT' | translate }}</span>
+      </button>
+    </div>
+  </div>
+
+  <h4 class="fw-bold mt-5 mb-4">{{ 'Business Address' | translate }}</h4>
+  <div class="d-flex flex-column flex-lg-row gap-4">
+    <div
+      class="border border-primary rounded-4 p-3 p-md-4 p-lg-5 d-flex flex-column flex-md-row justify-content-between col-12 col-lg-8 overflow-hidden gap-4"
+    >
+      <div class="col-12 col-md-8 col-lg-9 d-flex flex-column justify-content-between overflow-hidden flex-grow-1 min-w-0">
+        <div class="row g-3 mb-4 mx-0">
+          <div class="col-12 col-sm-4 px-2">
+            <div class="fw-bold mb-1">{{ 'STREET ADDRESS' | translate }}</div>
+            <div class="">{{ company?.addressLine1 || '-' }}</div>
+          </div>
+          <div class="col-12 col-sm-4 px-2">
+            <div class="fw-bold mb-1">{{ 'ZIP / PORTAL CODE' | translate }}</div>
+            <div class="">{{ company?.postalCode || '-' }}</div>
+          </div>
+          <div class="col-12 col-sm-4 px-2">
+            <div class="fw-bold mb-1">{{ 'CITY' | translate }}</div>
+            <div class="">{{ company?.city || '-' }}</div>
+          </div>
+        </div>
+
+        <div class="row g-3 mx-0 mb-4">
+          <div class="col-12 col-sm-4 px-2">
+            <div class="fw-bold mb-1">{{ 'COUNTY / STATE / PROVINCE' | translate }}</div>
+            <div class="">{{ company?.stateProvince || '-' }}</div>
+          </div>
+          <div class="col-12 col-sm-4 px-2">
+            <div class="fw-bold mb-1">{{ 'COUNTRY' | translate }}</div>
+            <div class="">{{ countryCodeToName(company?.country) }}</div>
+          </div>
+          <div class="col-12 col-sm-4 px-2">
+            <div class="fw-bold mb-1">{{ 'EMAIL ADDRESS' | translate }}</div>
+            <div class="">{{ company?.email || '-' }}</div>
+          </div>
+        </div>
+
+        <div class="row g-3 mx-0 mb-4">
+          <div class="col-12 col-sm-4 px-2">
+            <div class="fw-bold mb-1">{{ 'TELEPHONE' | translate }}</div>
+            <div class="">{{ company?.phoneNumber || '-' }}</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div appPermissionTooltip="setting.cantEditCompanyInfo">
+      <button
+        mat-stroked-button
+        class="d-flex align-items-center justify-content-center"
+        style="max-width: 200px"
+        (click)="openEditBusinessAddress()"
+        appPermissionDisable="setting.cantEditCompanyInfo"
+      >
+        <img
+          src="assets/images/edit_24px.svg"
+          appFallbackImage
+          loading="lazy"
+          alt="Edit icon"
+          style="height: 1em; width: auto; vertical-align: baseline; margin-right: 5px"
+        />
+        <span class="fw-bold fs-16">{{ 'EDIT' | translate }}</span>
+      </button>
+    </div>
+  </div>
+
+  <h4 class="fw-bold mt-5 mb-4">{{ 'Social' | translate }}</h4>
+  <div class="d-flex flex-column flex-lg-row gap-4">
+    <div
+      class="border border-primary rounded-4 p-3 p-md-4 p-lg-5 d-flex flex-column flex-md-row justify-content-between col-12 col-lg-8 overflow-hidden gap-4"
+    >
+      <div class="col-12 col-md-8 col-lg-9 d-flex flex-column justify-content-between overflow-hidden flex-grow-1 min-w-0">
+        <div class="row g-3 mb-4 mx-0">
+          <div class="col-12 col-sm-4 px-2">
+            <div class="fw-bold mb-1 d-flex align-items-center gap-2">
+              @if (company?.facebookUrl == null || company?.facebookUrl == '') {
+                <mat-icon class="error">info_rounded</mat-icon>
+              }
+
+              {{ 'FACEBOOK PROFILE URL' | translate }}
+            </div>
+            <a
+              class="pe-2 text-break text-decoration-none text-black cursor-pointer"
+              target="_blank"
+              [href]="safeUrl(company?.facebookUrl ?? '')"
+              >{{ company?.facebookUrl || '-' }}</a
+            >
+          </div>
+          <div class="col-12 col-sm-4 px-2">
+            <div class="fw-bold mb-1 d-flex align-items-center gap-2">
+              @if (company?.instagramUrl == null || company?.instagramUrl == '') {
+                <mat-icon class="error">info_rounded</mat-icon>
+              }
+              {{ 'INSTAGRAM PROFILE URL' | translate }}
+            </div>
+            <a
+              class="pe-2 text-break text-decoration-none text-black cursor-pointer"
+              target="_blank"
+              [href]="safeUrl(company?.instagramUrl ?? '')"
+              >{{ company?.instagramUrl || '-' }}</a
+            >
+          </div>
+          <div class="col-12 col-sm-4 px-2">
+            <div class="fw-bold mb-1 d-flex align-items-center gap-2">
+              @if (company?.linkedinUrl == null || company?.linkedinUrl == '') {
+                <mat-icon class="error">info_rounded</mat-icon>
+              }
+              {{ 'LINKEDIN PROFILE URL' | translate }}
+            </div>
+            <a
+              class="pe-2 text-break text-decoration-none text-black cursor-pointer"
+              target="_blank"
+              [href]="safeUrl(company?.linkedinUrl ?? '')"
+              >{{ company?.linkedinUrl || '-' }}</a
+            >
+          </div>
+          <div class="col-sm-4 px-2">
+            <div class="fw-bold mb-1 d-flex align-items-center gap-2">
+              @if (company?.xUrl == null || company?.xUrl == '') {
+                <mat-icon class="error">info_rounded</mat-icon>
+              }
+              {{ 'X USERNAME (WITHOUT @)' | translate }}
+            </div>
+            <a
+              class="pe-2 text-break text-decoration-none text-black cursor-pointer"
+              target="_blank"
+              [href]="safeUrl(company?.xUrl ?? '')"
+              >{{ company?.xUrl || '-' }}</a
+            >
+          </div>
+          @if ((company?.additionalSocialMediaUrls?.length ?? 0) > 0) {
+            @for (social of company?.additionalSocialMediaUrls; track $index) {
+              <div class="col-sm-4 px-2">
+                <div class="fw-bold mb-1 d-flex align-items-center gap-2">
+                  <span class="text-uppercase">
+                    {{ `${social.name} PROFILE URL`| translate }}
+                  </span>
+                </div>
+                <a
+                  class="pe-2 text-break text-decoration-none text-black cursor-pointer"
+                  target="_blank"
+                  [href]="safeUrl(social?.url ?? '')"
+                  >{{ social?.url || '-' }}</a
+                >
+              </div>
+            }
+          }
+        </div>
+      </div>
+    </div>
+
+    <div appPermissionTooltip="setting.cantEditCompanyInfo">
+      <button
+        mat-stroked-button
+        class="d-flex align-items-center justify-content-center"
+        style="max-width: 200px"
+        (click)="openEditSocialUrl()"
+        appPermissionDisable="setting.cantEditCompanyInfo"
+      >
+        <img
+          src="assets/images/edit_24px.svg"
+          appFallbackImage
+          loading="lazy"
+          alt="Edit icon"
+          style="height: 1em; width: auto; vertical-align: baseline; margin-right: 5px"
+        />
+        <span class="fw-bold fs-16">{{ 'EDIT' | translate }}</span>
+      </button>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,32 @@
+.add-admin-btn {
+  background-color: #03985c;
+  color: white;
+  font-size: 16px;
+  padding: 8px 16px;
+  border: none;
+  border-radius: 5px;
+  height: 44px;
+}
+
+.add-admin-btn:hover {
+  background-color: #02764a;
+}
+
+.mini-select {
+  width: 94px;
+}
+:host ::ng-deep .mini-select .mat-mdc-form-field-flex {
+  min-height: 30px !important;
+}
+
+:host ::ng-deep .mini-select .mat-mdc-form-field-infix {
+  min-height: 30px !important;
+  padding: 4px 0 !important;
+}
+
+:host ::ng-deep .mini-select .mat-mdc-select-trigger {
+  height: 26px !important;
+  display: flex;
+  align-items: center;
+  font-weight: bold;
+}

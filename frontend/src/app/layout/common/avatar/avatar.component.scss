@@ -1,0 +1,99 @@
+@import 'variables';
+
+.wrapper {
+  cursor: pointer;
+  @media screen and (min-width: 992px) {
+    border-radius: 10px;
+    background-color: #06985c1a;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    padding: 9px 15px;
+    background-color: white !important;
+  }
+}
+
+.name,
+.role {
+  display: inline-block;
+  max-width: 105px;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+.user-name {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  position: relative;
+  font-weight: 700;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+  width: 44px;
+  height: 44px;
+  &::before {
+    content: '';
+    display: block;
+    background-color: $primary;
+    position: absolute;
+    width: 38px;
+    height: 38px;
+    transform: translate(2px 2px);
+    border-radius: 50%;
+  }
+
+  &.haulier-user-name {
+  }
+
+  &.haulier-user-name::before {
+    content: '';
+    display: block;
+    background-color: $primary;
+    position: absolute;
+    width: 38px;
+    height: 38px;
+    transform: translate(2px 2px);
+    border-radius: 50%;
+  }
+
+  .content {
+    position: relative;
+    z-index: 10;
+    margin-bottom: 0;
+    line-height: 13px;
+    color: #fff;
+    font-size: 13px;
+    text-transform: uppercase;
+  }
+}
+
+.menu-item {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  cursor: pointer;
+
+  &:not(:last-child) {
+    margin-bottom: 18px;
+  }
+}
+
+.menu-title {
+  font-weight: bold;
+  margin-bottom: 0;
+}
+
+::ng-deep .avatar-menu {
+  box-shadow: none !important;
+  margin-top: 10px;
+  border-radius: 10px;
+  border: 1px solid $primary;
+
+  .mat-mdc-menu-content {
+    padding: 19px 21px;
+    background-color: #fff;
+  }
+}

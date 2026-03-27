@@ -1,0 +1,13 @@
+<app-list-container
+  [fetchFn]="offerService.getPurchases.bind(offerService)"
+  [displayFilter]="['materialType', 'country', 'materialPacking', 'status', 'sortBy']"
+  [customOptionValues]="customOptionValues"
+  [pageSize]="20"
+  [emptyMessage]="'No purchases are currently available for display.'"
+  [isCountryFilter]="false"
+  [listingType]="'offer'"
+>
+  <ng-template let-purchase>
+    <app-purchase-detail [purchase]="purchase"></app-purchase-detail>
+  </ng-template>
+</app-list-container>

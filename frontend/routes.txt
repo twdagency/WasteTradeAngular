@@ -1,0 +1,7 @@
+/login
+/login?lost_pass=1
+/create-account
+/termsandconditions
+/privacy-policy
+/create-haulier-account
+

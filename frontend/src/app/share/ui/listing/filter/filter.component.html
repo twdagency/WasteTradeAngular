@@ -1,0 +1,219 @@
+<div class="w-100 mt-4" [formGroup]="filterForm">
+  @if (!onlyFilter) {
+    <!-- Search Bar Section -->
+    <div class="row mb-4">
+      <div class="col-8 col-md-9">
+        <mat-form-field appearance="outline" class="w-100">
+          <input matInput type="text" maxlength="50" [placeholder]="'What are you looking for?' | translate" formControlName="searchTerm" />
+        </mat-form-field>
+      </div>
+      <div class="col-4 col-md-3" style="padding-left: 0">
+        <button mat-flat-button class="background-primary w-100 h-100 fs-16" (click)="search()">
+          <mat-icon class="d-none d-md-block">search</mat-icon>
+          {{ 'SEARCH' | translate }}
+        </button>
+      </div>
+    </div>
+  }
+
+  @if (!onlySearchBar) {
+    <!-- Filter Section -->
+    <div class="mt-lg-3 background-on-primary border-radius filter-wrapper" [class.open-mobile-filter]="openMobileFilter()">
+      <!-- clean filter button for desktop  -->
+      @if (hasFilterParams && !openMobileFilter()) {
+        <div class="clear-all-btn d-none d-md-block fw-bold rounded border" (click)="clearFilter(); $event.stopPropagation()">
+          {{ 'Clear Filter' | translate }}
+        </div>
+      }
+      <div class="d-flex flex-wrap p-4 justify-content-between align-items-end">
+        <div class="d-md-none pt-4 pb-4 w-100 position-relative">
+          <h2 style="font-size: 28px" class="fw-bold">{{ 'Filter' | translate }}</h2>
+          <app-icon
+            (click)="onCloseFilterMobile()"
+            class="d-block position-absolute end-0 top-0 m-3 cursor-pointer"
+            iconName="close"
+            iconClassName="text-white"
+            backgroundColor="#03985C"
+          ></app-icon>
+        </div>
+
+        <div class="filter-scrollable w-100">
+          <div class="d-flex flex-wrap align-items-lg-end gap-3 w-100 flex-column flex-md-row">
+            @for (item of activeFilter; track item.value) {
+              @if (item.type === 'date') {
+                <div class="{{ item.value }}-wrapper">
+                  <div class="small-mat-form-field d-flex flex-column align-items-start {{ item.value }}">
+                    <div class="filter-select-item-label d-flex align-items-start">{{ item.name | translate }}</div>
+                    <div class="row g-1 align-items-center">
+                      <div class="date-item date-picker-input {{ item.value }}">
+                        <mat-form-field appearance="outline" class="w-100 bg-white">
+                          <input
+                            matInput
+                            placeholder="dd/mm/yyyy"
+                            formControlName="date"
+                            [matDatepicker]="datePicker"
+                            name="start"
+                            class="fw-bold w-100"
+                            (click)="datePicker.open()"
+                            [max]="maxStartDate"
+                          />
+                          <mat-datepicker #datePicker></mat-datepicker>
+                        </mat-form-field>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              }
+              @if (item.type == 'dateRange') {
+                <div class="{{ item.value }}-wrapper">
+                  <div class="small-mat-form-field d-flex flex-column align-items-start {{ item.value }}">
+                    <div class="filter-select-item-label d-flex align-items-start">{{ item.name | translate }}</div>
+                    <div class="row g-1 align-items-center">
+                      <!-- Start Date -->
+                      <div class="date-item date-picker-input {{ item.value }}">
+                        <mat-form-field appearance="outline" class="w-100 bg-white">
+                          <input
+                            matInput
+                            placeholder="dd/mm/yyyy"
+                            formControlName="dateRequireFrom"
+                            [matDatepicker]="startPicker"
+                            name="start"
+                            class="fw-bold w-100"
+                            (click)="startPicker.open()"
+                            [max]="maxStartDate"
+                          />
+                          <mat-datepicker #startPicker></mat-datepicker>
+                        </mat-form-field>
+                      </div>
+                      <span class="col-md-auto"> - </span>
+                      <!-- End Date -->
+                      <div class="date-item date-picker-input {{ item.value }}">
+                        <mat-form-field appearance="outline" class="w-100 bg-white">
+                          <input
+                            matInput
+                            placeholder="dd/mm/yyyy"
+                            formControlName="dateRequireTo"
+                            [matDatepicker]="endPicker"
+                            name="end"
+                            class="fw-bold w-100"
+                            (click)="endPicker.open()"
+                            [min]="minEndDate"
+                          />
+                          <mat-datepicker #endPicker></mat-datepicker>
+                        </mat-form-field>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              }
+
+              @if (item.type == 'select') {
+                <div class="{{ item.value }}-wrapper select-wrapper">
+                  <div class="small-mat-form-field select-item d-flex flex-column align-items-start {{ item.value }}">
+                    <div class="filter-select-item-label d-flex align-items-start">{{ item.name | translate }}</div>
+                    <mat-form-field appearance="outline" class="w-100 bg-white">
+                      <mat-select
+                        [multiple]="item.multipleSelect"
+                        [formControlName]="item.value"
+                        [placeholder]="item.value === 'sortBy' ? 'Available Material' : (item.placeholder ?? 'All')"
+                        class="fw-bold"
+                        panelWidth="160px"
+                        panelClass="mt-2"
+                      >
+                        @if (item.multipleSelect) {
+                          <mat-select-trigger>
+                            @if (shouldShowAllLabel(item)) {
+                              {{
+                                item.value === 'country' ? ('All Countries' | translate) : ('All' | translate)
+                              }}
+                            } @else {
+                              @for (selected of getSelectedOptions(item); track $index) {
+                                {{ selected.name | translate }}@if (!$last) { , }
+                              }
+                            }
+                          </mat-select-trigger>
+                        }
+                        @if (item.value !== 'sortBy' && !item.noAllOption) {
+                          <mat-option [value]="item.multipleSelect ? allOptionValue : null" class="option-bold-label text-wrap">
+                            {{
+                            item.value === 'country' ? ('All Countries' | translate) : ('All' | translate)
+                            }}
+                          </mat-option>
+                        }
+                        @for (option of item.options; track $index) {
+                          <mat-option [value]="getOptionValue(item, option)" class="option-bold-label">
+                            {{ option.name | translate }}
+                          </mat-option>
+                        }
+                      </mat-select>
+                    </mat-form-field>
+                  </div>
+                </div>
+              }
+
+              @if (item.type == 'checkbox') {
+                <div class="d-flex flex-column align-items-start {{ item.value }}">
+                  <div class="filter-item-label d-flex align-items-start">
+                    <span style="margin-bottom: 6px">{{ item.name | translate }}</span>
+                  </div>
+                  <div class="d-flex gap-3">
+                    @if (item.options && item.options.length === 1) {
+                      <mat-checkbox class="large-checkbox" [formControlName]="item.options[0].value || item.value">
+                        <span class="fw-bold">{{ item.options[0].name | translate }}</span>
+                      </mat-checkbox>
+                    } @else {
+                      @for (option of item.options; track $index) {
+                        <mat-checkbox class="large-checkbox" [formControlName]="option.value">
+                          <span class="fw-bold">{{ option.name | translate }}</span>
+                        </mat-checkbox>
+                      }
+                    }
+                  </div>
+                </div>
+              }
+
+              @if (item.type == 'input') {
+                <div class="{{ item.value }}-wrapper text-input-wrapper">
+                  <div class="small-mat-form-field input-item d-flex flex-column align-items-start {{ item.value }}">
+                    <div class="filter-select-item-label d-flex align-items-start">{{ item.name | translate }}</div>
+                    <mat-form-field appearance="outline" class="w-100 bg-white">
+                      <mat-icon matPrefix>search</mat-icon>
+                      <input matInput [formControlName]="item.value" placeholder="{{ 'Type here' | translate }}" />
+                    </mat-form-field>
+                  </div>
+                </div>
+              }
+            }
+          </div>
+        </div>
+        <!-- Select Filters - Left Side -->
+      </div>
+
+      <div class="d-flex d-md-none align-items-center gap-4 m-4">
+        <div
+          class="text-uppercase fw-bold p-3 text-white rounded background-primary d-inline-block cursor-pointer"
+          mat-button
+          (click)="onUpdateFilter()"
+        >
+          {{ ' Update Filter' | translate }}
+        </div>
+
+        @if (hasFilterParams) {
+          <div class="text-uppercase fw-bold p-3 d-inline-block cursor-pointer" mat-button (click)="clearFilter()">
+            {{ 'Clear Filter' | translate }}
+          </div>
+        }
+      </div>
+    </div>
+    <div
+      class="d-flex align-items-center justify-content-between border rounded px-2 py-3 my-3 d-md-none border-black cursor-pointer"
+      (click)="openFilterMobile()"
+    >
+      <span class="text-uppercase fw-bold">{{ 'Filter' | translate }}</span>
+      <mat-icon>tune</mat-icon>
+    </div>
+  }
+
+  <!-- <div class="d-flex gap-3"> -->
+  <!-- </div> -->
+</div>

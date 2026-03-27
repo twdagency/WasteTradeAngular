@@ -1,0 +1,34 @@
+:host::ng-deep {
+  app-product-image {
+    .product-images-container {
+      width: 100%;
+      max-width: unset;
+    }
+
+    .image {
+      height: 500px;
+    }
+
+    @media screen and (max-width: 768px) {
+      .image {
+        height: 200px;
+      }
+    }
+  }
+
+  app-product-description {
+    .label {
+      font-weight: normal !important;
+    }
+
+    .value {
+      font-weight: 700;
+    }
+  }
+}
+
+.request-button {
+  height: 70px;
+  font-size: 20px;
+  margin-top: 25px;
+}

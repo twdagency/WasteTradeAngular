@@ -1,0 +1,161 @@
+<app-haulier-layout [title]="'Haulier Bid' | translate">
+  <div class="col-md-9 border border-primary d-flex justify-content-between align-items-stretch rounded-4">
+    @if (loading()) {
+      <div class="w-100 d-flex justify-content-center p-5">
+        <app-spinner></app-spinner>
+      </div>
+    } @else {
+      <!-- seller -->
+      <div class="col-md-6 seller-side rounded-start-4 d-flex flex-column">
+        <div class="px-4 pt-4 flex-grow-1">
+          <div class="d-flex flex-column mb-3">
+            <div class="w-100 primary fs-3 fw-bold">{{ 'Seller' | translate }}</div>
+          </div>
+
+          <div class="d-flex justify-content-between mb-4">
+            <div class="d-flex flex-column col-md-6">
+              <div class="text-uppercase fw-bold">{{ 'Seller user id' | translate }}</div>
+              <div>{{ sellerDetails()?.user?.username }}</div>
+            </div>
+            <div class="d-flex flex-column col-md-6">
+              <div class="text-uppercase fw-bold">{{ 'Location' | translate }}</div>
+              <div>
+                {{ sellerDetails()?.location?.street }}, {{ sellerDetails()?.location?.stateProvince }},
+                {{ mapCountryCodeToName[sellerDetails()?.location?.country ?? ''] }}
+              </div>
+            </div>
+          </div>
+
+          <div class="d-flex justify-content-between mb-4">
+            <div class="d-flex flex-column col-md-6">
+              <div class="text-uppercase fw-bold">{{ 'Loading Times' | translate }}</div>
+              <div>
+                {{ sellerDetails()?.loadingTimes?.openTime | slice: 0 : 5 }} - {{ sellerDetails()?.loadingTimes?.closeTime | slice: 0 : 5 }}
+              </div>
+            </div>
+            <div class="d-flex flex-column col-md-6">
+              <div class="text-uppercase fw-bold">{{ 'Container Type' | translate }}</div>
+              @for (item of sellerDetails()?.location?.containerType; track $index) {
+                <div>{{ mapLocationContainerCodeToName[item] }}</div>
+              }
+            </div>
+          </div>
+
+          <div class="d-flex justify-content-between mb-4">
+            <div class="d-flex flex-column col-md-6">
+              <div class="text-uppercase fw-bold">{{ 'Site Restrictions' | translate }}</div>
+              <div>{{ sellerDetails()?.siteRestrictions == 'N/a' ? 'No' : sellerDetails()?.siteRestrictions }}</div>
+            </div>
+            <div class="d-flex flex-column col-md-6">
+              <div class="text-uppercase fw-bold">{{ 'Material Name' | translate }}</div>
+              <div>{{ getListingTitle(listingDetails() ?? {}) }}</div>
+            </div>
+          </div>
+
+          <div class="d-flex justify-content-between mb-4">
+            <div class="d-flex flex-column col-md-6">
+              <div class="text-uppercase fw-bold">{{ 'Material Types' | translate }}</div>
+              <div>{{ listingDetails()?.materialType | titlecase }}</div>
+            </div>
+            <div class="d-flex flex-column col-md-6">
+              <div class="text-uppercase fw-bold">{{ 'Material Item' | translate }}</div>
+              <div>{{ mapCodeToMaterialItem[listingDetails()?.materialItem ?? ''] | titlecase }}</div>
+            </div>
+          </div>
+
+          <div class="d-flex justify-content-between mb-4">
+            <div class="d-flex flex-column col-md-6">
+              <div class="text-uppercase fw-bold">{{ 'Packaging' | translate }}</div>
+              <div>{{ mapCodeToMaterialPackaging[listingDetails()?.materialPacking ?? ''] | titlecase }}</div>
+            </div>
+            <div class="d-flex flex-column col-md-6">
+              <div class="text-uppercase fw-bold">{{ 'Incoterms' | translate }}</div>
+              <div>{{ offerDetails()?.offer?.incoterms }}</div>
+            </div>
+          </div>
+
+          <div class="d-flex justify-content-between mb-4">
+            <div class="d-flex flex-column col-md-7">
+              <div class="text-uppercase fw-bold">{{ 'Average Weight Per Load (MT)' | translate }}</div>
+              <div>{{ sellerDetails()?.averageWeightPerLoad | number: '1.0-3' }}</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- buyer -->
+      <div class="col-md-6 buyer-side rounded-end-4 d-flex flex-column">
+        <div class="px-4 pt-4 flex-grow-1">
+          <div class="d-flex flex-column mb-3">
+            <div class="w-100 primary fs-3 fw-bold">{{ 'Buyer' | translate }}</div>
+          </div>
+
+          <div class="d-flex justify-content-between mb-4">
+            <div class="d-flex flex-column col-md-6">
+              <div class="text-uppercase fw-bold">{{ 'Buyer user id' | translate }}</div>
+              <div>{{ buyerDetails()?.user?.username }}</div>
+            </div>
+            <div class="d-flex flex-column col-md-6">
+              <div class="text-uppercase fw-bold">{{ 'Location' | translate }}</div>
+              <div>
+                {{ buyerDetails()?.location?.street }}, {{ buyerDetails()?.location?.stateProvince }},
+                {{ mapCountryCodeToName[buyerDetails()?.location?.country ?? ''] }}
+              </div>
+            </div>
+          </div>
+
+          <div class="d-flex justify-content-between mb-4">
+            <div class="d-flex flex-column col-md-6">
+              <div class="text-uppercase fw-bold">{{ 'Loading Times' | translate }}</div>
+              <div>
+                {{ buyerDetails()?.loadingTimes?.openTime | slice: 0 : 5 }} - {{ buyerDetails()?.loadingTimes?.closeTime | slice: 0 : 5 }}
+              </div>
+            </div>
+            <div class="d-flex flex-column col-md-6">
+              <div class="text-uppercase fw-bold">{{ 'Container Types' | translate }}</div>
+              @for (item of buyerDetails()?.location?.containerType; track $index) {
+                <div>{{ mapLocationContainerCodeToName[item] }}</div>
+              }
+            </div>
+          </div>
+
+          <div class="d-flex justify-content-between mb-4">
+            <div class="d-flex flex-column col-md-6">
+              <div class="text-uppercase fw-bold">{{ 'Site Restrictions' | translate }}</div>
+              <div>{{ buyerDetails()?.siteRestrictions == 'N/a' ? 'No' : buyerDetails()?.siteRestrictions }}</div>
+            </div>
+            <div class="d-flex flex-column col-md-6">
+              <div class="text-uppercase fw-bold">{{ 'Desired Delivery Window' | translate }}</div>
+              <div>
+                {{ offerDetails()?.offer?.earliestDeliveryDate | date: 'dd/MM/yyyy' }}
+                -
+                {{ offerDetails()?.offer?.latestDeliveryDate | date: 'dd/MM/yyyy' }}
+              </div>
+            </div>
+          </div>
+
+          <div class="d-flex justify-content-between mb-4">
+            <div class="d-flex flex-column col-md-6">
+              <div class="text-uppercase fw-bold">{{ 'Num of Load Bid on' | translate }}</div>
+              <div>{{ offerDetails()?.offer?.quantity }}</div>
+            </div>
+            <div class="d-flex flex-column col-md-6">
+              <div class="text-uppercase fw-bold">{{ 'Incoterms' | translate }}</div>
+              <div>{{ offerDetails()?.offer?.incoterms }}</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    }
+  </div>
+
+  <div class="fs-2 fw-bold my-4">{{ 'Haulage Bid Information' | translate }}</div>
+  <app-haulier-offer-form
+    [hauliers]="haulierList()"
+    [setupFilterFn]="filterFn"
+    [displayFn]="displayFn"
+    [offerDetail]="offerDetails()"
+    [offerId]="offerId()"
+    [isAdminView]="false"
+  ></app-haulier-offer-form>
+</app-haulier-layout>

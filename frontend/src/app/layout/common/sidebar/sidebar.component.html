@@ -1,0 +1,96 @@
+<div class="sidebar-wrapper {{ headerService.isOpenMenu ? 'open' : '' }}">
+  <div class="close-button cursor-pointer" (click)="headerService.closeMenu()">
+    <mat-icon>close</mat-icon>
+  </div>
+
+  <div class="sidebar">
+    <div class="p-3 bg-white mb-4 d-lg-none">
+      <p class="fw-bold mb-2">{{ 'Hi' | translate }} {{ user()?.user?.firstName }}</p>
+      <p class="mb-0 text-break">{{ user()?.user?.email }}</p>
+    </div>
+
+    <div class="d-none d-lg-block logo-wrapper">
+      <img src="assets/images/compact-logo.svg" alt="Logo" class="cursor-pointer" (click)="toLandingPage()" />
+    </div>
+
+    @if (user()?.user?.globalRole === Role.USER) {
+      @if (!isHaulierUser) {
+        <a class="menu-item dashboard d-flex gap-3 align-items-center" routerLink="/dashboard" routerLinkActive="active-link">
+          <app-icon iconName="view_quilt"></app-icon>
+          <p class="fw-bold mb-0">{{ 'Dashboard' | translate }}</p>
+        </a>
+
+        <p class="mb-0 px-3 px-lg-5 text-uppercase mt-2 mt-lg-3 mb-lg-3">{{ 'PLATFORM' | translate }}</p>
+
+        <div class="d-flex flex-column">
+          <ng-container [ngTemplateOutlet]="menuPlatform" [ngTemplateOutletContext]="{ items: listMenuPlatform() }"></ng-container>
+          <div class="menu-item more d-flex gap-3 align-items-center">
+            <app-icon iconName="more_vert"></app-icon>
+            <p class="fw-bold mb-0">{{ 'More' | translate }}</p>
+            <mat-icon class="more-icon">arrow_drop_down</mat-icon>
+          </div>
+        </div>
+      } @else {
+        <ng-container [ngTemplateOutlet]="menuPlatform" [ngTemplateOutletContext]="{ items: haulierMenu() }"></ng-container>
+      }
+    } @else {
+      @if (
+        user()?.user?.globalRole === Role.SUPER_ADMIN ||
+        user()?.user?.globalRole === Role.ADMIN ||
+        user()?.user?.globalRole === Role.SALES_ADMIN
+      ) {
+        <p class="mb-0 px-3 px-lg-4 text-uppercase mt-2 mt-lg-3 mb-lg-3">
+          {{ 'ADMIN PLATFORM' | translate }}
+        </p>
+
+        <ng-container [ngTemplateOutlet]="menuPlatform" [ngTemplateOutletContext]="{ items: adminMenu() }"></ng-container>
+      }
+    }
+  </div>
+</div>
+
+<ng-template #menuPlatform let-items="items">
+  @for (item of items; track item.title) {
+    @if (!item.isTempLink) {
+      <a
+        (click)="toggleChildMenu($index, item, $event)"
+        [routerLink]="item.link"
+        routerLinkActive="active-link"
+        [routerLinkActiveOptions]="{ exact: true }"
+        class="menu-item d-flex gap-3 align-items-center"
+        [class.has-children]="item.children"
+        [class.open]="isChildMenuOpen($index)"
+      >
+        @if (item.icon) {
+          <app-icon iconName="{{ item.icon }}" className="{{ item.iconClass }}" backgroundColor="{{ item.backgroundColor }}"></app-icon>
+        }
+        <p class="fw-bold mb-0">{{ item.title | translate }}</p>
+        @if (item.children) {
+          <mat-icon class="more-icon">
+            {{ isChildMenuOpen($index) ? 'expand_less' : 'arrow_drop_down' }}
+          </mat-icon>
+        }
+      </a>
+
+      @if (item.children && isChildMenuOpen($index)) {
+        <div class="child-menu">
+          @for (child of item.children; track child.title) {
+            <a
+              (click)="clickChildMenu($event, child)"
+              [routerLink]="child.link"
+              routerLinkActive="active-link"
+              [routerLinkActiveOptions]="{ exact: true }"
+              class="menu-item child-menu-item d-flex gap-3 align-items-center {{ child.disabled ? 'disabled' : '' }}"
+            >
+              <p class="fw-500 mb-0">{{ child.title | translate }}</p>
+            </a>
+          }
+        </div>
+      }
+    } @else {
+      <p (click)="onComingSoon()" class="menu-item d-flex gap-3 align-items-center fw-bold mb-0">
+        {{ item.title | translate }}
+      </p>
+    }
+  }
+</ng-template>

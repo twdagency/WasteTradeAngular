@@ -1,0 +1,8 @@
+.dialogContainer {
+  width: 100% !important;
+  padding: 0 1rem 1rem;
+
+  @media screen and (min-width: 992px) {
+    padding: 1rem 3rem;
+  }
+}

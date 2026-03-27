@@ -1,0 +1,62 @@
+<app-common-layout [title]="listingDetail()?.listing ? (getListingTitle(listingDetail()!.listing) | translate) : ''">
+  @if (loading()) {
+    <app-spinner />
+  } @else {
+    @if (listingDetail(); as listingDetail) {
+      <div class="mb-3">
+        <!-- <div class="d-flex justify-content-end align-items-center col-12 col-md-6 col-lg-8 mb-3">
+          <app-icon [iconName]="'star_border'" [backgroundColor]="'#E2E2E2'" iconClassName="text-dark"></app-icon>
+        </div> -->
+        <div class="mb-3 d-flex gap-2">
+          <a class="primary fw-bold text-decoration-none cursor-pointer" (click)="onBack()">{{ 'Back to the materials' | translate }}</a>
+          <mat-icon class="primary">chevron_left</mat-icon>
+          <span class="fw-bold">{{ getListingTitle(listingDetail.listing) | translate }}</span>
+        </div>
+      </div>
+      <div class="d-flex flex-column flex-md-row gap-4">
+        <div class="d-flex flex-column gap-4 col-12 col-md-6 col-lg-8">
+          <app-product-image [images]="images" [featureImage]="featureImage" />
+
+          <app-product-description [items]="descriptionItems()">
+            @if (isSeller(); as isSeller) {
+              @if (!isOwnListing()) {
+                <button mat-flat-button class="text-uppercase fw-bold w-100 request-button">{{ 'request sample' | translate }}</button>
+              }
+            } @else {
+              <button mat-flat-button class="text-uppercase fw-bold w-100 request-button" [routerLink]="['/sell']">
+                {{ 'Sell material' | translate }}
+              </button>
+            }
+          </app-product-description>
+
+          <app-share-listing [title]="getListingTitle(listingDetail.listing)" />
+        </div>
+
+        <div class="d-flex flex-column col-12 col-md-6 col-lg-4 flex-fill mb-3">
+          @if (isOwnListing()) {
+            <app-product-expiry [listingDetail]="listingDetail" (renewListing)="handleRenewListing($event)" />
+            <app-review-status [state]="listingDetail.listing.state"></app-review-status>
+          }
+          <app-product-status [product]="listingDetail.listing"></app-product-status>
+          <app-material-owner [listingDetail]="listingDetail" />
+
+          @if (!isOwnListing()) {
+            <app-product-expiry [listingDetail]="listingDetail" />
+          }
+
+          <app-material-action (refresh)="refetch()" [isSeller]="isSeller()" [listingDetail]="listingDetail" />
+        </div>
+      </div>
+      <div class="mt-5">
+        <div class="fs-40 fw-bold">{{ 'You might also like' | translate }}</div>
+        @if (loadingRelateListing()) {
+          <app-spinner />
+        } @else {
+          <app-product-grid [items]="relateListing" [hideResultCount]="true" (selectItem)="onSelect($event)"></app-product-grid>
+        }
+      </div>
+    } @else {
+      <p>boo</p>
+    }
+  }
+</app-common-layout>

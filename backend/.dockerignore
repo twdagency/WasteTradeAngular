@@ -1,0 +1,33 @@
+node_modules
+npm-debug.log
+/dist
+# Cache used by TypeScript's incremental build
+*.tsbuildinfo
+
+# Yarn files (legacy)
+.yarn/
+yarn.lock
+.yarnrc.yml
+
+# pnpm files
+.pnpm-store/
+pnpm-debug.log
+
+# Git
+.git/
+.gitignore
+
+# IDE
+.vscode/
+.cursor/
+.idea/
+
+# Docs and tests
+__tests__/
+!README.md
+!docs/**
+
+# Environment
+.env
+.env.*
+!.env.example

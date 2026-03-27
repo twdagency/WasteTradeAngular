@@ -1,0 +1,48 @@
+@if (offer(); as offer) {
+  <div class="d-flex flex-wrap gap-3 mb-4 mb-lg-5 justify-content-between">
+    <button
+      mat-flat-button
+      class="d-flex align-items-center justify-content-center py-2 rounded px-2 background-primary text-white text-uppercase fw-bold button-back"
+      (click)="onBack()"
+    >
+      <mat-icon class="icon">west</mat-icon>
+      <span>{{ 'go back' | translate }}</span>
+    </button>
+
+    <div class="d-flex justify-content-center gap-3">
+      <button mat-stroked-button class="border-primary primary fw-bold text-uppercase">{{ 'Edit' | translate }}</button>
+
+      <button mat-flat-button class="remove-button fw-bold text-uppercase" [disabled]="!canRemove()" (click)="onRemove()">
+        {{ 'Remove' | translate }}
+      </button>
+    </div>
+  </div>
+  <h2 class="fw-bold mb-4 cursor-pointer" routerLink="/wt_waste_listing/{{ offer.listing.id }}">{{ getListingTitle(offer.listing) }}</h2>
+
+  <div class="d-flex gap-3 flex-wrap flex-xl-nowrap">
+    <div class="product-image-wrapper">
+      <app-product-image [images]="galleryImages()" />
+    </div>
+
+    <div class="flex-1">
+      <app-product-description [items]="offerDescription()" [showMaterialDescriptionLabel]="false" />
+    </div>
+  </div>
+
+  @if (loadingListing()) {
+    <app-spinner></app-spinner>
+  } @else {
+    @if (listingItems(); as listingItems) {
+      <app-offer-listing
+        class="d-block mt-4 mt-lg-5"
+        [items]="listingItems"
+        [page]="page()"
+        [totalItems]="totalItems()"
+        (pageChange)="onPageChange($event)"
+        (refresh)="onRefresh()"
+      />
+    }
+  }
+} @else if (offer() === undefined) {
+  <app-spinner></app-spinner>
+}

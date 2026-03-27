@@ -1,0 +1,9 @@
+<app-un-auth-layout>
+  @if (contentName() == "login") {
+    <app-login></app-login>
+  } @else if (contentName() == "forgot-password") {
+    <app-forgot-password></app-forgot-password>
+  } @else if (contentName() === "set-password") {
+    <app-set-password></app-set-password>
+  }
+</app-un-auth-layout>

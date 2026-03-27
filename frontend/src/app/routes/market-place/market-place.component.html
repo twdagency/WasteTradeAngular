@@ -1,0 +1,36 @@
+<app-common-layout [title]="'Marketplace' | translate">
+  <app-filter
+    [displayFilter]="['country', 'materialType', 'materialItem', 'materialPacking', 'wasteStoration', 'soldListings', 'sortBy']"
+    (filterChanged)="onFilterChange($event)"
+  ></app-filter>
+
+  <div class="mid-content-wrapper">
+    @if (loading()) {
+      <app-spinner></app-spinner>
+    } @else if (!loading() && items().length > 0) {
+      <app-product-grid
+        [items]="items()"
+        [totalItems]="totalItem()"
+        (selectItem)="onSelect($event)"
+        (delete)="deleteItem($event)"
+        [deletable]="true"
+      ></app-product-grid>
+      <app-pagination [pageNumber]="page()" [totalCount]="totalItem()" (pageChange)="onPageChange($event)"></app-pagination>
+    } @else {
+      @if (this.items().length === 0 && this.totalItem() === 0) {
+        <app-unsuccessful-search></app-unsuccessful-search>
+      }
+
+      @if (items().length == 0 && totalItem() > 0) {
+        <div class="fs-24 empty-message-container pt-4">
+          <p class="text-muted text-center">{{ 'No materials are currently available for display.' | translate }}</p>
+        </div>
+        <app-pagination [pageNumber]="page()" [totalCount]="totalItem()" (pageChange)="onPageChange($event)"></app-pagination>
+      }
+    }
+
+    <hr class="mt-5 mb-0" />
+
+    <app-listing-footer></app-listing-footer>
+  </div>
+</app-common-layout>

@@ -1,0 +1,23 @@
+<div class="background-on-primary d-flex justify-content-center w-100 py-5" style="height: 82vh">
+  <div class="col-md-7 text-center flex-column h-100 justify-content-center align-items-center">
+    <div class="w-100 d-flex justify-content-center mb-3">
+      <div
+        class="rounded rounded-circle d-flex justify-content-center align-items-center background-primary"
+        style="width: 70px; height: 70px"
+      >
+        <mat-icon class="text-white" style="font-size: 48px; height: 48px; width: 48px">location_on_circle</mat-icon>
+      </div>
+    </div>
+    <div class="fw-bold fs-40">{{ 'All Done!' | translate }}</div>
+    <div class="fw-bold fs-40">{{ 'Your New Location Is Now Added' | translate }}</div>
+    <div class="flex-column d-flex align-items-center">
+      <button mat-flat-button class="text-white fw-bold background-primary w-50 mt-5 mb-4 py-4" [routerLink]="['/sell']">
+        {{ 'CREATE NEW LISTINGS' | translate }}
+      </button>
+
+      <button mat-stroked-button class="border-primary w-50 fw-bold primary bg-white py-4 fw-bold" [routerLink]="['/my-sites']">
+        {{ 'VIEW MY LOCATIONS' | translate }}
+      </button>
+    </div>
+  </div>
+</div>

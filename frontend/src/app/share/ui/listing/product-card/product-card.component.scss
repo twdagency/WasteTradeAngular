@@ -1,0 +1,42 @@
+.product-image {
+  height: 111px;
+}
+
+.product-card {
+  font-size: 12px;
+  position: relative;
+}
+
+.delete-button {
+  background-color: #000;
+  border-radius: 15px;
+  width: 51px;
+  height: 51px;
+  color: #fff;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+:host::ng-deep app-icon {
+  .icon-wrapper,
+  mat-icon {
+    width: 18px;
+    height: 18px;
+    font-size: 11px !important;
+  }
+}
+
+@media screen and (min-width: 992px) {
+  .product-image {
+    height: 160px;
+  }
+
+  .product-card {
+    font-size: 16px;
+  }
+}
+
+.product-title {
+  height: 58px;
+}

@@ -1,0 +1,124 @@
+<div class="w-100">
+  <div class="border-thin rounded-4 p-3 p-md-4 mt-4 mb-3">
+    <div class="row gy-3 gy-md-4 align-items-start gap-1 justify-content-between">
+      <!-- ASSIGN Section -->
+      @if (listing) {
+        <app-assign-admin
+          class="col-auto"
+          [dataId]="listing.id"
+          [dataType]="dataType"
+          [assignAdmin]="listing.assignAdmin"
+        ></app-assign-admin>
+      }
+
+      <!-- SELLER Section -->
+      <div class="col-md-2">
+        <div class="fw-bold mb-2 mb-md-3 text-uppercase">{{ 'SELLER' | translate }}</div>
+        <app-user-summary [userData]="listing?.createdBy?.user" [allowDetails]="true"></app-user-summary>
+        <p class="mb-1 small">{{ listing?.createdBy?.user?.firstName }} {{ listing?.createdBy?.user?.lastName }}</p>
+        <p class="mb-1 small">{{ listing?.createdBy?.company?.name }}</p>
+        <app-location-summary [locationData]="listing?.createdBy?.location" [allowDetailsModal]="true"></app-location-summary>
+      </div>
+
+      <!-- MATERIAL & GUIDE PRICE -->
+      <div class="col-md-2">
+        <div class="mb-3">
+          <div class="fw-bold mb-2 mb-md-3 text-uppercase">{{ 'MATERIAL' | translate }}</div>
+          <p class="mb-1 small text-wrap">{{ getMaterialName() }}</p>
+        </div>
+        <div>
+          <div class="fw-bold mb-2 mb-md-3 text-uppercase">{{ 'GUIDE PRICE' | translate }}</div>
+          <p class="mb-1 small">
+            {{ getCurrencySignal(listing?.currency ?? '') }}{{ (listing?.pricePerMetricTonne | number: '1.0-2') ?? '-' }}
+          </p>
+        </div>
+      </div>
+
+      <!-- DATE & BEST OFFER -->
+      <div class="col-auto">
+        <div class="mb-3">
+          <div class="fw-bold mb-2 mb-md-3 text-uppercase">{{ 'DATE' | translate }}</div>
+          <p class="mb-1 small">{{ listing?.created_at | date: 'dd/MM/YYYY' }}</p>
+        </div>
+        <div>
+          <div class="fw-bold mb-2 mb-md-3 text-uppercase">{{ 'BEST OFFER' | translate }}</div>
+          <p class="mb-1 small">
+            @if (listing?.numberOfOffers) {
+              {{ getCurrencySignal(listing?.bestOfferCurrency ?? '') }}{{ (listing?.bestOffer | number) ?? '-' }}/MT
+            } @else {
+              -
+            }
+          </p>
+        </div>
+      </div>
+
+      <!-- DATE AVAILABLE & WEIGHT -->
+      <div class="col-auto">
+        <div class="mb-3">
+          <div class="fw-bold mb-2 mb-md-3 text-uppercase">{{ 'DATE AVAILABLE FROM' | translate }}</div>
+          <p class="mb-1 small">{{ listing?.start_date | date: 'dd/MM/YYYY' }}</p>
+        </div>
+        <div>
+          <div class="fw-bold mb-2 mb-md-3 text-uppercase">{{ 'WEIGHT' | translate }}</div>
+          <p class="mb-1 small">
+            @if (listing?.material_weight_per_unit) {
+              {{ listing?.material_weight_per_unit | number: '1.0-2' }}{{ ' MT' | translate }}
+            } @else {
+              {{ '-' }}
+            }
+          </p>
+        </div>
+      </div>
+
+      <!-- No. OFFERS & REMAINING -->
+      <div class="col-auto">
+        <div class="mb-3">
+          <div class="fw-bold mb-2 mb-md-3 text-uppercase">{{ 'No.OFFERS' | translate }}</div>
+          <p
+            class="mb-1 small"
+            [class.clickable]="(listing?.numberOfOffers ?? 0) > 0"
+            (click)="(listing?.numberOfOffers ?? 0) > 0 && searchOffers()"
+          >
+            {{ listing?.numberOfOffers ?? '-' }}
+          </p>
+        </div>
+        <div>
+          <div class="fw-bold mb-2 mb-md-3 text-uppercase">{{ 'REMAINING LOADS' | translate }}</div>
+          <p class="mb-1 small">{{ listing?.remaining_quantity | number }}</p>
+        </div>
+      </div>
+
+      <!-- STATUS & ADMIN STATE -->
+      <div class="col-auto">
+        <div class="mb-3">
+          <div class="fw-bold mb-2 mb-md-3 text-uppercase">{{ 'STATUS' | translate }}</div>
+          <p class="mb-1 small fw-500" [style.color]="getListingStatusColor(listing!.status)">
+            {{ getListingStatusText(listing?.status) | translate | titlecase }}
+          </p>
+        </div>
+        <div>
+          <div class="fw-bold mb-2 mb-md-3 text-uppercase">{{ 'ADMIN STATE' | translate }}</div>
+          <div class="d-flex align-items-center gap-1">
+            <mat-icon [style.color]="getListingStateColor(listing!.state)">fiber_manual_record</mat-icon>
+            <span class="small" [style.color]="getListingStateColor(listing!.state)">{{
+              getListingStateText(listing?.state) | translate | titlecase
+            }}</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Buttons Section -->
+      <div class="d-flex flex-column gap-2 h-100 align-items-center align-self-center justify-content-center col-auto">
+        <button mat-stroked-button class="border-primary primary py-4 fw-bold" style="min-width: 165px" (click)="onViewDetail()">
+          {{ 'VIEW DETAILS' | translate }}
+        </button>
+
+        @if (listing) {
+          <app-notes-btn
+            [inputData]="{ id: listing!.id, adminNote: listing!.adminNote, dataType: AdminNoteDataType.LISTINGS }"
+          ></app-notes-btn>
+        }
+      </div>
+    </div>
+  </div>
+</div>

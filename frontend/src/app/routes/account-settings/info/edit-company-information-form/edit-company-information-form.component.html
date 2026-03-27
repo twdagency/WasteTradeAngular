@@ -1,0 +1,121 @@
+<div class="container-fluid p-3 p-md-4 p-lg-4">
+  <div class="d-flex justify-content-between align-items-center w-100" mat-dialog-title>
+    <h2 class="fw-bold flex-grow-1">{{ 'Company Information' | translate }}</h2>
+
+    <div (click)="close()" class="cursor-pointer">
+      <app-icon iconName="close"></app-icon>
+    </div>
+  </div>
+
+  <mat-dialog-content class="overflow-x-hidden">
+    <form [formGroup]="formGroup">
+      <div class="row g-3 mb-3">
+        <div class="col-md-6">
+          <mat-label class="fw-bold mb-1 fs-16">{{ 'COMPANY NAME' | translate }}*</mat-label>
+          <mat-form-field appearance="outline" class="w-100">
+            <input matInput placeholder="{{ 'Type Here' | translate }}" type="text" formControlName="name" />
+            @if (formGroup.get('name')?.hasError('required')) {
+              <mat-error>This field is required. Please complete it before saving. </mat-error>
+            }
+            @if (formGroup.get('name')?.hasError('maxlength')) {
+              <mat-error>This input exceeds the field character limit.</mat-error>
+            }
+          </mat-form-field>
+        </div>
+        <div class="col-md-6">
+          <mat-label class="fw-bold mb-1 fs-16">{{ 'WEBSITE' | translate }}</mat-label>
+          <mat-form-field appearance="outline" class="w-100">
+            <input matInput placeholder="{{ 'Type Here' | translate }}" type="text" formControlName="website" />
+
+            @if (formGroup.get('website')?.hasError('pattern')) {
+              <mat-error>{{ 'PLEASE ENTER A VALID URL.' | translate }}</mat-error>
+            }
+          </mat-form-field>
+        </div>
+      </div>
+
+      <div class="row mb-4">
+        <div class="col-md-6">
+          <mat-label class="mb-0 fw-bold fs-16">{{ 'COMPANY INTEREST' | translate }}*</mat-label>
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-select placeholder="{{ 'Please Select' | translate }}" formControlName="companyInterest">
+              <mat-option value="both"> {{ 'Both' | translate }}</mat-option>
+              <mat-option value="seller">{{ 'Seller' | translate }}</mat-option>
+              <mat-option value="buyer">{{ 'Buyer' | translate }}</mat-option>
+            </mat-select>
+          </mat-form-field>
+          @if (formGroup.get('companyInterest')?.hasError('required') && formGroup.get('companyInterest')?.touched) {
+            <mat-error class="mt-0 mat-error">{{ 'This field is required. Please complete it before saving.' | translate }}</mat-error>
+          }
+        </div>
+        <div class="col-md-6">
+          <mat-label class="fw-bold mb-1 fs-16">{{ 'COMPANY TYPE' | translate }}*</mat-label>
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-select formControlName="companyType" placeholder="{{ 'Please Select' | translate }}">
+              <mat-option value="manufacturer">{{ MAP_COMPANY_TYPE_TO_LABEL['manufacturer'] | translate }}</mat-option>
+              <mat-option value="processor">{{ MAP_COMPANY_TYPE_TO_LABEL['processor'] | translate }}</mat-option>
+              <mat-option value="recycler">{{ MAP_COMPANY_TYPE_TO_LABEL['recycler'] | translate }}</mat-option>
+              <mat-option value="broker">{{ MAP_COMPANY_TYPE_TO_LABEL['broker'] | translate }}</mat-option>
+              <mat-option value="waste_producer">{{ MAP_COMPANY_TYPE_TO_LABEL['waste_producer'] | translate }}</mat-option>
+            </mat-select>
+            @if (formGroup.get('companyType')?.hasError('required')) {
+              <mat-error>{{ 'This field is required. Please complete it before saving.' | translate }}</mat-error>
+            }
+          </mat-form-field>
+        </div>
+      </div>
+
+      <div class="col-md-12 mb-4">
+        <label class="fw-bold fs-16">{{ 'COMPANY VAT NUMBER' | translate }}*</label>
+        <mat-form-field appearance="outline" class="w-100">
+          <input matInput placeholder="{{ 'Type here' | translate }}" type="text" formControlName="vatNumber" />
+          @if (formGroup.get('vatNumber')?.hasError('required')) {
+            <mat-error>{{ 'This field is required. Please complete it before saving.' | translate }}</mat-error>
+          }
+          @if (formGroup.get('vatNumber')?.hasError('maxlength')) {
+            <mat-error>{{ 'This input exceeds the field character limit.' | translate }}</mat-error>
+          }
+        </mat-form-field>
+      </div>
+
+      <div class="col-md-12 mb-4">
+        <label class="fw-bold fs-16">{{ 'COMPANY REGISTRATION NUMBER' | translate }}*</label>
+        <mat-form-field appearance="outline" class="w-100">
+          <input matInput placeholder="{{ 'Type here' | translate }}" type="text" formControlName="registrationNumber" />
+          @if (formGroup.get('registrationNumber')?.hasError('required')) {
+            <mat-error>{{ 'This field is required. Please complete it before saving.' | translate }}</mat-error>
+          }
+          @if (formGroup.get('registrationNumber')?.hasError('maxlength')) {
+            <mat-error>{{ 'This input exceeds the field character limit.' | translate }}</mat-error>
+          }
+        </mat-form-field>
+      </div>
+
+      <div class="col-md-12 mb-4">
+        <div class="fw-bold fs-16">{{ 'COMPANY DESCRIPTION' | translate }}</div>
+        <mat-form-field appearance="outline" class="w-100">
+          <textarea matInput rows="7" style="resize: none" formControlName="description"></textarea>
+          @if (formGroup.get('description')?.hasError('maxlength')) {
+            <mat-error>{{ 'This input exceeds the field character limit.' | translate }}</mat-error>
+          }
+        </mat-form-field>
+      </div>
+    </form>
+  </mat-dialog-content>
+  <mat-dialog-actions>
+    <div class="d-flex justify-content-md-between justify-content-center flex-column flex-md-row align-items-center w-100">
+      <button mat-stroked-button class="text-uppercase outline-primary-btn mb-3 mb-md-0 col-md-6 col-12 fs-16" (click)="close()">
+        {{ 'Discard Changes' | translate }}
+      </button>
+      <button
+        mat-flat-button
+        [disabled]="formGroup.invalid || formGroup.pristine"
+        class="text-uppercase primary-btn fw-bold ms-md-2 col-md-6 col-12 me-2 me-md-0 fs-16"
+        [class.overlay-spinner]="submitting()"
+        (click)="submit()"
+      >
+        {{ 'Save Changes' | translate }}
+      </button>
+    </div>
+  </mat-dialog-actions>
+</div>

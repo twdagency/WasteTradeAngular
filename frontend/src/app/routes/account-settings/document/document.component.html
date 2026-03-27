@@ -1,0 +1,151 @@
+<ng-template #document let-type="type" let-items="items">
+  <div class="w-100">
+    <div class="fw-bold mb-2">{{ type | translate }}</div>
+    @if (items.length == 0) {
+      <div class="d-flex justify-content-center align-items-center fs-24 mt-3">
+        <p class="text-muted">{{ 'No document found.' | translate }}</p>
+      </div>
+    } @else {
+      @for (item of items; track $index) {
+        <div
+          class="d-flex flex-column flex-md-row gap-3 align-items-stretch align-items-md-center w-100 cursor-pointer mb-3"
+          (click)="viewDocument(item)"
+          matTooltip="{{ 'View document' | translate }}"
+        >
+          <div class="w-100 rounded border d-flex">
+            <div class="col-md-1 col-2 background-grey d-flex justify-content-center align-items-center p-2 left-side">
+              <mat-icon class="me-1">file_copy</mat-icon>
+            </div>
+            <div class="d-md-flex flex-md-row flex-column align-items-center px-3 py-2 right-side w-100 text-break">
+              <div class="flex-column col-md-10">
+                <div class="fw-bold">
+                  {{ item.documentName }}
+                </div>
+                <div>
+                  <span class="fw-bold">{{ 'Expiry Date: ' | translate }}</span>
+                  <span>{{ item?.expiryDate | expiryDate }}</span>
+                </div>
+              </div>
+              <div class="col-md-2 d-flex align-items-center justify-content-md-end justify-content-start mt-md-0 mt-3">
+                <mat-icon [style.color]="getOfferStatusColor(item!.status)">fiber_manual_record</mat-icon>
+                <div class="fw-500" [style.color]="getOfferStatusColor(item!.status)">{{ (item?.status | titlecase) || '-' }}</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      }
+    }
+  </div>
+</ng-template>
+
+<div class="col-12 overflow-hidden">
+  @if (!isReusable) {
+    <h4 class="fw-bold mt-3 mb-4">{{ 'Company Documents' | translate }}</h4>
+  }
+  <div class="d-flex flex-column flex-lg-row gap-4">
+    <div
+      class="d-flex flex-column flex-md-row justify-content-between col-12 overflow-hidden gap-4"
+      [class.border]="!isReusable"
+      [class.border-primary]="!isReusable"
+      [class.col-lg-8]="!isReusable"
+      [class.p-3]="!isReusable"
+      [class.p-md-4]="!isReusable"
+      [class.p-lg-5]="!isReusable"
+      [class.rounded-4]="!isReusable"
+    >
+      <div class="col-12 col-md-8 col-lg-9 d-flex flex-column justify-content-between overflow-hidden flex-grow-1 min-w-0">
+        <div class="g-3 mb-4 mx-0" [class.row]="!isReusable">
+          <div class="col-12" [class.px-2]="!isReusable">
+            <div class="mb-3">
+              <div class="fw-bold">{{ 'WHICH PERMIT / LICENCE DO YOU HAVE?*' | translate }}</div>
+              @if (documentTypeUploaded.length > 0) {
+                <div>{{ documentTypeUploaded }}</div>
+              } @else {
+                @if (isReusable) {
+                  <p class="">{{ 'No document found' | translate }}</p>
+                } @else {
+                  <div class="d-flex justify-content-center align-items-center fs-24 mt-3">
+                    <p class="text-muted">{{ 'No document found.' | translate }}</p>
+                  </div>
+                }
+              }
+            </div>
+          </div>
+          @if (environmentPermitDocuments.length > 0) {
+            <ng-container
+              *ngTemplateOutlet="
+                document;
+                context: {
+                  items: environmentPermitDocuments,
+                  type: 'ENVIRONMENTAL PERMIT',
+                }
+              "
+            ></ng-container>
+          }
+
+          @if (wasteExemptionDocuments.length > 0) {
+            <ng-container
+              *ngTemplateOutlet="
+                document;
+                context: {
+                  items: wasteExemptionDocuments,
+                  type: 'WASTE EXEMPTION',
+                }
+              "
+            ></ng-container>
+          }
+
+          @if (otherDocuments.length > 0) {
+            <ng-container
+              *ngTemplateOutlet="
+                document;
+                context: {
+                  items: otherDocuments,
+                  type: 'OTHER DOCUMENT DESCRIPTION',
+                }
+              "
+            ></ng-container>
+          }
+          <div class="mb-1 mt-5 mb-3">
+            <span class="fw-bold"> {{ 'DO YOU HAVE A WASTE CARRIER LICENCE?' | translate }}</span>
+            <div class="d-flex justify-content-between col-12 col-md-6" name="wasteLicence" style="pointer-events: none">
+              {{ wasteCarrierLicenseDocuments.length > 0 ? 'Yes' : 'Not Applicable' }}
+            </div>
+          </div>
+          @if (wasteCarrierLicenseDocuments.length > 0) {
+            <ng-container
+              *ngTemplateOutlet="
+                document;
+                context: {
+                  items: wasteCarrierLicenseDocuments,
+                  type: 'WASTE CARRIER LICENCE UPLOAD',
+                }
+              "
+            ></ng-container>
+          }
+        </div>
+      </div>
+    </div>
+
+    @if (!isReusable) {
+      <div appPermissionTooltip="setting.cantEditCompanyDocument">
+        <button
+          mat-stroked-button
+          class="d-flex align-items-center justify-content-center"
+          style="max-width: 200px"
+          (click)="openEditDocuments()"
+          appPermissionDisable="setting.cantEditCompanyDocument"
+        >
+          <img
+            src="assets/images/edit_24px.svg"
+            appFallbackImage
+            loading="lazy"
+            alt="Edit icon"
+            style="height: 1em; width: auto; vertical-align: baseline; margin-right: 5px"
+          />
+          <span class="fw-bold fs-16">{{ 'EDIT' | translate }}</span>
+        </button>
+      </div>
+    }
+  </div>
+</div>

@@ -1,0 +1,97 @@
+<div class="w-100">
+  <div class="border-thin rounded-4 p-3 p-md-4 mt-4 mb-3">
+    <div class="row gy-4 gx-md-4 align-items-start">
+      <div class="col-12 col-lg-auto pb-3 pb-lg-0">
+        @if (wanted) {
+          <app-assign-admin [dataId]="wanted.id" [dataType]="dataType" [assignAdmin]="wanted.assignAdmin"></app-assign-admin>
+        }
+      </div>
+
+      <div class="col-12 col-lg-2 pb-3 pb-lg-0">
+        <div class="fw-bold mb-3 text-uppercase">{{ 'BUYER' | translate }}</div>
+        <app-user-summary [userData]="wanted?.createdBy?.user" [allowDetails]="true"></app-user-summary>
+        <p class="mb-1">{{ wanted?.createdBy?.user?.firstName || '-' }} {{ wanted?.createdBy?.user?.lastName || '-' }}</p>
+        <p class="mb-1">{{ wanted?.createdBy?.company?.name || '-' }}</p>
+        <app-location-summary [locationData]="wanted?.createdBy?.location" [allowDetailsModal]="true"></app-location-summary>
+      </div>
+
+      <div class="col-12 col-lg">
+        <div class="row gy-3 justify-content-between">
+          <div class="col-6 col-md-4 col-xl-2">
+            <div class="mb-3">
+              <div class="fw-bold mb-1 w-100 text-uppercase">{{ 'DATE REQUIRED' | translate }}</div>
+              <p class="mb-1 small">{{ (wanted?.start_date | date: 'dd/MM/YYYY') || '-' }}</p>
+            </div>
+            <div>
+              <div class="fw-bold mb-1 w-100 text-uppercase">{{ 'DATE LISTED' | translate }}</div>
+              <p class="mb-1 small">{{ (wanted?.created_at | date: 'dd/MM/YYYY') || '-' }}</p>
+            </div>
+          </div>
+
+          <div class="col-6 col-md-4 col-xl-2">
+            <div class="mb-3">
+              <div class="fw-bold mb-1 w-100 text-uppercase">{{ 'QUANTITY' | translate }}</div>
+              <p class="mb-1 small">{{ (wanted?.material_weight_wanted | number) || '-' }} MT</p>
+            </div>
+            <div>
+              <div class="fw-bold mb-1 w-100 text-uppercase">{{ 'MATERIAL' | translate }}</div>
+              <p class="mb-1 small">{{ getMaterialName(wanted?.material_type) || '-' }}</p>
+            </div>
+          </div>
+
+          <div class="col-6 col-md-4 col-xl-2">
+            <div class="mb-3">
+              <div class="fw-bold mb-1 w-100 text-uppercase">{{ 'REQUIRED IN' | translate }}</div>
+              <p class="mb-1 small">{{ countryCodeToName(wanted?.country) }}</p>
+            </div>
+            <div>
+              <div class="fw-bold mb-1 w-100 text-uppercase">{{ 'GUIDE PRICE' | translate }}</div>
+              <p class="mb-1 small">{{ wanted?.price_per_metric_tonne | number: '1.0-2' }}</p>
+            </div>
+          </div>
+
+          <div class="col-6 col-md-4 col-xl-2">
+            <div class="mb-3">
+              <div class="fw-bold mb-1 w-100 text-uppercase">{{ 'PACKAGING' | translate }}</div>
+              <p class="mb-1 small">{{ getPackingName(wanted?.material_packing) || '-' }}</p>
+            </div>
+            <div>
+              <div class="fw-bold mb-1 w-100 text-uppercase">{{ 'STORAGE' | translate }}</div>
+              <p class="mb-1 small">{{ (wanted?.waste_storation | titlecase) || '-' }}</p>
+            </div>
+          </div>
+
+          <div class="col-12 col-md-4 col-xl-auto">
+            <div class="row">
+              <div class="col-6 col-md-12 mb-md-3">
+                <div class="fw-bold mb-2 mb-md-1 text-uppercase">{{ 'STATUS' | translate }}</div>
+                <p class="mb-0 fw-bold" [style.color]="getListingStatusColor(wanted!.status)">
+                  {{ mappingListingStatus(wanted?.status) || '' | translate | titlecase }}
+                </p>
+              </div>
+              <div class="col-6 col-md-12">
+                <div class="fw-bold mb-2 mb-md-1 text-uppercase">{{ 'ADMIN STATE' | translate }}</div>
+                <div class="d-flex align-items-center gap-1">
+                  <mat-icon class="icon-sm" [style.color]="getListingStateColor(wanted!.state)">fiber_manual_record</mat-icon>
+                  <span class="small fw-bold" [style.color]="getListingStateColor(wanted!.state)">{{
+                    wanted?.state || '' | titlecase | translate
+                  }}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="d-flex flex-column gap-2 h-100 align-items-center align-self-center justify-content-center col-auto">
+        <button mat-stroked-button class="border-primary primary py-3 py-xl-4 fw-bold" style="min-width: 165px" (click)="onViewDetail()">
+          {{ 'VIEW DETAILS' | translate }}
+        </button>
+        @if (wanted) {
+          <app-notes-btn
+            [inputData]="{ id: wanted!.id, adminNote: wanted!.adminNote, dataType: AdminNoteDataType.LISTINGS }"
+          ></app-notes-btn>
+        }
+      </div>
+    </div>
+  </div>
+</div>

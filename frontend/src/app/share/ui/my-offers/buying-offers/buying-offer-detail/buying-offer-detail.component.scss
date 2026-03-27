@@ -1,0 +1,25 @@
+@import 'variables';
+
+.product-image-wrapper {
+  width: 600px;
+  max-width: 100%;
+}
+
+.button-back {
+  width: 119px;
+  border: none;
+}
+
+.remove-button {
+  background-color: $error !important;
+}
+
+:host::ng-deep {
+  app-product-image {
+    @media screen and (max-width: 768px) {
+      .image {
+        height: 200px;
+      }
+    }
+  }
+}

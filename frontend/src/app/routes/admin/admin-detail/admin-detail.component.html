@@ -1,0 +1,35 @@
+<app-admin-layout title="Admin Detail">
+  @if (loading()) {
+    <app-spinner></app-spinner>
+  } @else if (adminData()) {
+    <button
+      mat-button
+      class="d-inline-flex align-items-center rounded text-white text-uppercase fw-bold border-0 back-btn"
+      (click)="onBack()"
+    >
+      <div class="d-flex align-items-center">
+        <mat-icon class="icon custom-icon">west</mat-icon> <span class="text-mg">{{ 'RETURN TO USER TABLE' | translate }}</span>
+      </div>
+    </button>
+
+    <app-admin-profile [adminData]="adminData()" (editProfile)="onEditProfile()"></app-admin-profile>
+
+    @if (isSuperAdmin()) {
+      <button
+        mat-button
+        class="d-inline-flex align-items-center rounded text-white text-uppercase fw-bold border-0 justify-content-center custom-btn mt-5"
+        (click)="handleStatus()"
+        [ngStyle]="{
+          backgroundColor: adminData()?.status === 'active' ? '#03985C' : '#E84F63',
+        }"
+      >
+        <mat-icon fontSet="material-icons-outlined">
+          {{ adminData()?.status === 'active' ? 'archive' : 'unarchive' }}
+        </mat-icon>
+        <span class="text-mg">
+          {{ adminData()?.status === 'active' ? 'ARCHIVE' : ('UNARCHIVE' | translate) }}
+        </span>
+      </button>
+    }
+  }
+</app-admin-layout>

@@ -1,0 +1,53 @@
+@import '../variables';
+
+.mat-mdc-select-panel {
+  background-color: white !important;
+}
+
+.option-bold-label .mdc-list-item__primary-text {
+  font-weight: 700 !important;
+}
+
+.mat-mdc-option.mdc-list-item--selected {
+  background-color: $on-primary !important;
+}
+
+.mat-mdc-option.mdc-list-item--selected:not(.mdc-list-item--disabled):not(.mat-mdc-option-multiple)
+  .mdc-list-item__primary-text {
+  color: $black !important;
+  margin: 0px !important;
+}
+
+.mat-pseudo-checkbox-minimal.mat-pseudo-checkbox-checked::after {
+  color: $black !important;
+}
+
+.mat-mdc-option {
+  position: relative;
+  padding-right: 1.5rem !important;
+
+  .mat-pseudo-checkbox-minimal {
+    position: absolute;
+    right: 5px;
+  }
+}
+
+.assign-select {
+  width: 120px;
+}
+
+.assign-select .mat-mdc-form-field-flex {
+  min-height: 30px !important;
+}
+
+.assign-select .mat-mdc-form-field-infix {
+  min-height: 30px !important;
+  padding: 4px 0 !important;
+}
+
+.assign-select .mat-mdc-select-trigger {
+  height: 26px !important;
+  display: flex;
+  align-items: center;
+  font-weight: bold;
+}

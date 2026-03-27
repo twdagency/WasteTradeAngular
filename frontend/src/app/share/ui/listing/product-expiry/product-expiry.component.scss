@@ -1,0 +1,27 @@
+.warning {
+  background-color: #fdf2f2;
+  color: #d75a66;
+  border: 2px solid #d75a66;
+  border-radius: 20px;
+  font-weight: bold;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+}
+
+mat-icon {
+  width: 29px;
+  height: 29px;
+  font-size: 29px;
+}
+
+.owner-warning {
+  font-size: 16px;
+  padding: 24px;
+}
+
+.guest-warning {
+  font-size: 16px;
+  padding: 24px;
+}

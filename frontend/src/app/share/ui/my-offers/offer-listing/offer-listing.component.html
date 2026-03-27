@@ -1,0 +1,86 @@
+<h2 class="fw-bold mb-4 mb-lg-5">{{ 'List of offers' | translate }}</h2>
+
+@for (item of items; track item.id) {
+  <div class="wrapper w-100 overflow-auto mb-4 mb-md-5">
+    <div class="d-flex rounded-4 border-thin align-items-center justify-content-between gap-4 row-item overflow-hidden">
+      <div class="background-primary p-4 text-white text-center first-column">
+        <p class="text-uppercase fw-bold mb-1">{{ 'bid amount' | translate }}</p>
+        <h2 class="text-uppercase fw-bold mb-1">{{ item.bidAmount }}</h2>
+        <p class="text-uppercase fw-500 mb-3">({{ item.totalPrice }})</p>
+
+        <button mat-flat-button class="fw-bold text-uppercase rounded py-2 px-3 primary counter-button">
+          {{ 'counter offer' | translate }}
+        </button>
+      </div>
+
+      <div class="column-item">
+        <p class="label">{{ 'Bid date' | translate }}</p>
+        <p class="content">{{ item.date }}</p>
+      </div>
+
+      <div class="column-item">
+        <p class="label">{{ 'amount' | translate }}</p>
+        <p class="content fw-bold primary">{{ item.bidAmount }}</p>
+      </div>
+
+      <div class="column-item">
+        <p class="label">{{ 'Buyer Id' | translate }}</p>
+        <p class="content fw-bold primary">{{ item.buyerId ?? '&nbsp;' }}</p>
+      </div>
+
+      <div class="column-item">
+        <p class="label">{{ 'Status' | translate }}</p>
+        <p class="content fw-bold {{ item.status }}" [style.color]="getOfferStatusColor(item.status)">
+          {{ item.status | titlecase | translate }}
+        </p>
+      </div>
+
+      <div class="column-item">
+        <p class="label">{{ 'Buyer Status' | translate }}</p>
+        <p class="content fw-bold {{ item.buyerStatus }}" [style.color]="getCompanyStatusColor(item.buyerStatus)">
+          {{ item.buyerStatus || '' | titlecase | translate }}
+        </p>
+      </div>
+
+      @if (canAcceptReject(item.status)) {
+        <div class="d-flex flex-column gap-2">
+          <button
+            mat-flat-button
+            type="button"
+            class="accept-btn fw-bold background-primary border-primary text-white text-uppercase"
+            [disabled]="actionLoading()"
+            (click)="onAccept(item)"
+          >
+            {{ 'Accept' | translate }}
+          </button>
+          <button
+            mat-flat-button
+            type="button"
+            class="reject-btn fw-bold text-white text-uppercase"
+            [disabled]="actionLoading()"
+            (click)="onReject(item)"
+          >
+            {{ 'Reject' | translate }}
+          </button>
+        </div>
+      } @else {
+        <a routerLink="/offer-detail/{{ item.id }}">
+          <button
+            mat-stroked-button
+            type="button"
+            [disabled]="actionLoading()"
+            class="view-detail-btn primary border-primary text-uppercase fw-bold"
+          >
+            {{ 'View details' | translate }}
+          </button>
+        </a>
+      }
+    </div>
+  </div>
+} @empty {
+  <h5 class="text-center">{{ 'No offers yet!' | translate }}</h5>
+}
+
+@if (items.length) {
+  <app-pagination class="mt-5" [pageNumber]="page" [totalCount]="totalItems" (pageChange)="onPageChange($event)"></app-pagination>
+}

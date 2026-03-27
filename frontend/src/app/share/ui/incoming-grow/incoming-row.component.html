@@ -1,0 +1,47 @@
+<div class="item border border-thin shadow-sm rounded-4 mb-3">
+  <div class="row g-4 align-items-start">
+    <div class="col">
+      <div class="text-uppercase fw-bold small mb-1">{{ 'First name' | translate }}</div>
+      <div class="text-break">{{ items.firstName }}</div>
+    </div>
+
+    <div class="col">
+      <div class="text-uppercase fw-bold small mb-1">{{ 'Last name' | translate }}</div>
+      <div class="text-break">{{ items.lastName }}</div>
+    </div>
+
+    <div class="col-2">
+      <div class="text-uppercase fw-bold small mb-1">{{ 'Email address' | translate }}</div>
+      <div class="text-break">{{ items.email }}</div>
+    </div>
+
+    <div class="col-4">
+      <div class="text-uppercase fw-bold small mb-1">{{ 'Notes' | translate }}</div>
+      <div class="text-break small">
+        {{ items.notes }}
+      </div>
+    </div>
+
+    <div class="col-auto d-flex flex-column justify-content-center gap-2">
+      <button
+        mat-stroked-button
+        class="outlined-button text-uppercase incoming-btn fw-bold py-2"
+        style="min-width: 170px"
+        (click)="approve.emit()"
+        [disabled]="submitting"
+      >
+        {{ 'Approve' | translate }}
+      </button>
+
+      <button
+        mat-stroked-button
+        class="outlined-button danger-button text-uppercase incoming-btn fw-bold py-2"
+        style="min-width: 170px"
+        (click)="reject.emit()"
+        [disabled]="submitting"
+      >
+        {{ 'Reject' | translate }}
+      </button>
+    </div>
+  </div>
+</div>

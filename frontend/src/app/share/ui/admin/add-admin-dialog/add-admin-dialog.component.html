@@ -1,0 +1,134 @@
+<div class="add-admin-dialog">
+  <div class="dialog-header d-flex justify-content-between align-items-center mb-5">
+    <h2 class="dialog-title mb-0">{{ (isEditMode ? 'Edit Admin' : 'Add New Admin') | translate }}</h2>
+  </div>
+
+  <form [formGroup]="addAdminForm" class="add-admin-form">
+    <div class="row mb-5 g-3">
+      <!-- First Name -->
+      <div class="col-md-6">
+        <mat-label class="">{{ 'FIRST NAME' | translate }} <span class="asterisk">*</span></mat-label>
+        <mat-form-field appearance="outline" class="w-100">
+          <input matInput formControlName="firstName" placeholder="{{ 'e.g. Mark' | translate }}" type="text" maxlength="50" />
+          @if (addAdminForm.get('firstName')?.hasError('required')) {
+            <mat-error>{{ 'Enter a valid name, max 50 characters.' | translate }}</mat-error>
+          }
+          @if (addAdminForm.get('firstName')?.hasError('maxlength')) {
+            <mat-error>{{ 'Enter a valid name, max 50 characters.' | translate }}</mat-error>
+          }
+        </mat-form-field>
+      </div>
+
+      <!-- Last Name -->
+      <div class="col-md-6">
+        <mat-label class="">{{ 'LAST NAME' | translate }} <span class="asterisk">*</span></mat-label>
+        <mat-form-field appearance="outline" class="w-100">
+          <input matInput formControlName="lastName" placeholder="{{ 'e.g. Smith' | translate }}" type="text" maxlength="50" />
+          @if (addAdminForm.get('lastName')?.hasError('required')) {
+            <mat-error>{{ 'Enter a valid name, max 50 characters.' | translate }}</mat-error>
+          }
+          @if (addAdminForm.get('lastName')?.hasError('maxlength')) {
+            <mat-error>{{ 'Enter a valid name, max 50 characters.' | translate }}</mat-error>
+          }
+        </mat-form-field>
+      </div>
+    </div>
+
+    <!-- Email Address -->
+    <div class="col-md-12 mb-5">
+      <mat-label class="">{{ 'EMAIL ADDRESS' | translate }} <span class="asterisk">*</span></mat-label>
+      <mat-form-field appearance="outline" class="w-100">
+        <input matInput type="email" formControlName="email" placeholder="{{ 'sample@gmail.com' | translate }}" />
+        @if (addAdminForm.get('email')?.hasError('required')) {
+          <mat-error>{{ 'This field is required' | translate }}</mat-error>
+        }
+        @if (addAdminForm.get('email')?.hasError('email')) {
+          <mat-error>{{ 'Please enter a valid email address' | translate }}</mat-error>
+        }
+      </mat-form-field>
+    </div>
+
+    <!-- Phone Number -->
+    <div class="mb-5">
+      <app-telephone-form-control formControlName="phoneNumber" [isRequired]="true" [label]="'PHONE NUMBER' | translate">
+      </app-telephone-form-control>
+    </div>
+
+    <!-- Role -->
+    <div class="col-12 mb-5">
+      <div class="d-flex justify-content-between">
+        <mat-label class="">{{ 'ROLE' | translate }} <span class="asterisk">*</span></mat-label>
+
+        @if (isEditMode && !canModifyRole) {
+          <mat-icon
+            class="info-icon text-muted ms-2 mat-role-tooltip-icon"
+            [matTooltip]="'Only Super Admins can modify an existing user role.' | translate"
+            matTooltipPosition="above"
+            matTooltipClass="custom-role-tooltip"
+          >
+            info
+          </mat-icon>
+        }
+      </div>
+      <mat-form-field appearance="outline" class="w-100">
+        <mat-select formControlName="globalRole" placeholder="{{ 'Select' | translate }}" [disabled]="isEditMode && !canModifyRole">
+          @for (role of availableRoles; track role.value) {
+            <mat-option
+              [value]="role.value"
+              [disabled]="isRoleDisabled(role.value)"
+              [class.mat-role-option-disabled-option]="isRoleDisabled(role.value)"
+            >
+              <div class="d-flex justify-content-between align-items-center w-100">
+                <span [class.text-muted]="isRoleDisabled(role.value)">{{ role.label | translate }}</span>
+                @if (isRoleDisabled(role.value)) {
+                  <mat-icon
+                    class="info-icon text-muted ms-2 mat-role-tooltip-icon"
+                    [matTooltip]="'Only Super Admins can add other Super Admins' | translate"
+                    matTooltipPosition="above"
+                    matTooltipClass="custom-role-tooltip"
+                    matTooltipHideDelay="100000"
+                  >
+                    info
+                  </mat-icon>
+                }
+              </div>
+            </mat-option>
+          }
+        </mat-select>
+        @if (addAdminForm.get('globalRole')?.hasError('required')) {
+          <mat-error>{{ 'This field is required' | translate }}</mat-error>
+        }
+        @if (addAdminForm.get('globalRole')?.hasError('noPermission')) {
+          <mat-error>{{ 'You do not have permission to create Super Admin users' | translate }}</mat-error>
+        }
+      </mat-form-field>
+      <!-- @if (isEditMode && !canModifyRole) {
+        <div class="d-flex align-items-center mt-2">
+          <small class="text-muted">{{ 'Only Super Admins can modify an existing user role.' | translate }}</small>
+        </div>
+      } -->
+    </div>
+
+    <!-- Action Buttons -->
+    <div class="dialog-actions d-flex gap-3">
+      <button
+        mat-stroked-button
+        class="text-uppercase outline-primary-btn mb-3 mb-md-0 col-md-6 col-12 fs-16 action-button"
+        (click)="onCancel()"
+        [disabled]="loading()"
+      >
+        {{ 'CANCEL' | translate }}
+      </button>
+
+      <button
+        mat-flat-button
+        class="text-uppercase primary-btn fw-bold ms-md-2 col-md-6 col-12 me-2 me-md-0 fs-16 action-button"
+        (click)="onSave()"
+        [class.overlay-spinner]="loading()"
+        [disabled]="loading() || addAdminForm.invalid"
+      >
+        {{ (isEditMode ? 'UPDATE' : 'SAVE') | translate }}
+      </button>
+    </div>
+  </form>
+</div>

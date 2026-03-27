@@ -1,0 +1,52 @@
+<app-common-layout [title]="'My Offers' | translate">
+  <mat-tab-group
+    class="d-block mb-4 mb-lg-5 common-tab"
+    [selectedIndex]="activeTab()"
+    (selectedTabChange)="selectTab($event)"
+    animationDuration="0ms"
+  >
+    @for (tab of listTabOffer; track tab.label) {
+      <mat-tab label="{{ tab.label | translate }}"> </mat-tab>
+    }
+  </mat-tab-group>
+
+  <div class="d-flex align-items-center gap-2 mb-5">
+    <mat-icon class="primary">info_outline</mat-icon>
+    <span class="fw-500">{{ 'View the status of the offers you put on seller listings.' | translate }}</span>
+  </div>
+
+  <div [formGroup]="form">
+    <div class="row mb-5">
+      <div class="col-8 col-md-9">
+        <mat-form-field appearance="outline" class="w-100">
+          <input
+            matInput
+            type="text"
+            maxlength="50"
+            (keyup)="onChangeKeyword($event)"
+            placeholder="{{ 'What are you looking for?' | translate }}"
+            formControlName="searchTerm"
+          />
+        </mat-form-field>
+      </div>
+      <div class="col-4 col-md-3" style="padding-left: 0">
+        <button mat-flat-button class="background-primary w-100 h-100 fs-16" (click)="search()">
+          <mat-icon class="d-none d-md-block">search</mat-icon>
+          {{ 'SEARCH' | translate }}
+        </button>
+      </div>
+    </div>
+  </div>
+
+  @if (loading()) {
+    <app-spinner></app-spinner>
+  } @else if (items()) {
+    @if (items()?.length) {
+      <app-selling-offer-table [page]="page()" [totalItems]="totalItems()" [items]="items()!" (pageChange)="onPageChange($event)" />
+    } @else {
+      @if (emptyProps(); as emptyProps) {
+        <app-empty-offer [title]="emptyProps.title | translate" [content]="emptyProps.content | translate" [buttons]="emptyProps.buttons" />
+      }
+    }
+  }
+</app-common-layout>

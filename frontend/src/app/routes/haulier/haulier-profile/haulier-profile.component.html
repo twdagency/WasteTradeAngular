@@ -1,0 +1,353 @@
+<app-haulier-layout [title]="'Profile' | translate">
+  @if (haulier(); as haulier) {
+    <h4 class="fw-bold mt-4 mb-3">{{ 'Basic Details' | translate }}</h4>
+    <div class="d-flex flex-column flex-lg-row gap-3 overflow-hidden">
+      <div
+        class="border border-primary rounded-4 px-5 py-4 d-flex flex-column flex-md-row justify-content-between col-12 col-lg-8 overflow-hidden gap-3"
+      >
+        <div class="col-12 col-md-4 col-lg-3 d-flex align-items-center justify-content-center flex-column mb-3 mb-md-0 flex-shrink-0">
+          <div
+            class="d-flex justify-content-center align-items-center rounded-circle border p-2 mb-3"
+            style="width: 120px; height: 120px; border: 2px dashed black !important"
+          >
+            <div
+              class="w-100 h-100 rounded-circle background-primary text-white fw-bold d-flex justify-content-center align-items-center fs-56"
+            >
+              {{ userInitials() }}
+            </div>
+          </div>
+          <div class="text-center text-md-start">{{ 'Account ID:' | translate }} {{ haulier.accountId }}</div>
+        </div>
+        <div class="col-12 col-md-8 col-lg-9 d-flex flex-column justify-content-between overflow-hidden flex-grow-1 min-w-0">
+          <div class="row g-3 mb-3">
+            <div class="col-12 col-sm-4">
+              <div class="fw-bold text-uppercase small mb-1 text-truncate">{{ 'PREFIX' | translate }}</div>
+              <div class="text-truncate">{{ haulier.prefix | titlecase }}</div>
+            </div>
+            <div class="col-12 col-sm-4">
+              <div class="fw-bold text-uppercase small mb-1 text-truncate">{{ 'FIRST NAME' | translate }}</div>
+              <div class="text-truncate">{{ haulier.firstName }}</div>
+            </div>
+            <div class="col-12 col-sm-4">
+              <div class="fw-bold text-uppercase small mb-1 text-truncate">{{ 'LAST NAME' | translate }}</div>
+              <div class="text-truncate">{{ haulier.lastName }}</div>
+            </div>
+          </div>
+          <div class="row g-3">
+            <div class="col-12 col-sm-4">
+              <div class="fw-bold text-uppercase small mb-1 text-truncate">{{ 'JOB TITLE' | translate }}</div>
+              <div class="text-truncate">{{ haulier.jobTitle }}</div>
+            </div>
+            <div class="col-12 col-sm-4">
+              <div class="fw-bold text-uppercase small mb-1 text-truncate">{{ 'EMAIL ADDRESS' | translate }}</div>
+              <div class="text-truncate" title="john.smith@example.com">{{ haulier.email }}</div>
+            </div>
+            <div class="col-12 col-sm-4">
+              <div class="fw-bold text-uppercase small mb-1 text-truncate">{{ 'TELEPHONE' | translate }}</div>
+              <div class="text-truncate">{{ haulier.phoneNumber }}</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="d-flex justify-content-center justify-content-lg-start align-items-start">
+        <button
+          mat-stroked-button
+          class="d-flex align-items-center justify-content-center px-4 py-2"
+          style="max-width: 200px"
+          (click)="onEditProfile()"
+        >
+          <img
+            src="assets/images/edit_24px.svg"
+            appFallbackImage
+            loading="lazy"
+            alt="Edit icon"
+            class="me-2"
+            style="height: 1em; width: auto; vertical-align: baseline"
+          />
+          <span class="fw-bold fs-16">{{ 'EDIT' | translate }}</span>
+        </button>
+      </div>
+    </div>
+
+    <h4 class="fw-bold mt-5 mb-3">{{ 'Company Details' | translate }}</h4>
+    <div class="border border-primary rounded-4 px-5 py-4 d-flex flex-column flex-md-row justify-content-between col-12 col-lg-8 gap-3">
+      <div class="col-12 col-md-8 col-lg-9 flex-grow-1 min-w-0">
+        <div class="row g-4">
+          <div class="col-12 col-sm-4 profile-item">
+            @if (!haulier.companyName) {
+              <mat-icon class="status-icon error" [matTooltip]="'This field is currently empty.' | translate">info_rounded</mat-icon>
+            }
+            <div class="fw-bold text-uppercase small mb-1 text-truncate">
+              {{ 'Company Name' | translate }}
+            </div>
+            <div class="text-truncate">{{ haulier.companyName }}</div>
+          </div>
+
+          <div class="col-12 col-sm-4 profile-item">
+            @if (!haulier.vatRegistrationCountry) {
+              <mat-icon class="status-icon error" [matTooltip]="'This field is currently empty.' | translate">info_rounded</mat-icon>
+            }
+            <div class="fw-bold text-uppercase small mb-1 text-truncate">
+              {{ 'Country Of Vat Registration' | translate }}
+            </div>
+            <div class="text-truncate">{{ haulier.vatRegistrationCountry }}</div>
+          </div>
+
+          <div class="col-12 col-sm-4 profile-item">
+            @if (!haulier.vatNumber) {
+              <mat-icon class="status-icon error" [matTooltip]="'This field is currently empty.' | translate">info_rounded</mat-icon>
+            }
+            <div class="fw-bold text-uppercase small mb-1 text-truncate">
+              {{ 'Vat Number' | translate }}
+            </div>
+            <div class="text-truncate">{{ haulier.vatNumber }}</div>
+          </div>
+
+          <div class="col-12 col-sm-4 profile-item">
+            @if (!haulier.registrationNumber) {
+              <mat-icon class="status-icon error" [matTooltip]="'This field is currently empty.' | translate">info_rounded</mat-icon>
+            }
+            <div class="fw-bold text-uppercase small mb-1 text-truncate">
+              {{ 'Company Registration Number' | translate }}
+            </div>
+            <div class="text-truncate">{{ haulier.registrationNumber }}</div>
+          </div>
+
+          <div class="col-12 col-sm-4 profile-item">
+            @if (!haulier.addressLine1) {
+              <mat-icon class="status-icon error" [matTooltip]="'This field is currently empty.' | translate">info_rounded</mat-icon>
+            }
+            <div class="fw-bold text-uppercase small mb-1 text-truncate">
+              {{ 'Street Address' | translate }}
+            </div>
+            <div class="text-truncate">{{ haulier.addressLine1 | titlecase }}</div>
+          </div>
+
+          <div class="col-12 col-sm-4 profile-item">
+            @if (!haulier.city) {
+              <mat-icon class="status-icon error" [matTooltip]="'This field is currently empty.' | translate">info_rounded</mat-icon>
+            }
+            <div class="fw-bold text-uppercase small mb-1 text-truncate">
+              {{ 'City' | translate }}
+            </div>
+            <div class="text-truncate">{{ haulier.city | titlecase }}</div>
+          </div>
+
+          <div class="col-12 col-sm-4 profile-item">
+            @if (!haulier.stateProvince) {
+              <mat-icon class="status-icon error" [matTooltip]="'This field is currently empty.' | translate">info_rounded</mat-icon>
+            }
+            <div class="fw-bold text-uppercase small mb-1 text-truncate">
+              {{ 'County / State / Province' | translate }}
+            </div>
+            <div class="text-truncate">{{ haulier.stateProvince | titlecase }}</div>
+          </div>
+
+          <div class="col-12 col-sm-4 profile-item">
+            @if (!haulier.country) {
+              <mat-icon class="status-icon error" [matTooltip]="'This field is currently empty.' | translate">info_rounded</mat-icon>
+            }
+            <div class="fw-bold text-uppercase small mb-1 text-truncate">
+              {{ 'Country' | translate }}
+            </div>
+            <div class="text-truncate">{{ mapCountryCodeToName[haulier.country] }}</div>
+          </div>
+
+          <div class="col-12 col-sm-4 profile-item">
+            @if (!haulier.postalCode) {
+              <mat-icon class="status-icon error" [matTooltip]="'This field is currently empty.' | translate">info_rounded</mat-icon>
+            }
+            <div class="fw-bold text-uppercase small mb-1 text-truncate">
+              {{ 'Postcode' | translate }}
+            </div>
+            <div class="text-truncate">{{ haulier.postalCode }}</div>
+          </div>
+
+          <div class="col-12 col-sm-4 profile-item">
+            @if (!haulier.companyPhoneNumber) {
+              <mat-icon class="status-icon error" [matTooltip]="'This field is currently empty.' | translate">info_rounded</mat-icon>
+            }
+            <div class="fw-bold text-uppercase small mb-1 text-truncate">
+              {{ 'Telephone' | translate }}
+            </div>
+            <div class="text-truncate">{{ haulier.companyPhoneNumber }}</div>
+          </div>
+
+          <div class="col-12 col-sm-4 profile-item">
+            @if (!haulier.companyMobileNumber) {
+              <mat-icon class="status-icon error" [matTooltip]="'This field is currently empty.' | translate">info_rounded</mat-icon>
+            }
+            <div class="fw-bold text-uppercase small mb-1 text-truncate">
+              {{ 'Mobile' | translate }}
+            </div>
+            <div class="text-truncate">{{ haulier.companyMobileNumber }}</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <h4 class="fw-bold mt-5 mb-3">{{ 'Additional Information' | translate }}</h4>
+    <div class="border border-primary rounded-4 px-5 py-4 d-flex flex-column flex-md-row justify-content-between col-12 col-lg-8 gap-3">
+      <div class="col-12 col-md-8 col-lg-9 flex-grow-1 min-w-0">
+        <div class="row g-4 mb-3">
+          @if (additionalInformation(); as additionalInformation) {
+            <div class="col-12 col-sm-4">
+              <div class="fw-bold text-uppercase small mb-1 text-truncate">
+                {{ 'Fleet Type' | translate }}
+              </div>
+              <div class="text-truncate">{{ additionalInformation.fleetType }}</div>
+            </div>
+            <div class="col-12 col-sm-4">
+              <div class="fw-bold text-uppercase small mb-1 text-truncate">
+                {{ 'Areas Covered' | translate }}
+              </div>
+              @for (area of additionalInformation.areaCovered; track $index) {
+                <div class="text-truncate">{{ area }}</div>
+              }
+            </div>
+            <div class="col-12 col-sm-4">
+              <div class="fw-bold text-uppercase small mb-1 text-truncate">
+                {{ 'Container Types' | translate }}
+              </div>
+              @for (type of additionalInformation.containerType; track $index) {
+                <div class="text-truncate">{{ type }}</div>
+              }
+            </div>
+          }
+        </div>
+        <div>
+          <ng-container
+            *ngTemplateOutlet="
+              document;
+              context: {
+                items: wasteCarrierLicenseDocuments(),
+                type: 'WASTE CARRIER LICENSE',
+              }
+            "
+          ></ng-container>
+        </div>
+      </div>
+    </div>
+
+    <ng-template #document let-type="type" let-items="items">
+      <div class="w-100">
+        <div class="fw-bold mb-2">{{ type | translate }}</div>
+        @if (items.length == 0) {
+          <div class="d-flex justify-content-center align-items-center fs-24 mt-3">
+            <p class="text-muted">{{ 'No document found.' | translate }}</p>
+          </div>
+        } @else {
+          @for (item of items; track $index) {
+            <div
+              class="d-flex flex-column flex-md-row gap-3 align-items-stretch align-items-md-center w-100 cursor-pointer mb-3"
+              (click)="viewDocument(item)"
+              matTooltip="{{ 'View document' | translate }}"
+            >
+              <div class="w-100 rounded border d-flex">
+                <div class="col-md-1 col-2 background-grey d-flex justify-content-center align-items-center p-2 left-side">
+                  <mat-icon class="me-1">file_copy</mat-icon>
+                </div>
+                <div class="d-md-flex flex-md-row flex-column align-items-center px-3 py-2 right-side w-100 text-break">
+                  <div class="flex-column col-md-10">
+                    <div class="fw-bold">
+                      {{ item.fileName }}
+                    </div>
+                    <div>
+                      <span class="fw-bold">{{ 'Expiry Date: ' | translate }}</span>
+                      <span>{{ item?.expiryDate | expiryDate }}</span>
+                    </div>
+                  </div>
+                  <div class="col-md-2 d-flex align-items-center justify-content-md-end justify-content-start mt-md-0 mt-3">
+                    <mat-icon [style.color]="getOfferStatusColor(item!.status)">fiber_manual_record</mat-icon>
+                    <div class="fw-500" [style.color]="getOfferStatusColor(item!.status)">{{ (item?.status | titlecase) || '-' }}</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          }
+        }
+      </div>
+    </ng-template>
+
+    <h4 class="fw-bold mt-5 mb-3">{{ 'Socials' | translate }}</h4>
+    <div class="border border-primary rounded-4 px-5 py-4 d-flex flex-column flex-md-row justify-content-between col-12 col-lg-8 gap-3">
+      <div class="col-12 col-md-8 col-lg-9 flex-grow-1 min-w-0">
+        <div class="row g-4">
+          <div class="col-12 col-sm-4">
+            <div class="fw-bold text-uppercase small mb-1 position-relative">
+              @if (haulier.facebookUrl == null || haulier.facebookUrl == '') {
+                <mat-icon
+                  [matTooltip]="'This field is currently empty.' | translate"
+                  class="error position-absolute"
+                  style="top: 0px; left: -28px"
+                  >info_rounded</mat-icon
+                >
+              }
+              {{ 'FACEBOOK PROFILE URL' | translate }}
+            </div>
+            <a
+              class="text-break text-decoration-none text-black cursor-pointer"
+              target="_blank"
+              [href]="safeUrl(haulier.facebookUrl ?? '')"
+              >{{ haulier.facebookUrl || '-' }}</a
+            >
+          </div>
+          <div class="col-12 col-sm-4">
+            <div class="fw-bold text-uppercase small mb-1 position-relative">
+              @if (haulier.instagramUrl == null || haulier.instagramUrl == '') {
+                <mat-icon
+                  [matTooltip]="'This field is currently empty.' | translate"
+                  class="error position-absolute"
+                  style="top: 0px; left: -28px"
+                  >info_rounded</mat-icon
+                >
+              }
+              {{ 'INSTAGRAM PROFILE URL' | translate }}
+            </div>
+            <a
+              class="text-break text-decoration-none text-black cursor-pointer"
+              target="_blank"
+              [href]="safeUrl(haulier.instagramUrl ?? '')"
+              >{{ haulier.instagramUrl || '-' }}</a
+            >
+          </div>
+          <div class="col-12 col-sm-4">
+            <div class="fw-bold text-uppercase small mb-1 position-relative">
+              @if (haulier.linkedinUrl == null || haulier.linkedinUrl == '') {
+                <mat-icon
+                  [matTooltip]="'This field is currently empty.' | translate"
+                  class="error position-absolute"
+                  style="top: 0px; left: -28px"
+                  >info_rounded</mat-icon
+                >
+              }
+              {{ 'LINKEDIN PROFILE URL' | translate }}
+            </div>
+            <a
+              class="text-break text-decoration-none text-black cursor-pointer"
+              target="_blank"
+              [href]="safeUrl(haulier.linkedinUrl ?? '')"
+              >{{ haulier.linkedinUrl || '-' }}</a
+            >
+          </div>
+          <div class="col-12 col-sm-4">
+            <div class="fw-bold text-uppercase small mb-1 position-relative">
+              @if (haulier.xUrl == null || haulier.xUrl == '') {
+                <mat-icon
+                  [matTooltip]="'This field is currently empty.' | translate"
+                  class="error position-absolute"
+                  style="top: 0px; left: -28px"
+                  >info_rounded</mat-icon
+                >
+              }
+              {{ 'X USERNAME (WITHOUT @)' | translate }}
+            </div>
+            <a class="text-break text-decoration-none text-black cursor-pointer" target="_blank" [href]="safeUrl(haulier.xUrl ?? '')">{{
+              haulier.xUrl || '-'
+            }}</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  }
+</app-haulier-layout>

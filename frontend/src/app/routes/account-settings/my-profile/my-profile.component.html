@@ -1,0 +1,85 @@
+<div class="col-12 overflow-hidden">
+  <h4 class="fw-bold mt-3 mb-4">{{ 'Personal Information' | translate }}</h4>
+
+  <div class="d-flex flex-column flex-lg-row gap-4 overflow-hidden">
+    <div
+      class="border border-primary rounded-4 p-3 p-md-4 p-lg-5 d-flex flex-column flex-md-row justify-content-between col-12 col-lg-8 overflow-hidden gap-4"
+    >
+      <div class="col-12 col-md-4 col-lg-3 d-flex align-items-center justify-content-center flex-column mb-4 mb-md-0 flex-shrink-0">
+        <div
+          class="d-flex justify-content-center align-items-center rounded-circle border p-2 mb-3"
+          style="width: 120px; height: 120px; border: 2px dashed black !important"
+        >
+          <div
+            class="w-100 h-100 rounded-circle background-primary text-white fw-bold d-flex justify-content-center align-items-center fs-56"
+          >
+            {{ userInitials() }}
+          </div>
+        </div>
+
+        <div class="text-center text-md-start">{{ 'Account ID:' | translate }} {{ user()?.user?.username }}</div>
+      </div>
+
+      <div class="col-12 col-md-8 col-lg-9 d-flex flex-column justify-content-between overflow-hidden flex-grow-1 min-w-0">
+        <div class="row g-3 mb-4 mx-0">
+          <div class="col-12 col-sm-4 px-2">
+            <div class="fw-bold text-uppercase small mb-1 text-truncate">{{ 'PREFIX' | translate }}</div>
+            <div class="text-truncate">{{ user()?.user?.prefix | titlecase }}</div>
+          </div>
+          <div class="col-12 col-sm-4 px-2">
+            <div class="fw-bold text-uppercase small mb-1 text-truncate">{{ 'FIRST NAME' | translate }}</div>
+            <div class="text-truncate">{{ user()?.user?.firstName }}</div>
+          </div>
+          <div class="col-12 col-sm-4 px-2">
+            <div class="fw-bold text-uppercase small mb-1 text-truncate">{{ 'LAST NAME' | translate }}</div>
+            <div class="text-truncate">{{ user()?.user?.lastName }}</div>
+          </div>
+        </div>
+
+        <div class="row g-3 mx-0">
+          <div class="col-12 col-sm-4 px-2">
+            <div class="fw-bold text-uppercase small mb-1 text-truncate">{{ 'JOB TITLE' | translate }}</div>
+            <div class="text-truncate">{{ user()?.user?.jobTitle }}</div>
+          </div>
+          <div class="col-12 col-sm-4 px-2">
+            <div class="fw-bold text-uppercase small mb-1 text-truncate">{{ 'EMAIL ADDRESS' | translate }}</div>
+            <div class="text-truncate" title="john.smith@example.com">{{ user()?.user?.email }}</div>
+          </div>
+          <div class="col-12 col-sm-4 px-2">
+            <div class="fw-bold text-uppercase small mb-1 text-truncate">{{ 'TELEPHONE' | translate }}</div>
+            <div class="text-truncate">{{ user()?.user?.phoneNumber }}</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="d-flex justify-content-center justify-content-lg-start align-items-start">
+      <button
+        mat-stroked-button
+        class="d-flex align-items-center justify-content-center"
+        style="max-width: 200px"
+        (click)="onEditProfile()"
+      >
+        <img
+          src="assets/images/edit_24px.svg"
+          appFallbackImage
+          loading="lazy"
+          alt="Edit icon"
+          style="height: 1em; width: auto; vertical-align: baseline; margin-right: 5px"
+        />
+        <span class="fw-bold fs-16">{{ 'EDIT' | translate }}</span>
+      </button>
+    </div>
+  </div>
+
+  <h4 class="fw-bold mt-5 mb-4">{{ 'Change Password' | translate }}</h4>
+  <div class="row">
+    <div class="col-12 col-md-6 col-lg-4">
+      <a href="/login?lost_pass=1" target="_blank">
+        <button mat-flat-button class="background-primary text-white w-100 py-4 rounded-3 fw-bold border-0 fs-16">
+          {{ 'CHANGE PASSWORD' | translate }}
+        </button>
+      </a>
+    </div>
+  </div>
+</div>

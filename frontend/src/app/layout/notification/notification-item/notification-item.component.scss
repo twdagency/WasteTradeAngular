@@ -1,0 +1,38 @@
+.notification-item {
+  background-color: #ebfff7;
+  border-left: 3px solid #03985c;
+  padding: 16px 24px;
+}
+strong {
+  margin-left: 4px;
+  font-size: 16px;
+}
+
+.header-wrapper {
+  color: #1d1d1b;
+}
+
+.read {
+  background-color: white;
+  border: none;
+
+  .header-wrapper {
+    color: #b1b1aa;
+    margin-bottom: 9px;
+  }
+}
+
+.left-header {
+  gap: 10px;
+}
+
+:host::ng-deep app-icon .icon-wrapper,
+mat-icon {
+  width: 20px;
+  height: 20px;
+}
+
+:host {
+  display: block;
+  cursor: pointer;
+}

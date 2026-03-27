@@ -1,0 +1,89 @@
+<button mat-icon-button class="common-modal-close-btn" (click)="handleClose()">
+  <mat-icon>close</mat-icon>
+</button>
+
+<div class="review-merge-modal d-flex flex-column">
+  <h2 class="title fw-bold">{{ 'Review Merge' | translate }}</h2>
+
+  <!-- Master Company Section -->
+  <div class="company-section">
+    <h3 class="fw-bold">{{ 'Master Company' | translate }}</h3>
+
+    <div class="company-details-grid">
+      <div class="detail-row">
+        <span class="label fw-bold text-uppercase">{{ 'Name' | translate }}</span>
+        <span class="label fw-bold text-uppercase">{{ 'VAT Number' | translate }}</span>
+        <span class="label fw-bold text-uppercase">{{ 'Country' | translate }}</span>
+      </div>
+      <div class="detail-row">
+        <span class="value">{{ data.masterCompany.name }}</span>
+        <span class="value">{{ data.masterCompany.vatNumber || 'N/A' }}</span>
+        <span class="value">{{ data.masterCompany.country || 'N/A' }}</span>
+      </div>
+    </div>
+  </div>
+
+  <hr class="section-divider" />
+
+  <!-- Merged Company Section -->
+  <div class="company-section">
+    <h3 class="fw-bold mb-3">{{ 'Merged Company' | translate }}</h3>
+
+    <div class="company-details-grid">
+      <div class="detail-row">
+        <span class="label fw-bold text-uppercase">{{ 'Name' | translate }}</span>
+        <span class="label fw-bold text-uppercase">{{ 'VAT Number' | translate }}</span>
+        <span class="label fw-bold text-uppercase">{{ 'Country' | translate }}</span>
+      </div>
+      <div class="detail-row">
+        <span class="value">{{ data.mergedCompany.name }}</span>
+        <span class="value">{{ data.mergedCompany.vatNumber || 'N/A' }}</span>
+        <span class="value">{{ data.mergedCompany.country || 'N/A' }}</span>
+      </div>
+    </div>
+  </div>
+
+  <hr class="section-divider" />
+
+  <!-- What Will Happen Section -->
+  <div class="what-happens-section mb-4">
+    <h3 class="fw-bold mb-0">{{ 'What Will Happen' | translate }}</h3>
+
+    <div class="info-item">
+      <span class="fw-bold">{{ 'Profile Details & Settings:' | translate }}</span>
+      <span class="ms-2">{{ "Master's values replace the other company's profile, preferences, and settings." | translate }}</span>
+    </div>
+
+    <div class="info-item">
+      <span class="fw-bold">{{ 'Members:' | translate }}</span>
+      <span class="ms-2">{{ 'All members are consolidated into the master company.' | translate }}</span>
+    </div>
+
+    <div class="info-item">
+      <span class="fw-bold">{{ 'Assets:' | translate }}</span>
+      <span class="ms-2">{{ 'All locations, listings, offers, documents moved into the Master.' | translate }}</span>
+    </div>
+
+    <div class="info-item">
+      <span class="fw-bold">{{ 'VAT Handling:' | translate }}</span>
+      <span class="ms-2">{{ "Master's VAT becomes the active VAT." | translate }}</span>
+    </div>
+  </div>
+
+  <!-- Dialog Actions -->
+  <div class="dialog-actions mt-4 d-flex gap-3">
+    <button
+      mat-flat-button
+      color="primary"
+      class="primary-btn text-uppercase dialog-btn fw-bold w-100"
+      [disabled]="merging()"
+      (click)="onConfirmMerge()"
+    >
+      @if (merging()) {
+        {{ 'Merging...' | translate }}
+      } @else {
+        {{ 'Confirm Merge' | translate }}
+      }
+    </button>
+  </div>
+</div>

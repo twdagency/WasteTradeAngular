@@ -1,0 +1,16 @@
+.sub-label {
+  font-size: 12px;
+}
+
+.bidding-modal {
+  max-height: 80vh;
+  overflow: auto;
+}
+
+.submit-button {
+  height: 48px;
+
+  @media screen and (min-width: 992px) {
+    height: 70px;
+  }
+}

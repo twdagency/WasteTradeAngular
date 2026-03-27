@@ -1,0 +1,93 @@
+@if (item(); as item) {
+  <div class="w-100 container-fluid bg-white p-4 border-thin rounded-4 p-3 p-md-4 mb-3">
+    <div class="row gap-3">
+      <app-assign-admin class="col-auto" [dataId]="item.id" [dataType]="dataType" [assignAdmin]="item.assignAdmin"></app-assign-admin>
+      <div class="col-auto flex-shink-1 flex-grow-1">
+        <div class="row gap-md-4 gy-3 flex-wrap mb-4">
+          <div class="col-md-2 col-6">
+            <div class="fw-bold mb-2 small text-uppercase">{{ 'Seller' | translate }}</div>
+            <p class="mb-0 clickable" (click)="viewUserDetails(item?.sellerUserId)">
+              {{ item?.sellerUser?.username }}
+            </p>
+            <p class="mb-0">{{ item?.sellerUser?.firstName }} {{ item?.sellerUser?.lastName }}</p>
+            <p class="mb-0">{{ location().seller }}</p>
+            <p class="mb-0">{{ mapCountryCodeToName[item?.sellerCompany?.country ?? ''] || item?.sellerCompany?.country }}</p>
+          </div>
+
+          <div class="col-md-2 col-6">
+            <div class="fw-bold mb-2 small text-uppercase d-flex align-items-center gap-2">
+              <span class="mb-0">
+                {{ 'Buyer' | translate }}
+              </span>
+              @if (item.buyerMessage) {
+                <span [matTooltip]="item.buyerMessage | translate" class="d-flex align-items-center">
+                  <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path
+                      fill-rule="evenodd"
+                      clip-rule="evenodd"
+                      d="M10 18.75C12.3206 18.75 14.5462 17.8281 16.1872 16.1872C17.8281 14.5462 18.75 12.3206 18.75 10C18.75 7.67936 17.8281 5.45376 16.1872 3.81282C14.5462 2.17187 12.3206 1.25 10 1.25C7.67936 1.25 5.45376 2.17187 3.81282 3.81282C2.17187 5.45376 1.25 7.67936 1.25 10C1.25 12.3206 2.17187 14.5462 3.81282 16.1872C5.45376 17.8281 7.67936 18.75 10 18.75ZM10 20C12.6522 20 15.1957 18.9464 17.0711 17.0711C18.9464 15.1957 20 12.6522 20 10C20 7.34784 18.9464 4.8043 17.0711 2.92893C15.1957 1.05357 12.6522 0 10 0C7.34784 0 4.8043 1.05357 2.92893 2.92893C1.05357 4.8043 0 7.34784 0 10C0 12.6522 1.05357 15.1957 2.92893 17.0711C4.8043 18.9464 7.34784 20 10 20Z"
+                      fill="#8E8E8D"
+                    />
+                    <path
+                      d="M11.1624 8.23633L8.29994 8.59508L8.19744 9.07008L8.75994 9.17383C9.12744 9.26133 9.19994 9.39383 9.11994 9.76008L8.19744 14.0951C7.95494 15.2163 8.32869 15.7438 9.20744 15.7438C9.88869 15.7438 10.6799 15.4288 11.0387 14.9963L11.1487 14.4763C10.8987 14.6963 10.5337 14.7838 10.2912 14.7838C9.94744 14.7838 9.82244 14.5426 9.91119 14.1176L11.1624 8.23633Z"
+                      fill="#8E8E8D"
+                    />
+                    <path
+                      d="M10 6.875C10.6904 6.875 11.25 6.31536 11.25 5.625C11.25 4.93464 10.6904 4.375 10 4.375C9.30964 4.375 8.75 4.93464 8.75 5.625C8.75 6.31536 9.30964 6.875 10 6.875Z"
+                      fill="#8E8E8D"
+                    />
+                  </svg>
+                </span>
+              }
+            </div>
+            <p class="mb-0 clickable" (click)="viewUserDetails(item?.buyerUserId)">
+              {{ item?.buyerUser?.username }}
+            </p>
+            <p class="mb-0">{{ item?.buyerUser?.firstName }} {{ item?.buyerUser?.lastName }}</p>
+            <p class="mb-0">{{ location().buyer }}</p>
+            <p class="mb-0">{{ mapCountryCodeToName[item?.buyerCompany?.country ?? ''] || item?.buyerCompany?.country }}</p>
+          </div>
+
+          <div class="col-md-2 col-6">
+            <div class="fw-bold mb-2 small text-uppercase">{{ 'Sample Size' | translate }}</div>
+            <p class="mb-0 fw-500">{{ item?.sampleSize }}</p>
+          </div>
+
+          <div class="col-md-3 col-6">
+            <div class="fw-bold mb-2 small text-uppercase">{{ 'Number of Samples' | translate }}</div>
+            <p class="mb-0 fw-500">{{ item.numberOfSamples }}</p>
+          </div>
+        </div>
+        <div class="row gap-md-4 gy-3 flex-wrap">
+          <div class="col-md-2 col-6">
+            <div class="fw-bold mb-2 small text-uppercase">{{ 'Material' | translate }}</div>
+            <p class="mb-0 fw-bold clickable" (click)="viewMaterialDetail()">{{ item?.listing?.title }}</p>
+          </div>
+
+          <div class="col-md-2 col-6">
+            <div class="fw-bold mb-2 small text-uppercase">{{ 'Date' | translate }}</div>
+            <p class="mb-0 fw-500">{{ item?.createdAt | date: 'dd/MM/yyyy' }}</p>
+          </div>
+
+          <div class="col-md-2 col-6">
+            <div class="fw-bold mb-2 small text-uppercase">{{ 'Sent' | translate }}</div>
+            <p class="mb-0 fw-500">{{ (item?.sentDate | date: 'dd/MM/yyyy') ?? 'N/A' }}</p>
+          </div>
+
+          <div class="col-md-2 col-6">
+            <div class="fw-bold mb-2 small text-uppercase">{{ 'Received' | translate }}</div>
+            <p class="mb-0 fw-500">{{ (item?.receivedDate | date: 'dd/MM/yyyy') ?? 'N/A' }}</p>
+          </div>
+
+          <div class="col-md-2 col-6">
+            <div class="fw-bold mb-2 small text-uppercase">{{ 'Status' | translate }}</div>
+            <p class="mb-0 fw-500">{{ item?.status ?? '' | translate }}</p>
+          </div>
+        </div>
+      </div>
+      <div class="col-12 col-lg-2 d-flex align-items-center justify-content-center justify-content-lg-end">
+        <app-notes-btn [inputData]="{ id: item.id, adminNote: item.adminNote, dataType: AdminNoteDataType.SAMPLES }"></app-notes-btn>
+      </div>
+    </div>
+  </div>
+}

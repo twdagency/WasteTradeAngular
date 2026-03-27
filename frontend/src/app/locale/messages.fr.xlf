@@ -1,0 +1,290 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xliff version="1.2" xmlns="urn:oasis:names:tc:xliff:document:1.2">
+  <file source-language="en" datatype="plaintext" original="ng2.template" target-language="fr">
+    <body>
+      <trans-unit id="4752480708407562864" datatype="html">
+        <source>© <x id="INTERPOLATION" equiv-text="{{now.getFullYear()}}"/> Waste Trade, All rights reserved. Disclaimer.</source><target state="new">© <x id="INTERPOLATION" equiv-text="{{now.getFullYear()}}"/> Waste Trade, All rights reserved. Disclaimer.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/layout/footer/footer.component.html</context>
+          <context context-type="linenumber">2,3</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="3303852097031321192" datatype="html">
+        <source>Terms &amp; Conditions</source><target state="new">Terms &amp; Conditions</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/layout/footer/footer.component.html</context>
+          <context context-type="linenumber">4,5</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="8515328822332882886" datatype="html">
+        <source>Privacy &amp; Policy</source><target state="new">Privacy &amp; Policy</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/layout/footer/footer.component.html</context>
+          <context context-type="linenumber">5,6</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="3562649245896997851" datatype="html">
+        <source> Do you have a WasteTrade account? <x id="START_LINK" ctype="x-a" equiv-text="&lt;a href=&quot;&quot; class=&quot;text-white fw-bold text-decoration-underline&quot;>"/>Login<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a>"/></source><target state="new"> Do you have a WasteTrade account? <x id="START_LINK" ctype="x-a" equiv-text="&lt;a href=&quot;&quot; class=&quot;text-white fw-bold text-decoration-underline&quot;>"/>Login<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a>"/></target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/routes/registrations/trading-flatform-form/trading-flatform-form.component.html</context>
+          <context context-type="linenumber">5,8</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="3301086086650990787" datatype="html">
+        <source>Register</source><target state="new">Register</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/routes/registrations/trading-flatform-form/trading-flatform-form.component.html</context>
+          <context context-type="linenumber">9,10</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="403489510198641655" datatype="html">
+        <source>PREFIX*</source><target state="new">PREFIX*</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/routes/registrations/trading-flatform-form/trading-flatform-form.component.html</context>
+          <context context-type="linenumber">13</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="8293338867739777508" datatype="html">
+        <source> Dr.</source><target state="new"> Dr.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/routes/registrations/trading-flatform-form/trading-flatform-form.component.html</context>
+          <context context-type="linenumber">16</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="4467575164480625769" datatype="html">
+        <source>Miss.</source><target state="new">Miss.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/routes/registrations/trading-flatform-form/trading-flatform-form.component.html</context>
+          <context context-type="linenumber">17</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="1790016378034710289" datatype="html">
+        <source>Mr.</source><target state="new">Mr.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/routes/registrations/trading-flatform-form/trading-flatform-form.component.html</context>
+          <context context-type="linenumber">18</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="6883694315276768646" datatype="html">
+        <source>Mrs.</source><target state="new">Mrs.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/routes/registrations/trading-flatform-form/trading-flatform-form.component.html</context>
+          <context context-type="linenumber">19</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="648613878322613872" datatype="html">
+        <source>Ms.</source><target state="new">Ms.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/routes/registrations/trading-flatform-form/trading-flatform-form.component.html</context>
+          <context context-type="linenumber">20</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="6890765597884748968" datatype="html">
+        <source>Mx.</source><target state="new">Mx.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/routes/registrations/trading-flatform-form/trading-flatform-form.component.html</context>
+          <context context-type="linenumber">21</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="4667692497518898710" datatype="html">
+        <source>Prof.</source><target state="new">Prof.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/routes/registrations/trading-flatform-form/trading-flatform-form.component.html</context>
+          <context context-type="linenumber">22</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="8292677406352184762" datatype="html">
+        <source>Rev.</source><target state="new">Rev.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/routes/registrations/trading-flatform-form/trading-flatform-form.component.html</context>
+          <context context-type="linenumber">23</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="2830855718349204493" datatype="html">
+        <source>This field is required </source><target state="new">This field is required </target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/routes/registrations/trading-flatform-form/trading-flatform-form.component.html</context>
+          <context context-type="linenumber">26</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/routes/registrations/trading-flatform-form/trading-flatform-form.component.html</context>
+          <context context-type="linenumber">40</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/routes/registrations/trading-flatform-form/trading-flatform-form.component.html</context>
+          <context context-type="linenumber">54</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/routes/registrations/trading-flatform-form/trading-flatform-form.component.html</context>
+          <context context-type="linenumber">69</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/routes/registrations/trading-flatform-form/trading-flatform-form.component.html</context>
+          <context context-type="linenumber">128</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/routes/registrations/trading-flatform-form/trading-flatform-form.component.html</context>
+          <context context-type="linenumber">192</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="5885741052762217659" datatype="html">
+        <source>FIRST NAME*</source><target state="new">FIRST NAME*</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/routes/registrations/trading-flatform-form/trading-flatform-form.component.html</context>
+          <context context-type="linenumber">31</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="3480572914217665654" datatype="html">
+        <source>LAST NAME*</source><target state="new">LAST NAME*</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/routes/registrations/trading-flatform-form/trading-flatform-form.component.html</context>
+          <context context-type="linenumber">45,46</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="2301824956468429960" datatype="html">
+        <source>JOB TITLE*</source><target state="new">JOB TITLE*</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/routes/registrations/trading-flatform-form/trading-flatform-form.component.html</context>
+          <context context-type="linenumber">60</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="3014181226938693737" datatype="html">
+        <source>Password weak</source><target state="new">Password weak</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/routes/registrations/trading-flatform-form/trading-flatform-form.component.html</context>
+          <context context-type="linenumber">97</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="5898109905716421568" datatype="html">
+        <source>Password medium</source><target state="new">Password medium</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/routes/registrations/trading-flatform-form/trading-flatform-form.component.html</context>
+          <context context-type="linenumber">102</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="745687858811977473" datatype="html">
+        <source>Password strong</source><target state="new">Password strong</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/routes/registrations/trading-flatform-form/trading-flatform-form.component.html</context>
+          <context context-type="linenumber">107</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="7872827642776001469" datatype="html">
+        <source>WHERE DID YOU HEAR ABOUT US*</source><target state="new">WHERE DID YOU HEAR ABOUT US*</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/routes/registrations/trading-flatform-form/trading-flatform-form.component.html</context>
+          <context context-type="linenumber">112</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="2130931921485539267" datatype="html">
+        <source>Google Search</source><target state="new">Google Search</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/routes/registrations/trading-flatform-form/trading-flatform-form.component.html</context>
+          <context context-type="linenumber">118</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="4395816529203312607" datatype="html">
+        <source>PRSE Trade Show</source><target state="new">PRSE Trade Show</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/routes/registrations/trading-flatform-form/trading-flatform-form.component.html</context>
+          <context context-type="linenumber">119</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="6311046208060940210" datatype="html">
+        <source>Plastics Live Trade Show</source><target state="new">Plastics Live Trade Show</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/routes/registrations/trading-flatform-form/trading-flatform-form.component.html</context>
+          <context context-type="linenumber">120</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="2169274626817412334" datatype="html">
+        <source>Sustainability show</source><target state="new">Sustainability show</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/routes/registrations/trading-flatform-form/trading-flatform-form.component.html</context>
+          <context context-type="linenumber">121</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="4563110841402614868" datatype="html">
+        <source> K-Show</source><target state="new"> K-Show</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/routes/registrations/trading-flatform-form/trading-flatform-form.component.html</context>
+          <context context-type="linenumber">122</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="6599965293047720314" datatype="html">
+        <source>Interplas</source><target state="new">Interplas</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/routes/registrations/trading-flatform-form/trading-flatform-form.component.html</context>
+          <context context-type="linenumber">123</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="3173158063422707803" datatype="html">
+        <source>Plast 2023</source><target state="new">Plast 2023</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/routes/registrations/trading-flatform-form/trading-flatform-form.component.html</context>
+          <context context-type="linenumber">124</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="6148968462751417600" datatype="html">
+        <source>Word of mouth</source><target state="new">Word of mouth</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/routes/registrations/trading-flatform-form/trading-flatform-form.component.html</context>
+          <context context-type="linenumber">125</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="5949446092067838241" datatype="html">
+        <source> COMPANY INTEREST* </source><target state="new"> COMPANY INTEREST* </target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/routes/registrations/trading-flatform-form/trading-flatform-form.component.html</context>
+          <context context-type="linenumber">133</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="2501969335659826225" datatype="html">
+        <source>This field is required</source><target state="new">This field is required</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/routes/registrations/trading-flatform-form/trading-flatform-form.component.html</context>
+          <context context-type="linenumber">148</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/routes/registrations/trading-flatform-form/trading-flatform-form.component.html</context>
+          <context context-type="linenumber">178</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="2198600296505309398" datatype="html">
+        <source>MATERIALS ACCEPTED <x id="START_TAG_SPAN" ctype="x-span" equiv-text="&lt;span class=&quot;fw-normal&quot;>"/>(MULTIPLE SELECTION)*<x id="CLOSE_TAG_SPAN" ctype="x-span" equiv-text="&lt;/span>"/></source><target state="new">MATERIALS ACCEPTED <x id="START_TAG_SPAN" ctype="x-span" equiv-text="&lt;span class=&quot;fw-normal&quot;>"/>(MULTIPLE SELECTION)*<x id="CLOSE_TAG_SPAN" ctype="x-span" equiv-text="&lt;/span>"/></target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/routes/registrations/trading-flatform-form/trading-flatform-form.component.html</context>
+          <context context-type="linenumber">153,155</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="8423865533959857627" datatype="html">
+        <source>OTHER MATERIAL</source><target state="new">OTHER MATERIAL</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/routes/registrations/trading-flatform-form/trading-flatform-form.component.html</context>
+          <context context-type="linenumber">183</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="5954032733165238287" datatype="html">
+        <source>I accept the <x id="START_TAG_SPAN" ctype="x-span" equiv-text="&lt;span class=&quot;fw-bold&quot;>"/>Terms &amp; Condition<x id="CLOSE_TAG_SPAN" ctype="x-span" equiv-text="&lt;/span>"/> and <x id="START_TAG_SPAN" ctype="x-span" equiv-text="&lt;span class=&quot;fw-bold&quot;>"/>Privacy Policy <x id="CLOSE_TAG_SPAN" ctype="x-span" equiv-text="&lt;/span>"/> by join WasteTrade</source><target state="new">I accept the <x id="START_TAG_SPAN" ctype="x-span" equiv-text="&lt;span class=&quot;fw-bold&quot;>"/>Terms &amp; Condition<x id="CLOSE_TAG_SPAN" ctype="x-span" equiv-text="&lt;/span>"/> and <x id="START_TAG_SPAN" ctype="x-span" equiv-text="&lt;span class=&quot;fw-bold&quot;>"/>Privacy Policy <x id="CLOSE_TAG_SPAN" ctype="x-span" equiv-text="&lt;/span>"/> by join WasteTrade</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/routes/registrations/trading-flatform-form/trading-flatform-form.component.html</context>
+          <context context-type="linenumber">203,205</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="3498970204767096106" datatype="html">
+        <source> This field is required </source><target state="new"> This field is required </target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/routes/registrations/trading-flatform-form/trading-flatform-form.component.html</context>
+          <context context-type="linenumber">211</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="524967139656223743" datatype="html">
+        <source> CREATE ACCOUNT </source><target state="new"> CREATE ACCOUNT </target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/routes/registrations/trading-flatform-form/trading-flatform-form.component.html</context>
+          <context context-type="linenumber">221,222</context>
+        </context-group>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

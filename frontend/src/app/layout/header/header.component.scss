@@ -1,0 +1,26 @@
+.header {
+  display: flex;
+  height: 70px;
+  padding: 0 14px;
+  box-shadow: 2px 2px 5px 2px #0000000d;
+  position: relative;
+
+  & > img {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    max-width: 162px;
+  }
+
+  @media screen and (min-width: 1400px) {
+    display: none;
+  }
+}
+
+.user {
+  display: flex;
+
+  align-items: center;
+
+  gap: 10px;
+}

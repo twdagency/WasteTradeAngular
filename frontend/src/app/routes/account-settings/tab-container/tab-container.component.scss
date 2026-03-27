@@ -1,0 +1,12 @@
+.button-wrapper {
+  margin-bottom: 33px;
+  @media screen and (min-width: 992px) {
+    margin-bottom: 0;
+    margin-top: 0;
+  }
+}
+
+.icon {
+  line-height: 24px;
+  font-size: 16px;
+}

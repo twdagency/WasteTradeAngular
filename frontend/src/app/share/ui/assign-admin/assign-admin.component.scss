@@ -1,0 +1,17 @@
+$width: 150px;
+
+.error-message {
+  width: $width;
+  color: #e84f63;
+  font-weight: 500;
+  margin-top: 9px;
+}
+
+.assign-select {
+  width: $width;
+  background-color: #ebfff7;
+}
+
+:host::ng-deep mat-form-field.select-error {
+  --mdc-outlined-text-field-outline-color: #e84f63;
+}

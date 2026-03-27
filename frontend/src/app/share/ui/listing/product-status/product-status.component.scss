@@ -1,0 +1,62 @@
+@import 'variables';
+
+.available {
+  border-color: $primary;
+  background-color: $info;
+
+  .icon {
+    color: $primary;
+  }
+}
+
+.required {
+  border-color: #3d3d3d;
+  background-color: #dadada;
+
+  .icon {
+    color: #3d3d3d;
+  }
+}
+
+.sold {
+  border-color: #3d3d3d;
+  background-color: #dadada;
+  color: #9e9e9e;
+  padding: 7px 5px !important;
+
+  .item-content {
+    flex-wrap: nowrap;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .reset-date {
+    color: #939797;
+  }
+}
+
+.pending {
+  border-color: #f5d19a;
+  background-color: #feedd8;
+  color: #f9a52a;
+  padding: 7px 5px !important;
+}
+
+.expired {
+  border-color: #e84f63;
+  background-color: #fbdfe3;
+
+  .icon {
+    color: #e84f63;
+  }
+}
+
+.ongoing {
+  border-color: #4f7ae8;
+  background-color: #dfe7fb;
+
+  .icon {
+    color: #4f7ae8;
+  }
+}

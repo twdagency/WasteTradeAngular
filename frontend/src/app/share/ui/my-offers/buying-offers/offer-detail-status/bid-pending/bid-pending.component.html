@@ -1,0 +1,59 @@
+@if (offer(); as offerDetail) {
+  <h2 class="fw-bold mb-4">{{ 'Your Offer Details - Offer Pending' | translate }}</h2>
+
+  <div class="background-primary py-4 text-white fw-500 rounded text-center mb-5">
+    <p class="mb-1">{{ 'Bid Amount' | translate }}</p>
+    <h2 class="mb-1 fw-bold">{{ getCurrencySignal(offerDetail.offer.currency) }}{{ offerDetail.offer.offeredPricePerUnit | number }}/MT</h2>
+    <p class="mb-0">
+      ({{ getCurrencySignal(offerDetail.offer.currency) }}{{ offerDetail.offer.offeredPricePerUnit * offerDetail.offer.quantity | number }})
+    </p>
+  </div>
+
+  <div class="border rounded px-5 py-4 content-grid">
+    <div class="cell">
+      <p class="label">{{ 'bid date' | translate }}</p>
+      <p class="content">{{ offerDetail.offer.createdAt | date: 'DD/MM/YYYY' }}</p>
+    </div>
+
+    <div class="cell">
+      <p class="label">{{ 'load quantity' | translate }}</p>
+      <p class="content quantity">{{ offerDetail.offer.quantity | number }}/{{ offerDetail.listing.quantity | number }}</p>
+    </div>
+
+    <div class="cell">
+      <p class="label">{{ 'weight per load' | translate }}</p>
+      <p class="content">{{ offerDetail.listing.materialWeightPerUnit | number }} MT</p>
+    </div>
+
+    <div class="cell">
+      <p class="label">{{ 'destination' | translate }}</p>
+      <p class="content">{{ getLocationAddress(offerDetail.buyer.location) }}</p>
+    </div>
+
+    <div class="cell">
+      <p class="label">{{ 'incoterms' | translate }}</p>
+      <p class="content">{{ offerDetail.offer.incoterms }}</p>
+    </div>
+
+    <div class="cell">
+      <p class="label">{{ 'Earliest Delivery Date' | translate }}</p>
+      <p class="content">{{ offerDetail.offer.earliestDeliveryDate | date: 'dd/MM/YY' }}</p>
+    </div>
+
+    <div class="cell">
+      <p class="label">{{ 'Latest Delivery Date' | translate }}</p>
+      <p class="content">{{ offerDetail.offer.latestDeliveryDate | date: 'dd/MM/YY' }}</p>
+    </div>
+
+    <div class="cell">
+      <p class="label">{{ 'Status' | translate }}</p>
+      <p class="content status">Pending</p>
+    </div>
+  </div>
+
+  <div class="d-flex justify-content-end mt-4">
+    <button mat-flat-button class="text-uppercase background-primary w-bold" (click)="onFindNew()">
+      {{ 'Find new material' | translate }}
+    </button>
+  </div>
+}

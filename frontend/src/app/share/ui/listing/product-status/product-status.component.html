@@ -1,0 +1,78 @@
+@if (product(); as product) {
+  <div class="mb-4" style="height: 30px">
+    @if (product) {
+      <!-- https://app.clickup.com/t/869aknbjc -->
+      @if (product?.listingRenewalPeriod && status() !== ProductStatus.Sold) {
+        <div class="border rounded rounded-pill mb-2 ongoing h-100 d-flex align-items-center">
+          <div class="fw-500 fs-18 w-100 d-flex justify-content-center align-items-center gap-1 item-content">
+            <mat-icon class="icon">lens</mat-icon>{{ 'Ongoing' | translate }}
+          </div>
+        </div>
+      } @else {
+        @switch (status()) {
+          @case (ProductStatus.Available) {
+            <div class="border rounded rounded-pill mb-2 available h-100 d-flex align-items-center">
+              <div class="fw-500 fs-18 w-100 d-flex justify-content-center align-items-center gap-1 item-content">
+                <mat-icon class="icon">lens</mat-icon>
+                @if (fromDate()) {
+                  <span>{{ 'Available From' | translate }}</span> <span>{{ fromDate() }}</span>
+                } @else {
+                  <span>{{ 'Available Now' | translate }}</span>
+                }
+              </div>
+            </div>
+          }
+
+          @case (ProductStatus.Required) {
+            <div class="border rounded rounded-pill mb-2 required h-100 d-flex align-items-center">
+              <div class="fw-500 fs-18 w-100 d-flex justify-content-center align-items-center gap-1 item-content">
+                <mat-icon class="icon">lens</mat-icon>
+                @if (fromDate()) {
+                  <span>{{ 'Required From' | translate }}</span> <span>{{ fromDate() }}</span>
+                } @else {
+                  <span>{{ 'Required Now' | translate }}</span>
+                }
+              </div>
+            </div>
+          }
+
+          @case (ProductStatus.Sold) {
+            <div class="border rounded rounded-pill mb-2 sold h-100 d-flex align-items-center">
+              <div class="fw-500 w-100 d-flex justify-content-center align-items-center gap-1 item-content"
+                [class.fs-14]="resetDate()" [class.fs-18]="!resetDate()">
+                {{ product.listingType === 'sell' ? ('Sold' | translate) : ('Fulfilled' | translate) }}
+                @if (resetDate()) {
+                  <span class="reset-date fs-12">({{ 'Available From' | translate }} {{ resetDate() }})</span>
+                }
+              </div>
+            </div>
+          }
+
+          @case (ProductStatus.Expired) {
+            <div class="border rounded py-1 rounded-pill mb-2 expired h-100 d-flex align-items-center">
+              <div class="fw-500 fs-18 w-100 d-flex justify-content-center align-items-center gap-1 item-content">
+                <mat-icon class="icon">lens</mat-icon>{{ 'Expired' | translate }}
+              </div>
+            </div>
+          }
+
+          @case (ProductStatus.Pending) {
+            <div class="border rounded rounded-pill mb-2 h-100 d-flex align-items-center pending">
+              <div class="fw-500 fs-18 w-100 d-flex justify-content-center align-items-center gap-1 item-content">
+                <mat-icon class="icon">lens</mat-icon>{{ 'Pending' | translate }}
+              </div>
+            </div>
+          }
+
+          @case (ProductStatus.Ongoing) {
+            <div class="border rounded rounded-pill mb-2 ongoing h-100 d-flex align-items-center">
+              <div class="fw-500 fs-18 w-100 d-flex justify-content-center align-items-center gap-1 item-content">
+                <mat-icon class="icon">lens</mat-icon>{{ 'Ongoing' | translate }}
+              </div>
+            </div>
+          }
+        }
+      }
+    }
+  </div>
+}

@@ -1,0 +1,13 @@
+<app-un-auth-layout>
+  <div class="col-md-6 mx-auto">
+    <div class="fs-24 box-shadow p-3 background-primary border-radius text-white text-center mt-3 mb-5">
+      {{ 'Do you have a WasteTrade account ?' | translate }}
+      <span (click)="goLogin()" class="text-white fw-bold text-decoration-underline">{{ 'Login' | translate }}</span>
+    </div>
+    <div class="border border-radius border-1 border-dark p-4 bg-white">
+      <div class="mb-4 fw-bold fs-48">{{ 'Haulier Register' | translate }}</div>
+      <h6 class="mb-4 mt-5 primary fw-bold">{{ 'PERSONAL INFORMATION' | translate }}</h6>
+      <app-haulier-form ngSkipHydration [withAutoSave]="true"></app-haulier-form>
+    </div>
+  </div>
+</app-un-auth-layout>

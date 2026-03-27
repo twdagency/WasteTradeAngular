@@ -1,0 +1,25 @@
+<div class="custom-dialog">
+  <button class="close-btn" mat-icon-button (click)="dialogRef.close(false)">
+    <mat-icon>close</mat-icon>
+  </button>
+
+  <div class="dialog-message">
+    <p>
+      {{
+        data.status === 'active'
+          ? ('Do you want to archive  this user? This will remove any assignments, affected items will require re-assigning.' | translate)
+          : ('Do you want to unarchive this user?' | translate)
+      }}
+    </p>
+  </div>
+
+  <div class="dialog-actions mt-3 d-flex">
+    <button mat-stroked-button color="primary" class="text-uppercase dialog-btn cancel-btn fw-bold" (click)="dialogRef.close(false)">
+      {{ 'Cancel' | translate }}
+    </button>
+
+    <button mat-flat-button color="primary" class="text-uppercase dialog-btn confirm-btn fw-bold" (click)="dialogRef.close(true)">
+      {{ 'Confirm' | translate }}
+    </button>
+  </div>
+</div>

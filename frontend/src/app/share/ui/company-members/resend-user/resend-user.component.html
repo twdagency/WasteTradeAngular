@@ -1,0 +1,29 @@
+<button mat-icon-button class="common-modal-close-btn" (click)="handleClose()">
+  <mat-icon>close</mat-icon>
+</button>
+<div class="container resend-modal">
+  <div class="d-flex flex-column justify-content-between">
+    <h2 class="mb-4">{{ 'Resend invite to ' | translate }}{{ data?.email }} ?</h2>
+
+    <div class="dialog-actions mt-3 d-flex">
+      <button
+        mat-stroked-button
+        color="primary"
+        class="outlined-button text-uppercase dialog-btn cancel-btn fw-bold"
+        (click)="handleClose()"
+      >
+        {{ 'Cancel' | translate }}
+      </button>
+
+      <button
+        mat-flat-button
+        color="primary"
+        class="primary-btn text-uppercase dialog-btn confirm-btn fw-bold"
+        [disabled]="submitting()"
+        (click)="handleConfirm()"
+      >
+        {{ 'Confirm' | translate }}
+      </button>
+    </div>
+  </div>
+</div>

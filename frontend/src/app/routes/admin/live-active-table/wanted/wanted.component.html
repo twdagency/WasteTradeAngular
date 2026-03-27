@@ -1,0 +1,15 @@
+<app-list-container
+  [fetchFn]="listingsService.getListingsWanted.bind(listingsService)"
+  [displayFilter]="['dateRange', 'company', 'materialType', 'country', 'status', 'sortBy']"
+  [customOptionValues]="customOptionValues"
+  [pageSize]="20"
+  [emptyMessage]="'No wanted are currently available for display.'"
+  [isCountryFilter]="false"
+  [pageType]="'wanted'"
+  [isCountryFilter]="true"
+  [listingType]="'wanted'"
+>
+  <ng-template let-wanted>
+    <app-wanted-detail [wanted]="wanted"></app-wanted-detail>
+  </ng-template>
+</app-list-container>

@@ -1,0 +1,117 @@
+@if (isAuth()) {
+  <div class="footer-wrapper-login d-flex">
+    <div class="side"></div>
+
+    <div class="container">
+      <div class="d-flex justify-content-center justify-content-md-between gap-2 flex-wrap footer-wrapper">
+        <div class="text-center">© {{ now.getFullYear() }} WasteTrade, {{ 'All rights reserved. Disclaimer' | translate }}.</div>
+        <div class="d-flex" style="gap: 80px">
+          <a mat-button routerLink="/termsandconditions" target="_blank" class="footer-link"> {{ 'Terms & Conditions' | translate }}</a>
+          <a mat-button routerLink="/privacy-policy" target="_blank" class="footer-link">{{ 'Privacy Policy' | translate }}</a>
+        </div>
+      </div>
+    </div>
+  </div>
+} @else {
+  <div class="background-primary pt-5 pb-4">
+    <div class="container">
+      <div class="row gap-4 gap-md-0">
+        <div class="col-lg-6 py-md-3 py-lg-0">
+          <img src="assets/images/footer-logo.png" alt="Logo" class="cursor-pointer mb-4" routerLink="/" />
+
+          <div class="socials d-flex gap-3 pb-3 pb-lg-5">
+            <a
+              itemprop="sameAs"
+              href="https://www.instagram.com/_wastetrade/"
+              target="_self"
+              title="Instagram"
+              aria-label="Instagram"
+              role="button"
+            >
+              <img src="assets/images/socials/insta.svg" alt="Instagram" />
+            </a>
+            <a
+              itemprop="sameAs"
+              href="https://twitter.com/wastetrade"
+              target="_self"
+              title="X (Twitter)"
+              aria-label="X (Twitter)"
+              role="button"
+            >
+              <img src="assets/images/socials/x.svg" alt="X (Twitter)" />
+            </a>
+
+            <a
+              itemprop="sameAs"
+              href="https://www.facebook.com/profile.php?id=100067425009620"
+              target="_self"
+              title="Facebook"
+              aria-label="Facebook"
+              role="button"
+            >
+              <img src="assets/images/socials/facebook.svg" alt="Facebook" />
+            </a>
+
+            <a
+              itemprop="sameAs"
+              href="https://www.linkedin.com/company/85879302/"
+              target="_self"
+              title="LinkedIn"
+              aria-label="LinkedIn"
+              role="button"
+            >
+              <img src="assets/images/socials/in.svg" alt="LinkedIn" />
+            </a>
+          </div>
+        </div>
+
+        <div class="col-md-6 col-lg-2">
+          <div class="list-link d-flex flex-column gap-1">
+            <p class="sub-title fw-bold mb-1 fs-24">{{ 'Menu' | translate }}</p>
+            <a class="fs-24" mat-button routerLink="/" target="_blank">{{ 'Home' | translate }}</a>
+            <a class="fs-24" mat-button routerLink="/buy" target="_blank">{{ 'Marketplace' | translate }}</a>
+            <a class="fs-24" mat-button routerLink="/wanted" target="_blank">{{ 'Materials' | translate }}</a>
+          </div>
+        </div>
+        <div class="col-md-6 col-lg-2">
+          <div class="list-link d-flex flex-column gap-1">
+            <p class="sub-title fw-bold mb-1 fs-24">{{ 'Company' | translate }}</p>
+            <a class="fs-24" mat-button href="https://www.wastetrade.com/about/" target="_blank">{{ 'About' | translate }}</a>
+            <a class="fs-24" mat-button href="https://www.wastetrade.com/wt_vacancies/" target="_blank">{{ 'Vacancies' | translate }}</a>
+
+            <a class="fs-24" mat-button routerLink="/privacy-policy" target="_blank">{{ 'Privacy Policy' | translate }}</a>
+            <a class="fs-24" mat-button routerLink="/termsandconditions" target="_blank">{{ 'Terms and Conditions' | translate }}</a>
+          </div>
+        </div>
+
+        <div class="col-md-6 col-lg-2">
+          <div class="list-link d-flex flex-column gap-1">
+            <p class="sub-title fw-bold mb-1 fs-24">{{ 'Help' | translate }}</p>
+            <p class="cursor-pointer" (click)="viewResources($event)" style="font-size: 24px">
+              {{ 'Resources' | translate }}
+            </p>
+            <a class="fs-24" mat-button href="https://www.wastetrade.com/contact-us/" target="_blank">{{ 'Contact form' | translate }}</a>
+          </div>
+        </div>
+
+        <div class="col-md-6 py-md-3 py-lg-0">
+          <div class="d-flex gap-2">
+            <div class="certificate-wrapper iso background-dark">
+              <img src="assets/images/sio.jpg" alt="ISO" class="cursor-pointer" routerLink="/" />
+            </div>
+
+            <div class="certificate-wrapper award">
+              <img src="assets/images/Recycling_Awards_Icon.jpg" alt="National Recycling Awards" class="cursor-pointer" routerLink="/" />
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="bottom-content mt-4">
+        <div class="text-center text-white" style="font-size: 18px">
+          © {{ now.getFullYear() }} {{ 'WasteTrade, All rights reserved. Disclaimer.' | translate }}
+        </div>
+      </div>
+    </div>
+  </div>
+}

@@ -1,0 +1,95 @@
+<ng-template #removeSection>
+  <span [matTooltip]="canDelete().tooltip" [matTooltipDisabled]="canDelete().action" class="w-100">
+    <button
+      mat-flat-button
+      class="text-uppercase w-100 py-4 mb-3 button-delete text-white background-error fw-bold fs-16"
+      [disabled]="canDelete().hardDisabled"
+      [class.button-disabled]="!canDelete().action"
+      (click)="onDeleteListing()"
+      [class.overlay-spinner]="deleting()"
+    >
+      <svg class="me-2" xmlns="http://www.w3.org/2000/svg" height="41px" width="41px" viewBox="0 -960 960 960" fill="#e3e3e3">
+        <path
+          d="M280-120q-33 0-56.5-23.5T200-200v-520h-40v-80h200v-40h240v40h200v80h-40v520q0 33-23.5 56.5T680-120H280Zm400-600H280v520h400v-520ZM360-280h80v-360h-80v360Zm160 0h80v-360h-80v360ZM280-720v520-520Z"
+        />
+      </svg>
+      <span>{{ 'Delete listing' | translate }}</span>
+    </button>
+    @if (showPendingNote()) {
+      <div class="text-center px-3">(*) You cannot delete the listing because it is in the Approval Process</div>
+    }
+  </span>
+</ng-template>
+
+@if (isOwnListing()) {
+  @if (isSeller) {
+    <!-- <button
+      mat-stroked-button
+      class="text-uppercase w-100 py-4 mb-4 border-primary primary fw-bold fs-16"
+      (click)="onEditListing()"
+      disabled
+    >
+      Edit listing
+    </button>
+
+    <button mat-flat-button class="text-uppercase w-100 py-4 mb-4 background-primary text-white fw-bold fs-16" disabled>
+      View Bid on this listing
+    </button> -->
+
+    <span [matTooltip]="canEdit().tooltip" [matTooltipDisabled]="canEdit().action" class="w-100">
+      <button
+        mat-stroked-button
+        class="text-uppercase w-100 py-4 mb-3 outline-primary-btn fw-bold fs-16"
+        (click)="editListing()"
+        [class.edit-button-disabled]="!canEdit().action"
+        [disabled]="!canEdit().action"
+      >
+        {{ 'Edit listing' | translate }}
+      </button>
+    </span>
+
+    <span [matTooltip]="canSold().tooltip" [matTooltipDisabled]="canSold().action" class="w-100">
+      <button
+        mat-flat-button
+        class="text-uppercase w-100 py-4 mb-3 text-white background-dark fw-bold fs-16"
+        [class.overlay-spinner]="solding()"
+        [class.button-disabled]="!canSold().action"
+        (click)="onSold()"
+        [disabled]="!canSold().action"
+      >
+        {{ 'Mark as Sold' | translate }}
+      </button>
+    </span>
+
+    <ng-container [ngTemplateOutlet]="removeSection"> </ng-container>
+  } @else {
+    <div class="d-flex flex-column align-items-center">
+      @if (canFulfill()) {
+        <button
+          mat-flat-button
+          class="text-uppercase w-100 py-4 mb-3 background-dark text-white fw-bold fs-16"
+          [class.overlay-spinner]="fulfilling()"
+          (click)="onFulfill()"
+        >
+          {{ 'Fulfil' | translate }}
+        </button>
+      }
+
+      <ng-container [ngTemplateOutlet]="removeSection"> </ng-container>
+    </div>
+  }
+} @else if (isSeller) {
+  @if (listingDetail()?.listing?.status !== 'sold') {
+    <div class="d-flex flex-column align-items-center border border-light background-on-primary rounded rounded-4 gap-3 p-4">
+      <button mat-flat-button class="text-uppercase w-100 action-button" (click)="onBid()">{{ 'bid now' | translate }}</button>
+      <p class="text-uppercase text-decoration-underline fw-bold underlink cursor-pointer" (click)="onRequestInformation()">
+        {{ 'Request information' | translate }}
+      </p>
+    </div>
+  }
+} @else {
+  <div class="d-flex flex-column align-items-center border border-primary background-on-primary rounded rounded-4 gap-3 p-4 mb-3">
+    <button mat-flat-button class="text-uppercase action-button" [routerLink]="['/sell']">{{ 'Sell material' | translate }}</button>
+    <!-- <p class="text-uppercase text-decoration-underline fw-bold underlink">message buyer</p> -->
+  </div>
+}

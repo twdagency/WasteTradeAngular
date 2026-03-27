@@ -1,0 +1,54 @@
+<div class="p-5 flex-column h-100 align-items-between justify-content-center">
+  <div class="d-flex justify-content-between align-items-center w-100">
+    <h2 class="fw-bold flex-grow-1">{{ 'Renew your listing' | translate }}</h2>
+    <div class="dialog-close-button" (click)="close()">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="12" cy="12" r="12" fill="#1D1D1B" />
+        <path d="M7 7.06641L17.8064 17.8728" stroke="white" stroke-width="3" stroke-linecap="round" />
+        <path d="M17.8086 7L7.00222 17.8064" stroke="white" stroke-width="3" stroke-linecap="round" />
+      </svg>
+    </div>
+  </div>
+  <div class="p-0 mt-3 flex-grow-1 overflow-hidden">
+    @if (expiryInfo()?.isNearingExpiry) {
+      <div class="d-flex w-100 align-items-center gap-2 error mb-4 mt-3 fs-16">
+        <mat-icon>error_outline</mat-icon>
+        <span class="fw-bold">
+          {{ 'Listing expires in' | translate }} {{ expiryInfo()?.daysUntilExpiry }} {{ 'days - End date: ' | translate }}
+          {{ endDate() | date: 'dd/MM/yyyy' }}
+        </span>
+      </div>
+    }
+    <form [formGroup]="formGroup" class="h-100 d-flex flex-column">
+      <mat-label class="fw-bold mb-1 d-block fs-16">{{ 'CHOOSE RENEWAL PERIOD*' | translate }}</mat-label>
+      <mat-radio-group class="flex-column w-100 flex-grow-1" formControlName="renewalPeriod">
+        <mat-radio-button class="bold-label col-12 d-block mt-2" [value]="RENEWAL_PERIOD.TWO_WEEKS">
+          <span class="fs-16">
+            {{ '2 Weeks ' | translate }} ({{ 'New end date' | translate }} {{ newEndDate().twoWeeks | date: 'dd/MM/yyyy' }})
+          </span>
+        </mat-radio-button>
+        <mat-radio-button class="bold-label col-12 fs-16 d-block" [value]="RENEWAL_PERIOD.NINETY_DAYS">
+          <span class="fs-16">
+            {{ '90 Days' | translate }} ({{ 'New end date' | translate }} {{ newEndDate().ninetyDays | date: 'dd/MM/yyyy' }})
+          </span></mat-radio-button
+        >
+      </mat-radio-group>
+    </form>
+  </div>
+  <div class="p-0 mt-3">
+    <div class="d-flex justify-content-between align-items-center gap-3 col-md-12 col-12s">
+      <button mat-stroked-button class="text-uppercase border-primary primary w-100 fw-bold py-3" (click)="close()">
+        {{ 'CANCEL' | translate }}
+      </button>
+      <button
+        mat-flat-button
+        [disabled]="formGroup.invalid"
+        class="text-uppercase primary-btn w-100 fw-bold py-3"
+        [class.overlay-spinner]="submitting()"
+        (click)="submit()"
+      >
+        {{ 'CONFIRM' | translate }}
+      </button>
+    </div>
+  </div>
+</div>

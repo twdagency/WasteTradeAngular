@@ -1,0 +1,22 @@
+services:
+  frontend-ssr:
+    build:
+      context: .
+      dockerfile: server.Dockerfile
+      args:
+        API_URL: ${API_URL}
+    restart: always
+    container_name: frontend-ssr
+    networks:
+      - frontend-ssr
+        #env_file:
+        #- .env
+    ports:
+      - '4000:4000'
+    dns:
+      - 8.8.8.8
+      - 8.8.4.4
+
+networks:
+  frontend-ssr:
+    driver: bridge

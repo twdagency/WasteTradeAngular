@@ -1,0 +1,12 @@
+<div class="wrapper" [matMenuTriggerFor]="notificationMenu" #menuTrigger="matMenuTrigger">
+  <mat-icon>notifications</mat-icon>
+  @if (amount()) {
+    <span class="amount">{{ amount() }}</span>
+  }
+</div>
+
+<mat-menu class="notification-menu" #notificationMenu="matMenu">
+  <div (click)="$event.stopPropagation()">
+    <app-notification-menu (reFetchNoti)="onReFetchNoti()" #notificationMenuComponent></app-notification-menu>
+  </div>
+</mat-menu>

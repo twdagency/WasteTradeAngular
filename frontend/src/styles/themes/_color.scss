@@ -1,0 +1,21 @@
+@import '../variables';
+
+.primary {
+  color: $primary !important;
+}
+
+.secondary {
+  color: $secondary;
+}
+
+.error {
+  color: $error !important;
+}
+
+.text-dark {
+  color: $black !important;
+}
+
+.text-empty {
+  color: $empty-state !important;
+}

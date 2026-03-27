@@ -1,0 +1,6 @@
+@import 'variables';
+
+.disable-mat-form-field {
+  pointer-events: none;
+  background-color: $grey;
+}

@@ -1,0 +1,20 @@
+:host {
+  width: 100%;
+}
+
+.page-wrapper {
+  max-width: 754px;
+  padding-bottom: 30px;
+}
+
+.form-container {
+  margin-top: 84px;
+
+  @media screen and (max-width: 768px) {
+    margin-top: 42px;
+  }
+}
+
+mat-form-field {
+  margin-top: 8px;
+}

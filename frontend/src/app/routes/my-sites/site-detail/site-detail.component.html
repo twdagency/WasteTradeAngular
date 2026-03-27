@@ -1,0 +1,219 @@
+<!-- <button
+    mat-flat-button
+    class="d-flex align-items-center justify-content-center py-2 rounded px-2 background-primary text-white text-uppercase fw-bold button-back"
+    (click)="onBack()"
+  >
+    <mat-icon class="icon">west</mat-icon>
+    <span >go back</span>
+  </button> -->
+@if (!loading()) {
+  <div class="col-12 overflow-hidden">
+    @if (location) {
+      <div class="d-flex flex-column flex-md-row flex-lg-row gap-4">
+        <div
+          [class]="
+            'd-flex flex-column justify-content-between overflow-hidden gap-4 ' +
+            (isDialog
+              ? 'col-md-12 border-0 p-0 rounded-0 mt-3 fs-16'
+              : 'flex-md-row border border-primary rounded-4 p-3 p-md-4 col-12 col-lg-8')
+          "
+        >
+          <div
+            class="col-12 col-md-9 d-flex flex-column justify-content-between overflow-hidden min-w-0"
+            [class.col-md-12]="isDialog"
+            [class.flex-grow-1]="!isDialog"
+          >
+            <div class="fw-bold w-100 fs-24 mb-3 mb-md-4">{{ 'Warehouse Location' | translate }}</div>
+
+            <div class="row mb-3 mb-md-4">
+              <div class="col-12 col-md-4 mb-3 mb-md-0">
+                <div class="fw-bold">{{ 'LOCATION NAME' | translate }}</div>
+                <div>{{ location.locationName || '-' }}</div>
+              </div>
+              <div class="col-12 col-md-4 mb-3 mb-md-0">
+                <div class="fw-bold text-uppercase">{{ 'SITE POINT OF CONTACT' | translate }}</div>
+                <div>
+                  {{ (location.prefix | titlecase) + '. ' + location.firstName + ' ' + location.lastName || '-' }}
+                </div>
+              </div>
+              <div class="col-12 col-md-4 mb-3 mb-md-0">
+                <div class="fw-bold">{{ 'POSITION IN COMPANY' | translate }}</div>
+                <div>{{ location.positionInCompany || '-' }}</div>
+              </div>
+            </div>
+
+            <div class="row mb-3 mb-md-4">
+              <div class="col-12 col-md-4 mb-3 mb-md-0">
+                <div class="fw-bold">{{ 'PHONE NUMBER' | translate }}</div>
+                <div>{{ location.phoneNumber || '-' }}</div>
+              </div>
+            </div>
+
+            <div class="row mb-3 mb-md-4">
+              <div class="col-12 mb-3 mb-md-0">
+                <div class="fw-bold">{{ 'SITE-SPECIFIC INSTRUCTIONS' | translate }}</div>
+                <div>{{ location.siteSpecificInstructions || '-' }}</div>
+              </div>
+            </div>
+
+            <div class="row mb-3 mb-md-4">
+              <div class="col-12 col-md-4 mb-3 mb-md-0">
+                <div class="fw-bold">{{ 'STREET ADDRESS' | translate }}</div>
+                <div>
+                  {{ location.street ? location.street + (location.addressLine ? ' - ' + location.addressLine : '') : '-' }}
+                </div>
+              </div>
+              <div class="col-12 col-md-4 mb-3 mb-md-0">
+                <div class="fw-bold">{{ 'ZIP / POSTAL CODE' | translate }}</div>
+                <div>{{ location.postcode || '-' }}</div>
+              </div>
+              <div class="col-12 col-md-4 mb-3 mb-md-0">
+                <div class="fw-bold">{{ 'CITY' | translate }}</div>
+                <div>{{ location.city || '-' }}</div>
+              </div>
+            </div>
+
+            <div class="row mb-3 mb-md-4">
+              <div class="col-12 col-md-4 mb-3 mb-md-0">
+                <div class="fw-bold">{{ 'COUNTY / STATE / REGION' | translate }}</div>
+                <div>{{ location.stateProvince || '-' }}</div>
+              </div>
+              <div class="col-12 col-md-4 mb-3 mb-md-0">
+                <div class="fw-bold">{{ 'COUNTRY' | translate }}</div>
+                <div>{{ countryCodeToName(location.country) || '-' }}</div>
+              </div>
+            </div>
+
+            <div class="row mb-3" [class.mb-md-4]="!isDialog">
+              <div class="col-12 col-md-4 mb-3 mb-md-0">
+                <div class="fw-bold">{{ 'HEAD OFFICE OPENING TIME' | translate }}</div>
+                <div>{{ location.officeOpenTime || '-' }}</div>
+              </div>
+              <div class="col-12 col-md-4 mb-3 mb-md-0">
+                <div class="fw-bold">{{ 'HEAD OFFICE CLOSING TIME' | translate }}</div>
+                <div>{{ location.officeCloseTime || '-' }}</div>
+              </div>
+            </div>
+
+            @if (isDialog) {
+              <hr class="my-4 opacity-100" />
+            }
+
+            <div class="fw-bold w-100 fs-24 mb-3">{{ 'Material Accepted' | translate }}</div>
+            <div class="mb-3 mb-md-4">
+              @if (newMaterials.length == 0) {
+                <p class="">{{ 'No materials found.' | translate }}</p>
+              } @else {
+                @for (type of newMaterials; track $index) {
+                  <div class="col-12 mb-3">
+                    <div class="fw-bold mb-2">{{ type.name | translate }}</div>
+                    <div>{{ type.materials.join(', ') || '-' }}</div>
+                  </div>
+                }
+              }
+
+              @if (location.otherMaterial) {
+                <div class="col-12 mb-3">
+                  <div class="fw-bold mb-2">{{ 'Other Material' | translate }}</div>
+                  <div>{{ location.otherMaterial | titlecase }}</div>
+                </div>
+              }
+            </div>
+
+            @if (isDialog) {
+              <hr class="my-4 opacity-100" />
+            }
+
+            <div class="fw-bold w-100 fs-24 mb-3">{{ 'On-site Facilities' | translate }}</div>
+            <div class="row mb-3 mb-md-4">
+              <div class="col-12 col-md-6 mb-3 mb-md-0">
+                <div class="fw-bold">{{ 'IS THERE A LOADING RAMP ON THIS SITE?' | translate }}</div>
+                <div>{{ location.loadingRamp === true ? 'Yes' : location.loadingRamp === false ? 'No' : '-' }}</div>
+              </div>
+              <div class="col-12 col-md-6 mb-3 mb-md-0">
+                <div class="fw-bold">{{ 'HAVE YOU GOT A WEIGHBRIDGE ON THIS SITE?' | translate }}</div>
+                <div>{{ location.weighbridge === true ? 'Yes' : location.weighbridge === false ? 'No' : '-' }}</div>
+              </div>
+            </div>
+
+            <div class="row mb-3 mb-md-4">
+              <div class="col-12 mb-3 mb-md-0">
+                <div class="fw-bold">{{ 'CAN YOU LOAD/UNLOAD MATERIAL YOURSELF ON THIS SITE?' | translate }}</div>
+                <div>
+                  {{ location.selfLoadUnLoadCapability === true ? 'Yes' : location.selfLoadUnLoadCapability === false ? 'No' : '-' }}
+                </div>
+              </div>
+            </div>
+
+            <div class="row mb-3" [class.mb-md-4]="!isDialog">
+              <div class="col-12 mb-3 mb-md-0">
+                <div class="fw-bold">{{ 'WHICH CONTAINER TYPES CAN YOU MANAGE ON THIS SITE?' | translate }}</div>
+                <div>{{ containerManage || '-' }}</div>
+              </div>
+            </div>
+
+            @if (isDialog) {
+              <hr class="my-4 opacity-100" />
+            }
+
+            <!-- LICENCE  -->
+            <div class="fw-bold w-100 fs-24 mb-3">{{ 'Licences / Permits' | translate }}</div>
+            <div class="row mb-0">
+              <div class="col-12">
+                <app-document [isReusable]="true" [externalDocument]="location.companyLocationDocuments ?? []"></app-document>
+              </div>
+            </div>
+          </div>
+          @if (isDialog) {
+            <div class="col-12 mt-3">
+              <button
+                mat-stroked-button
+                class="border border-primary text-uppercase primary py-3 w-100 fw-bold"
+                style="height: 56px"
+                (click)="dialogRef?.close()"
+              >
+                {{ 'Close' | translate }}
+              </button>
+            </div>
+          }
+        </div>
+
+        @if (!isDialog) {
+          <div class="d-flex justify-content-center justify-content-lg-start align-items-start">
+            <button
+              mat-stroked-button
+              class="d-flex align-items-center justify-content-center px-3 py-2"
+              style="max-width: 200px"
+              (click)="openEditLocation()"
+            >
+              <img
+                src="assets/images/edit_24px.svg"
+                appFallbackImage
+                loading="lazy"
+                alt="Edit icon"
+                style="height: 1em; width: auto; vertical-align: baseline; margin-right: 5px"
+              />
+              <span class="fw-bold fs-16">{{ 'EDIT' | translate }}</span>
+            </button>
+          </div>
+        }
+      </div>
+    } @else {
+      <div class="d-flex justify-content-center align-items-center fs-24 mt-3">
+        <p class="text-muted">{{ 'No location found.' | translate }}</p>
+      </div>
+    }
+
+    @if (!isDialog) {
+      <div class="d-flex justify-content-center justify-content-md-start mt-4" [class.justify-content-md-center]="!location">
+        <div class="col-12 col-sm-8 col-md-4 col-lg-4">
+          <button mat-flat-button class="w-100 fw-bold text-white py-3" (click)="addNewLocation()">
+            {{ 'ADD NEW LOCATION' | translate }}
+          </button>
+        </div>
+      </div>
+    }
+  </div>
+} @else {
+  <app-spinner></app-spinner>
+}

@@ -1,0 +1,41 @@
+.content-grid {
+  margin-top: 60px;
+  display: grid;
+  grid-template-rows: 1fr auto;
+  overflow: hidden;
+
+  > * {
+    &:first-child {
+      overflow-y: auto;
+      overflow-x: hidden;
+      padding-right: 0.5rem;
+    }
+
+    &:last-child:has(app-pagination) {
+      padding-top: 1rem;
+      background: var(--bs-body-bg);
+    }
+
+    &:has(app-spinner),
+    &.fs-24 {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+
+      &.fs-24 {
+        min-height: clamp(10vh, 20vh, 30vh);
+      }
+    }
+
+    .mt-auto {
+      margin-top: 0 !important;
+    }
+  }
+}
+
+.empty-message-container {
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}

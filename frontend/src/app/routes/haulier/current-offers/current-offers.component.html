@@ -1,0 +1,22 @@
+<app-haulier-layout [title]="'Current Offers' | translate">
+  @if (loading()) {
+    <app-spinner></app-spinner>
+  } @else {
+    @if (items().length === 0) {
+      <div class="fs-24 empty-message-container">
+        <p class="text-muted text-center">{{ 'You have not made any offers yet. Please view the available loads.' | translate }}</p>
+      </div>
+    } @else {
+      <p class="fw-bold text-uppercase mb-4">{{ items().length }} {{ 'results of' | translate }} {{ totalCount() }}</p>
+      @for (item of displayItem(); track $index) {
+        <app-haulage-offer-row [item]="item"></app-haulage-offer-row>
+      }
+      <app-pagination
+        [pageNumber]="page()"
+        [totalCount]="totalCount()"
+        [size]="pageSize()"
+        (pageChange)="onPageChange($event)"
+      ></app-pagination>
+    }
+  }
+</app-haulier-layout>

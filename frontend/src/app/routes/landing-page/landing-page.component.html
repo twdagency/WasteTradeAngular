@@ -1,0 +1,15 @@
+@if (!isHaulier) {
+  <app-common-layout [title]="' Landing Page' | translate">
+    <div class="text-center justify-content-center align-items-center col-12" style="height: 100%">
+      <mat-icon style="width: 50px; height: 50px; font-size: 50px" class="primary text-center width">hourglass_empty</mat-icon>
+      <div class="text-center fw-bold fs-40">{{ 'Coming Soon !' | translate }}</div>
+    </div>
+  </app-common-layout>
+} @else {
+  <app-haulier-layout [title]="' Landing Page' | translate">
+    <div class="text-center justify-content-center align-items-center col-12" style="height: 100%">
+      <mat-icon style="width: 50px; height: 50px; font-size: 50px" class="primary text-center width">hourglass_empty</mat-icon>
+      <div class="text-center fw-bold fs-40">{{ 'Coming Soon !' | translate }}</div>
+    </div>
+  </app-haulier-layout>
+}
