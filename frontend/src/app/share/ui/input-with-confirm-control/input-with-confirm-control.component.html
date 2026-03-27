@@ -14,6 +14,7 @@
         [type]="showValue ? 'text' : 'password'"
         [placeholder]="placeholder ?? ''"
         [attr.autocomplete]="autocompleteValue"
+        [attr.name]="nameValue || null"
         (blur)="onTouched?.()"
       />
       @if (type === 'password') {
@@ -45,6 +46,7 @@
         [type]="showConfirmValue ? 'text' : 'password'"
         [placeholder]="placeholder ?? ''"
         [attr.autocomplete]="autocompleteConfirm"
+        [attr.name]="nameConfirm || null"
         (blur)="onTouched?.()"
       />
       @if (type === 'password') {

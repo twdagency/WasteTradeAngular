@@ -3,7 +3,7 @@
     {{ 'Basic Details' | translate }}
   </p>
 }
-<form [formGroup]="formGroup">
+<form [formGroup]="formGroup" autocomplete="on">
   <div class="row g-3 mb-4">
     <div [class]="isDialog ? 'col-md-4' : 'col-md-2'">
       <mat-label class="fw-bold d-block mb-2">{{ 'PREFIX' | translate }} <span class="asterisk">*</span></mat-label>
@@ -26,7 +26,7 @@
     <div [class]="isDialog ? 'col-md-4' : 'col-md-5'">
       <mat-label class="fw-bold d-block mb-2">{{ 'FIRST NAME' | translate }} <span class="asterisk">*</span></mat-label>
       <mat-form-field appearance="outline" class="w-100">
-        <input matInput placeholder="{{ 'e.g. Mark' | translate }}" type="text" autocomplete="given-name" formControlName="firstName" />
+        <input matInput placeholder="{{ 'e.g. Mark' | translate }}" type="text" autocomplete="given-name" name="given-name" formControlName="firstName" />
         @if (formGroup.get('firstName')?.hasError('required')) {
           <mat-error>{{ 'This field is required' | translate }} </mat-error>
         }
@@ -38,7 +38,7 @@
     <div [class]="isDialog ? 'col-md-4' : 'col-md-5'">
       <label class="fw-bold d-block mb-2">{{ 'LAST NAME' | translate }} <span class="asterisk">*</span></label>
       <mat-form-field appearance="outline" class="w-100">
-        <input matInput placeholder="{{ 'e.g. Smith' | translate }}" type="text" autocomplete="family-name" formControlName="lastName" />
+        <input matInput placeholder="{{ 'e.g. Smith' | translate }}" type="text" autocomplete="family-name" name="family-name" formControlName="lastName" />
         @if (formGroup.get('lastName')?.hasError('required')) {
           <mat-error>{{ 'This field is required' | translate }} </mat-error>
         }
@@ -52,7 +52,7 @@
   <div class="mb-4">
     <mat-label class="fw-bold d-block mb-2">{{ 'JOB TITLE' | translate }} <span class="asterisk">*</span></mat-label>
     <mat-form-field appearance="outline" class="w-100">
-      <input matInput placeholder="{{ 'Type here' | translate }}" type="text" autocomplete="organization-title" formControlName="jobTitle" />
+      <input matInput placeholder="{{ 'Type here' | translate }}" type="text" autocomplete="organization-title" name="organization-title" formControlName="jobTitle" />
       @if (formGroup.get('jobTitle')?.hasError('required')) {
         <mat-error>{{ 'This field is required' | translate }} </mat-error>
       }
@@ -80,6 +80,8 @@
         [isEmail]="true"
         autocompleteValue="email"
         autocompleteConfirm="email"
+        nameValue="email"
+        nameConfirm="confirm-email"
       >
       </app-input-with-confirm-control>
     </div>
@@ -96,6 +98,8 @@
         [isHaulier]="true"
         autocompleteValue="new-password"
         autocompleteConfirm="new-password"
+        nameValue="new-password"
+        nameConfirm="confirm-password"
       >
       </app-input-with-confirm-control>
       @if (formGroup.get('password')?.hasError('pwdStrengthInvalid')) {
@@ -122,7 +126,7 @@
     <div class="mb-4">
       <mat-label class="fw-bold d-block mb-2">{{ 'EMAIL' | translate }} <span class="asterisk">*</span></mat-label>
       <mat-form-field appearance="outline" class="w-100">
-        <input matInput placeholder="{{ 'Type here' | translate }}" type="email" autocomplete="email" formControlName="email" />
+        <input matInput placeholder="{{ 'Type here' | translate }}" type="email" autocomplete="email" name="email" formControlName="email" />
         @if (formGroup.get('email')?.hasError('required')) {
           <mat-error>{{ 'This field is required' | translate }} </mat-error>
         }
@@ -141,7 +145,7 @@
   <div class="mb-4">
     <label class="fw-bold d-block mb-2">{{ 'COMPANY NAME' | translate }} <span class="asterisk">*</span></label>
     <mat-form-field appearance="outline" class="w-100">
-      <input matInput placeholder="ex. WasteTrade" type="text" autocomplete="organization" formControlName="companyName" />
+      <input matInput placeholder="ex. WasteTrade" type="text" autocomplete="organization" name="organization" formControlName="companyName" />
       @if (formGroup.get('companyName')?.hasError('required')) {
         <mat-error>{{ 'This field is required' | translate }} </mat-error>
       }
@@ -205,7 +209,7 @@
   <div class="mb-4">
     <label class="fw-bold d-block mb-2">{{ 'STREET ADDRESS' | translate }} <span class="asterisk">*</span></label>
     <mat-form-field appearance="outline" class="w-100">
-      <input matInput placeholder="{{ 'Type here' | translate }}" type="text" autocomplete="street-address" formControlName="addressLine1" />
+      <input matInput placeholder="{{ 'Type here' | translate }}" type="text" autocomplete="street-address" name="street-address" formControlName="addressLine1" />
       @if (formGroup.get('addressLine1')?.hasError('required')) {
         <mat-error>{{ 'This field is required' | translate }}</mat-error>
       }
@@ -219,7 +223,7 @@
     <div class="col-md-6">
       <mat-label class="fw-bold d-block mb-2">{{ 'POST CODE' | translate }} <span class="asterisk">*</span></mat-label>
       <mat-form-field appearance="outline" class="w-100">
-        <input matInput placeholder="{{ 'Type here' | translate }}" type="text" autocomplete="postal-code" formControlName="postalCode" />
+        <input matInput placeholder="{{ 'Type here' | translate }}" type="text" autocomplete="postal-code" name="postal-code" formControlName="postalCode" />
         @if (formGroup.get('postalCode')?.hasError('required')) {
           <mat-error>{{ 'This field is required' | translate }}</mat-error>
         }
@@ -231,7 +235,7 @@
     <div class="col-md-6">
       <mat-label class="fw-bold d-block mb-2">{{ 'CITY' | translate }} <span class="asterisk">*</span></mat-label>
       <mat-form-field appearance="outline" class="w-100">
-        <input matInput placeholder="{{ 'Type here' | translate }}" type="text" autocomplete="address-level2" formControlName="city" />
+        <input matInput placeholder="{{ 'Type here' | translate }}" type="text" autocomplete="address-level2" name="address-level2" formControlName="city" />
         @if (formGroup.get('city')?.hasError('required')) {
           <mat-error>{{ 'This field is required' | translate }}</mat-error>
         }
@@ -246,7 +250,7 @@
     <div class="col-md-6">
       <mat-label class="fw-bold d-block mb-2">{{ 'COUNTY / STATE / REGION' | translate }} <span class="asterisk">*</span></mat-label>
       <mat-form-field appearance="outline" class="w-100">
-        <input matInput placeholder="{{ 'Type here' | translate }}" type="text" autocomplete="address-level1" formControlName="stateProvince" />
+        <input matInput placeholder="{{ 'Type here' | translate }}" type="text" autocomplete="address-level1" name="address-level1" formControlName="stateProvince" />
         @if (formGroup.get('stateProvince')?.hasError('required')) {
           <mat-error>{{ 'This field is required' | translate }}</mat-error>
         }

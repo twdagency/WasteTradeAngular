@@ -8,11 +8,11 @@
     <h4 class="fw-bold fs-1 mb-3">{{ 'Login' | translate }}</h4>
     <h6 class="primary mb-4 fw-bold">{{ 'Welcome Back!' | translate }}</h6>
 
-    <form [formGroup]="formGroup">
+    <form [formGroup]="formGroup" autocomplete="on">
       <div class="col-12 mb-4">
         <mat-label class="fw-bold mb-1">{{ 'EMAIL ADDRESS' | translate }}</mat-label>
         <mat-form-field appearance="outline" class="w-100">
-          <input matInput placeholder="{{ 'ex. sample@gmail.com' | translate }}" type="email" autocomplete="email" formControlName="email" />
+          <input matInput placeholder="{{ 'ex. sample@gmail.com' | translate }}" type="email" autocomplete="email" name="email" formControlName="email" />
         </mat-form-field>
         @if (formGroup.get('email')?.hasError('required') && formGroup.get('email')?.touched) {
           <mat-error>{{ 'This is a required field.' | translate }}</mat-error>
@@ -25,7 +25,7 @@
       <div class="col-12 mb-3">
         <mat-label class="fw-bold mb-1">{{ 'PASSWORD' | translate }}</mat-label>
         <mat-form-field appearance="outline" class="w-100">
-          <input matInput type="password" autocomplete="current-password" placeholder="******" formControlName="password" />
+          <input matInput type="password" autocomplete="current-password" name="password" placeholder="******" formControlName="password" />
         </mat-form-field>
         @if (formGroup.get('password')?.hasError('required') && formGroup.get('password')?.touched) {
           <mat-error>{{ 'This is a required field.' | translate }}</mat-error>

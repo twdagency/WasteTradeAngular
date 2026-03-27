@@ -20,7 +20,7 @@
       </div>
     </div>
     <div class="" style="width: 830px">
-      <form [formGroup]="formGroup" (submit)="submit('/company-document')">
+      <form [formGroup]="formGroup" (submit)="submit('/company-document')" autocomplete="on">
         <div class="border border-dark boder-2 p-4 border-radius bg-white">
           <h3 class="text-center my-2 fw-bold fs-40">{{ 'Company Information' | translate }}</h3>
           <div class="px-2 py-3 background-primary d-flex align-items-center mb-4 rounded-4 justify-content-center">
@@ -83,7 +83,7 @@
           <div class="col-md-12 mb-4">
             <label class="fw-bold">{{ 'STREET ADDRESS' | translate }} <span class="asterisk">*</span></label>
             <mat-form-field appearance="outline" class="w-100">
-              <input matInput placeholder="{{ 'Type here' | translate }}" type="text" autocomplete="street-address" formControlName="addressLine1" />
+              <input matInput placeholder="{{ 'Type here' | translate }}" type="text" autocomplete="street-address" name="street-address" formControlName="addressLine1" />
               @if (formGroup.get('addressLine1')?.hasError('required')) {
                 <mat-error>{{ 'This field is required' | translate }}</mat-error>
               }
@@ -96,7 +96,7 @@
             <div class="col-md-6">
               <mat-label class="fw-bold mb-1">{{ 'POST CODE' | translate }} <span class="asterisk">*</span></mat-label>
               <mat-form-field appearance="outline" class="w-100">
-                <input matInput placeholder="{{ 'Type here' | translate }}" type="text" autocomplete="postal-code" formControlName="postalCode" />
+                <input matInput placeholder="{{ 'Type here' | translate }}" type="text" autocomplete="postal-code" name="postal-code" formControlName="postalCode" />
                 @if (formGroup.get('postalCode')?.hasError('required')) {
                   <mat-error>{{ 'This field is required' | translate }}</mat-error>
                 }
@@ -108,7 +108,7 @@
             <div class="col-md-6">
               <mat-label class="fw-bold mb-1">{{ 'CITY' | translate }} <span class="asterisk">*</span></mat-label>
               <mat-form-field appearance="outline" class="w-100">
-                <input matInput placeholder="{{ 'Type here' | translate }}" type="text" autocomplete="address-level2" formControlName="city" />
+                <input matInput placeholder="{{ 'Type here' | translate }}" type="text" autocomplete="address-level2" name="address-level2" formControlName="city" />
                 @if (formGroup.get('city')?.hasError('required')) {
                   <mat-error>{{ 'This field is required' | translate }}</mat-error>
                 }
@@ -123,7 +123,7 @@
             <div class="col-md-6">
               <mat-label class="fw-bold mb-1">{{ 'COUNTY / STATE / REGION' | translate }} <span class="asterisk">*</span></mat-label>
               <mat-form-field appearance="outline" class="w-100">
-                <input matInput placeholder="{{ 'Type here' | translate }}" type="text" autocomplete="address-level1" formControlName="stateProvince" />
+                <input matInput placeholder="{{ 'Type here' | translate }}" type="text" autocomplete="address-level1" name="address-level1" formControlName="stateProvince" />
                 @if (formGroup.get('stateProvince')?.hasError('required')) {
                   <mat-error>{{ 'This field is required' | translate }}</mat-error>
                 }
