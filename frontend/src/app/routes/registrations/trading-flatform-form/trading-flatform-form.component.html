@@ -2,9 +2,9 @@
   <div class="col-md-6 mx-auto">
     <div class="fs-24 box-shadow p-3 background-primary border-radius text-white text-center mt-3 mb-5">
       {{ 'Do you have a WasteTrade account ?' | translate }}
-      <span (click)="goLogin()" class="text-white fw-bold text-decoration-underline fs-24">
+      <a role="button" (click)="goLogin()" class="text-white fw-bold text-decoration-underline fs-24" style="cursor: pointer">
         {{ 'Login' | translate }}
-      </span>
+      </a>
     </div>
     <div class="border border-radius border-1 border-dark p-4 bg-white">
       <div class="mb-4 fw-bold fs-48">{{ 'Register' | translate }}</div>
