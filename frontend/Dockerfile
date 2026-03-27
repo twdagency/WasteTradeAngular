@@ -21,6 +21,12 @@ RUN npm install -g @angular/cli@19.2.0
 # add app
 COPY . /app
 
+# Inject API_URL into the production environment file
+ARG API_URL
+RUN if [ -n "$API_URL" ]; then \
+      sed -i "s|apiUrl: '.*'|apiUrl: '$API_URL'|" src/environments/environment.prod.ts; \
+    fi
+
 # Generate build
 RUN npm run build
 
