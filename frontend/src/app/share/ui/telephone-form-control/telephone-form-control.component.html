@@ -30,7 +30,7 @@
 
       <div class="col-7" [class.col-md-9]="!isHalf" [class.col-md-8]="isHalf">
         <mat-form-field appearance="fill" class="w-100 no-outline bg-white right-side">
-          <input matInput placeholder="ex. 741234480" type="text" [formControl]="telephoneControl" />
+          <input matInput placeholder="ex. 741234480" type="tel" autocomplete="tel-national" [formControl]="telephoneControl" />
         </mat-form-field>
       </div>
     </div>

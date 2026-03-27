@@ -13,6 +13,7 @@
         [formControl]="valueControl"
         [type]="showValue ? 'text' : 'password'"
         [placeholder]="placeholder ?? ''"
+        [attr.autocomplete]="autocompleteValue"
         (blur)="onTouched?.()"
       />
       @if (type === 'password') {
@@ -43,6 +44,7 @@
         [formControl]="confirmControl"
         [type]="showConfirmValue ? 'text' : 'password'"
         [placeholder]="placeholder ?? ''"
+        [attr.autocomplete]="autocompleteConfirm"
         (blur)="onTouched?.()"
       />
       @if (type === 'password') {

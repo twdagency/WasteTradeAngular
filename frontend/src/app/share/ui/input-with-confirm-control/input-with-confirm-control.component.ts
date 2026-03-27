@@ -50,6 +50,8 @@ export class InputWithConfirmControlComponent implements ControlValueAccessor, V
   @Input() required: boolean = false;
   @Input() isEmail: boolean = false;
   @Input() isHaulier: boolean = false;
+  @Input() autocompleteValue: string = 'off';
+  @Input() autocompleteConfirm: string = 'off';
 
   showValue = false;
   showConfirmValue = false;
