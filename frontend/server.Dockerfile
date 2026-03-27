@@ -21,12 +21,6 @@ RUN npm install -g @angular/cli@19.2.0
 # add app
 COPY . /app
 
-# Define a build argument for the API URL
-ARG API_URL
-
-# Replace the environment variable in the Angular environment file
-RUN sed -i "s|apiUrl: '.*'|apiUrl: '${API_URL}'|" src/environments/environment.prod.ts
-
 # Generate build
 RUN npm run build
 
