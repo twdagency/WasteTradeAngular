@@ -24,6 +24,7 @@ export const AWS_S3_ACCESS_KEY_ID = process.env.AWS_S3_ACCESS_KEY_ID;
 export const AWS_S3_SECRET_ACCESS_KEY = process.env.AWS_S3_SECRET_ACCESS_KEY;
 export const AWS_S3_REGION = process.env.AWS_S3_REGION;
 export const AWS_S3_ENDPOINT = process.env.AWS_S3_ENDPOINT;
+export const AWS_S3_PUBLIC_URL = process.env.AWS_S3_PUBLIC_URL;
 
 export const SENDGRID_API_KEY = process.env?.SENDGRID_API_KEY;
 export const SENDGRID_SENDER = process.env?.SENDGRID_SENDER;

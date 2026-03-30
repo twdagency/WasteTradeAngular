@@ -7,7 +7,7 @@ Full-stack waste trading platform built with Angular 19 (frontend) and LoopBack 
 ```
 ├── frontend/          Angular 19 with SSR
 ├── backend/           LoopBack 4 REST API (Node.js)
-├── docker-compose.yml Local dev: PostgreSQL + Redis
+├── docker-compose.yml Local dev: PostgreSQL + Redis + MinIO
 └── README.md
 ```
 
@@ -18,7 +18,7 @@ Full-stack waste trading platform built with Angular 19 (frontend) and LoopBack 
 - Node.js 20 or 22
 - pnpm 10 (`corepack enable pnpm`)
 - yarn 1.x (for frontend)
-- Docker Desktop (for PostgreSQL + Redis)
+- Docker Desktop (for PostgreSQL + Redis + MinIO)
 
 ### 1. Start databases
 
@@ -26,7 +26,7 @@ Full-stack waste trading platform built with Angular 19 (frontend) and LoopBack 
 docker compose up -d
 ```
 
-This starts PostgreSQL (port 5450) and Redis (port 6379).
+This starts PostgreSQL (port 5450), Redis (port 6379), and MinIO (S3-compatible storage, API on port 9000, console on port 9001). The `wastetrade` bucket is created automatically.
 
 ### 2. Import the database
 
@@ -57,7 +57,7 @@ npx ng serve            # runs on http://localhost:4200
 
 ## Deploy to Railway
 
-Railway auto-deploys on every push to `main`. The project uses four services:
+Railway auto-deploys on every push to `main`. The project uses five services:
 
 | Service      | Type             | Source Directory |
 |-------------|------------------|------------------|
@@ -65,6 +65,7 @@ Railway auto-deploys on every push to `main`. The project uses four services:
 | **frontend** | Dockerfile (SSR) | `frontend/`      |
 | **Postgres** | Railway add-on   | —                |
 | **Redis**    | Railway add-on   | —                |
+| **MinIO**    | Docker image     | —                |
 
 ### Setup steps
 
@@ -74,7 +75,20 @@ Railway auto-deploys on every push to `main`. The project uses four services:
 
 3. **Add Redis** — click "New" → "Database" → "Redis".
 
-4. **Add the backend service** — click "New" → "GitHub Repo" → select this repo.
+4. **Add MinIO (file storage)** — click "New" → "Docker Image" → enter `minio/minio`.
+   - Add a **volume** (Settings → Volumes) mounted at `/data`
+   - Set the **start command** to: `server /data --console-address :9001`
+   - Add these **environment variables**:
+
+   | Variable | Value |
+   |----------|-------|
+   | `MINIO_ROOT_USER` | *(choose a username)* |
+   | `MINIO_ROOT_PASSWORD` | *(choose a strong password)* |
+
+   - Set **port** to `9000` (Settings → Networking)
+   - **Generate a public domain** (Settings → Networking → "Generate Domain") — this is the URL browsers will use to load uploaded files
+
+5. **Add the backend service** — click "New" → "GitHub Repo" → select this repo.
    - Set **Root Directory** to `backend`
    - Railway will detect the `Dockerfile` and `railway.toml` automatically
    - Add these **environment variables** (use Railway variable references where noted):
@@ -94,10 +108,18 @@ Railway auto-deploys on every push to `main`. The project uses four services:
    | `REDIS_PASSWORD` | `${{Redis.REDISPASSWORD}}` |
    | `FE_BASE_URL` | *(your frontend Railway URL once deployed)* |
    | `BE_BASE_URL` | *(your backend Railway URL once deployed)* |
+   | `AWS_S3_BUCKET` | `wastetrade` |
+   | `AWS_S3_REGION` | `us-east-1` |
+   | `AWS_S3_ACCESS_KEY_ID` | *(same as `MINIO_ROOT_USER` above)* |
+   | `AWS_S3_SECRET_ACCESS_KEY` | *(same as `MINIO_ROOT_PASSWORD` above)* |
+   | `AWS_S3_ENDPOINT` | `http://MinIO.railway.internal:9000` |
+   | `AWS_S3_PUBLIC_URL` | *(MinIO's public Railway domain, e.g. `https://minio-production-xxxx.up.railway.app`)* |
 
-   Add any additional keys (SendGrid, AWS S3, Salesforce, DeepL) as needed.
+   Add any additional keys (SendGrid, Salesforce, DeepL) as needed.
 
-5. **Add the frontend service** — click "New" → "GitHub Repo" → select this repo again.
+   > **Note:** `AWS_S3_ENDPOINT` uses Railway's private network (fast, free internal traffic). `AWS_S3_PUBLIC_URL` is the public domain that browsers use to fetch uploaded files. The backend auto-creates the bucket on first boot.
+
+6. **Add the frontend service** — click "New" → "GitHub Repo" → select this repo again.
    - Set **Root Directory** to `frontend`
    - Add this **build argument** (in Settings → Build):
 
@@ -105,17 +127,18 @@ Railway auto-deploys on every push to `main`. The project uses four services:
    |-----------|-------|
    | `API_URL` | *(your backend Railway URL, e.g. `https://backend-production-xxxx.up.railway.app`)* |
 
-6. **Import the database** — open the PostgreSQL service in Railway, go to the "Data" tab, and use the import tool to upload your `.sql` dump. Alternatively, connect via the Railway CLI:
+7. **Import the database** — open the PostgreSQL service in Railway, go to the "Data" tab, and use the import tool to upload your `.sql` dump. Alternatively, connect via the Railway CLI:
    ```bash
    railway link
    railway connect postgres
    # then run pg_restore from your local machine
    ```
 
-7. **Generate domains** — for both backend and frontend services, go to Settings → Networking → "Generate Domain" to get public URLs.
+8. **Generate domains** — for both backend and frontend services, go to Settings → Networking → "Generate Domain" to get public URLs.
 
 ### After first deploy
 
 - Backend is available at its Railway URL (e.g. `https://backend-production-xxxx.up.railway.app/ping`)
 - Frontend is available at its Railway URL
+- Uploaded files are accessible via MinIO's public Railway URL
 - Every push to `main` triggers a new deploy automatically

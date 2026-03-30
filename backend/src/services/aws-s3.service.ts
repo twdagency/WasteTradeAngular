@@ -13,6 +13,11 @@ export class AwsS3Provider implements Provider<AWS.S3> {
     }
 
     value(): AWS.S3 {
-        return new AWS.S3();
+        const opts: AWS.S3.ClientConfiguration = {};
+        if (this.config.endpoint) {
+            opts.endpoint = this.config.endpoint;
+            opts.s3ForcePathStyle = true;
+        }
+        return new AWS.S3(opts);
     }
 }

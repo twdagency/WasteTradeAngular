@@ -14,7 +14,7 @@ import path from 'path';
 import { JWTAuthenticationStrategy } from './authentication-strategies/jwt-strategy';
 import { AwsComponent } from './components/AWS/aws.component';
 import * as CronJobs from './components/Cronjobs';
-import { AWS_S3_ACCESS_KEY_ID, AWS_S3_REGION, AWS_S3_SECRET_ACCESS_KEY, NODE_ENV } from './config';
+import { AWS_S3_ACCESS_KEY_ID, AWS_S3_ENDPOINT, AWS_S3_REGION, AWS_S3_SECRET_ACCESS_KEY, NODE_ENV } from './config';
 import { REQUEST_BODY_LIMIT_SIZE } from './constants';
 import { PasswordHasherBindings, TokenServiceBindings, TokenServiceConstants, DeepLServiceBindings } from './keys';
 import { AwsS3Bindings } from './keys/aws';
@@ -108,6 +108,7 @@ export class WasteTradeApplication extends BootMixin(ServiceMixin(RepositoryMixi
             accessKeyId: AWS_S3_ACCESS_KEY_ID,
             secretAccessKey: AWS_S3_SECRET_ACCESS_KEY,
             region: AWS_S3_REGION,
+            ...(AWS_S3_ENDPOINT ? { endpoint: AWS_S3_ENDPOINT, s3ForcePathStyle: true } : {}),
         } as AwsS3Config);
         this.component(AwsComponent);
 

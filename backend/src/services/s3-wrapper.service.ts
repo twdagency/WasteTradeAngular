@@ -4,7 +4,7 @@ import { HttpErrors, Request, Response } from '@loopback/rest';
 import * as AWS from 'aws-sdk';
 import * as mime from 'mime-types';
 import multer from 'multer';
-import { AWS_S3_BUCKET } from '../config';
+import { AWS_S3_BUCKET, AWS_S3_PUBLIC_URL } from '../config';
 import { MAX_FILE_SIZE } from '../constants/file';
 import { AwsS3Bindings } from '../keys/aws';
 import { File } from '../models';
@@ -19,18 +19,60 @@ type MulterCompatibleResponse = any;
 
 @injectable({ scope: BindingScope.TRANSIENT })
 export class S3WrapperService {
+    private bucketReady: Promise<void>;
+
     constructor(
         @inject(AwsS3Bindings.AwsS3Provider)
         private s3: AWS.S3,
         @repository(FileRepository)
         public fileRepository: FileRepository,
-    ) {}
+    ) {
+        this.bucketReady = this.ensureBucket();
+    }
+
+    private async ensureBucket(): Promise<void> {
+        try {
+            await this.s3.headBucket({ Bucket: AWS_S3_BUCKET }).promise();
+        } catch {
+            try {
+                await this.s3.createBucket({ Bucket: AWS_S3_BUCKET }).promise();
+                await this.s3
+                    .putBucketPolicy({
+                        Bucket: AWS_S3_BUCKET,
+                        Policy: JSON.stringify({
+                            Version: '2012-10-17',
+                            Statement: [
+                                {
+                                    Effect: 'Allow',
+                                    Principal: '*',
+                                    Action: 's3:GetObject',
+                                    Resource: `arn:aws:s3:::${AWS_S3_BUCKET}/*`,
+                                },
+                            ],
+                        }),
+                    })
+                    .promise();
+                console.log(`Created S3 bucket "${AWS_S3_BUCKET}"`);
+            } catch (createErr) {
+                console.error(`Failed to create S3 bucket "${AWS_S3_BUCKET}":`, createErr);
+            }
+        }
+    }
+
+    private buildPublicUrl(fileKey: string): string {
+        if (AWS_S3_PUBLIC_URL) {
+            const base = AWS_S3_PUBLIC_URL.replace(/\/$/, '');
+            return `${base}/${AWS_S3_BUCKET}/${fileKey}`;
+        }
+        return `https://${AWS_S3_BUCKET}.s3.amazonaws.com/${fileKey}`;
+    }
 
     public async uploadFileToS3(fileKey: string, originalFileName: string, fileBuffer: Buffer): Promise<string> {
+        await this.bucketReady;
+
         const mimeType: string | false = mime.lookup(originalFileName);
         const contentType: string = mimeType || 'application/octet-stream';
 
-        // Apply watermark if it's an image
         let processedBuffer = fileBuffer;
         if (WatermarkUtil.isImage(contentType)) {
             try {
@@ -38,7 +80,6 @@ export class S3WrapperService {
                 console.log(`Watermark applied to ${originalFileName}`);
             } catch (error) {
                 console.error(`Failed to apply watermark to ${originalFileName}:`, error);
-                // Continue with original buffer if watermarking fails
             }
         }
 
@@ -55,7 +96,7 @@ export class S3WrapperService {
                         console.log(err);
                         reject(err);
                     } else {
-                        resolve(result?.Location);
+                        resolve(AWS_S3_PUBLIC_URL ? this.buildPublicUrl(fileKey) : result?.Location);
                     }
                 },
             );
