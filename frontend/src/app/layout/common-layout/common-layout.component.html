@@ -10,29 +10,6 @@
           <p class="fw-bold title mb-0">{{ title }}</p>
 
           <div class="header-desktop align-items-center right-box pointer">
-            <div class="d-flex align-items-center gap-4">
-              <a mat-button [routerLink]="ROUTES_WITH_SLASH.buy" class="icon-wrapper">
-                <div class="icon-item">
-                  <mat-icon>shopping_cart</mat-icon>
-                </div>
-                <span>{{ 'Buy' | translate }}</span>
-              </a>
-
-              <a mat-button [routerLink]="ROUTES_WITH_SLASH.sell" class="icon-wrapper">
-                <div class="icon-item">
-                  <mat-icon>work</mat-icon>
-                </div>
-                <span>{{ 'Sell' | translate }}</span>
-              </a>
-
-              <a mat-button [routerLink]="ROUTES_WITH_SLASH.wanted" class="icon-wrapper">
-                <div class="icon-item">
-                  <mat-icon>notification_important</mat-icon>
-                </div>
-                <span>{{ 'Wanted' | translate }}</span>
-              </a>
-            </div>
-
             <div class="d-flex align-items-center gap-2">
               <app-icon iconName="question_mark"></app-icon>
               <p class="mb-0">{{ 'Support Center' | translate }}</p>
