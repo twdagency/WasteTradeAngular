@@ -19,39 +19,45 @@ type MulterCompatibleResponse = any;
 
 @injectable({ scope: BindingScope.TRANSIENT })
 export class S3WrapperService {
-    private bucketReady: Promise<void>;
-
     constructor(
         @inject(AwsS3Bindings.AwsS3Provider)
         private s3: AWS.S3,
         @repository(FileRepository)
         public fileRepository: FileRepository,
     ) {
-        this.bucketReady = this.ensureBucket();
+        if (AWS_S3_BUCKET) {
+            this.ensureBucket().catch(() => {});
+        }
     }
 
     private async ensureBucket(): Promise<void> {
+        const timeout = <T>(promise: Promise<T>, ms: number): Promise<T> =>
+            Promise.race([promise, new Promise<never>((_, reject) => setTimeout(() => reject(new Error('timeout')), ms))]);
+
         try {
-            await this.s3.headBucket({ Bucket: AWS_S3_BUCKET }).promise();
+            await timeout(this.s3.headBucket({ Bucket: AWS_S3_BUCKET }).promise(), 5000);
         } catch {
             try {
-                await this.s3.createBucket({ Bucket: AWS_S3_BUCKET }).promise();
-                await this.s3
-                    .putBucketPolicy({
-                        Bucket: AWS_S3_BUCKET,
-                        Policy: JSON.stringify({
-                            Version: '2012-10-17',
-                            Statement: [
-                                {
-                                    Effect: 'Allow',
-                                    Principal: '*',
-                                    Action: 's3:GetObject',
-                                    Resource: `arn:aws:s3:::${AWS_S3_BUCKET}/*`,
-                                },
-                            ],
-                        }),
-                    })
-                    .promise();
+                await timeout(this.s3.createBucket({ Bucket: AWS_S3_BUCKET }).promise(), 5000);
+                await timeout(
+                    this.s3
+                        .putBucketPolicy({
+                            Bucket: AWS_S3_BUCKET,
+                            Policy: JSON.stringify({
+                                Version: '2012-10-17',
+                                Statement: [
+                                    {
+                                        Effect: 'Allow',
+                                        Principal: '*',
+                                        Action: 's3:GetObject',
+                                        Resource: `arn:aws:s3:::${AWS_S3_BUCKET}/*`,
+                                    },
+                                ],
+                            }),
+                        })
+                        .promise(),
+                    5000,
+                );
                 console.log(`Created S3 bucket "${AWS_S3_BUCKET}"`);
             } catch (createErr) {
                 console.error(`Failed to create S3 bucket "${AWS_S3_BUCKET}":`, createErr);
@@ -68,7 +74,6 @@ export class S3WrapperService {
     }
 
     public async uploadFileToS3(fileKey: string, originalFileName: string, fileBuffer: Buffer): Promise<string> {
-        await this.bucketReady;
 
         const mimeType: string | false = mime.lookup(originalFileName);
         const contentType: string = mimeType || 'application/octet-stream';
