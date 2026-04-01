@@ -14,10 +14,11 @@ export interface VatCompanyNameMismatchModalData {
 
 @Component({
   selector: 'app-vat-company-name-mismatch-modal',
+  styleUrls: ['./vat-company-name-mismatch-modal.component.scss'],
   template: `
     <div class="wrapper">
       <div class="d-flex justify-content-between align-items-center mb-4">
-        <h2 class="mb-0 fw-bold">{{ 'Company Name / VAT Number Mismatch' | translate }}</h2>
+        <h2 class="mb-0 fw-bold">{{ 'Company Name Mismatch' | translate }}</h2>
         <button mat-icon-button type="button" class="common-modal-close-btn" (click)="cancel()">
           <mat-icon>close</mat-icon>
         </button>
