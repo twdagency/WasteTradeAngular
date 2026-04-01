@@ -1,12 +1,14 @@
 # WasteTrade
 
-Full-stack waste trading platform built with Angular 19 (frontend) and LoopBack 4 / Node.js (backend), backed by PostgreSQL and Redis.
+Full-stack waste trading platform built with Angular 19 (frontend), LoopBack 4 / Node.js (backend), and Strapi 5 (CMS), backed by PostgreSQL and Redis.
 
 ## Project Structure
 
 ```
 ├── frontend/          Angular 19 with SSR
 ├── backend/           LoopBack 4 REST API (Node.js)
+├── cms/               Strapi 5 CMS (articles, jobs, resources, materials)
+│   └── migration/     WordPress → Strapi migration scripts
 ├── docker-compose.yml Local dev: PostgreSQL + Redis + MinIO
 └── README.md
 ```
@@ -26,7 +28,7 @@ Full-stack waste trading platform built with Angular 19 (frontend) and LoopBack 
 docker compose up -d
 ```
 
-This starts PostgreSQL (port 5450), Redis (port 6379), and MinIO (S3-compatible storage, API on port 9000, console on port 9001). The `wastetrade` bucket is created automatically.
+This starts PostgreSQL (port 5450), Redis (port 6379), and MinIO (S3-compatible storage, API on port 9000, console on port 9001). The `wastetrade` bucket is created automatically. A second database (`strapi`) is also created in the same PostgreSQL instance for the CMS.
 
 ### 2. Import the database
 
@@ -53,16 +55,41 @@ yarn install
 npx ng serve            # runs on http://localhost:4200
 ```
 
+### 5. CMS (Strapi)
+
+```bash
+cd cms
+cp .env.example .env    # then edit .env with your local values
+npm install
+npm run develop         # runs on http://localhost:1337
+```
+
+On first run, Strapi will prompt you to create an admin user at `http://localhost:1337/admin`.
+
+The `.env.example` defaults to the local Docker PostgreSQL instance (`DATABASE_CLIENT=postgres`, port 5450, database `strapi`). To use SQLite instead, set `DATABASE_CLIENT=sqlite`.
+
+#### WordPress Migration
+
+To migrate content from the old WordPress site into Strapi:
+
+```bash
+cd cms/migration
+cp .env.example .env    # set WORDPRESS_URL, STRAPI_URL, STRAPI_API_TOKEN
+npm install
+npm run migrate         # or npm run migrate:dry-run to preview
+```
+
 ---
 
 ## Deploy to Railway
 
-Railway auto-deploys on every push to `main`. The project uses five services:
+Railway auto-deploys on every push to `main`. The project uses six services:
 
 | Service      | Type             | Source Directory |
 |-------------|------------------|------------------|
 | **backend**  | Dockerfile       | `backend/`       |
 | **frontend** | Dockerfile (SSR) | `frontend/`      |
+| **cms**      | Dockerfile       | `cms/`           |
 | **Postgres** | Railway add-on   | —                |
 | **Redis**    | Railway add-on   | —                |
 | **MinIO**    | Docker image     | —                |
@@ -127,18 +154,40 @@ Railway auto-deploys on every push to `main`. The project uses five services:
    |-----------|-------|
    | `API_URL` | *(your backend Railway URL, e.g. `https://backend-production-xxxx.up.railway.app`)* |
 
-7. **Import the database** — open the PostgreSQL service in Railway, go to the "Data" tab, and use the import tool to upload your `.sql` dump. Alternatively, connect via the Railway CLI:
+7. **Add the CMS service** — click "New" → "GitHub Repo" → select this repo again.
+   - Set **Root Directory** to `cms`
+   - Railway will detect the `Dockerfile` and `railway.toml` automatically
+   - Add these **environment variables**:
+
+   | Variable | Value |
+   |----------|-------|
+   | `NODE_ENV` | `production` |
+   | `DATABASE_CLIENT` | `postgres` |
+   | `DATABASE_URL` | `${{Postgres.DATABASE_URL}}` |
+   | `DATABASE_SSL` | `true` |
+   | `APP_KEYS` | *(comma-separated random strings)* |
+   | `API_TOKEN_SALT` | *(random string)* |
+   | `ADMIN_JWT_SECRET` | *(random string)* |
+   | `TRANSFER_TOKEN_SALT` | *(random string)* |
+   | `JWT_SECRET` | *(random string)* |
+   | `ENCRYPTION_KEY` | *(random string)* |
+   | `CORS_ORIGINS` | *(your frontend Railway URL, e.g. `https://frontend-production-xxxx.up.railway.app`)* |
+
+   > **Note:** Strapi uses the same Railway PostgreSQL add-on as the backend. By default it creates its own tables in the `public` schema. If you prefer schema isolation, set `DATABASE_SCHEMA=strapi` and create that schema in the database first.
+
+8. **Import the database** — open the PostgreSQL service in Railway, go to the "Data" tab, and use the import tool to upload your `.sql` dump. Alternatively, connect via the Railway CLI:
    ```bash
    railway link
    railway connect postgres
    # then run pg_restore from your local machine
    ```
 
-8. **Generate domains** — for both backend and frontend services, go to Settings → Networking → "Generate Domain" to get public URLs.
+9. **Generate domains** — for backend, frontend, and CMS services, go to Settings → Networking → "Generate Domain" to get public URLs.
 
 ### After first deploy
 
 - Backend is available at its Railway URL (e.g. `https://backend-production-xxxx.up.railway.app/ping`)
 - Frontend is available at its Railway URL
+- CMS admin panel is at its Railway URL + `/admin` — create your first admin user there
 - Uploaded files are accessible via MinIO's public Railway URL
 - Every push to `main` triggers a new deploy automatically
