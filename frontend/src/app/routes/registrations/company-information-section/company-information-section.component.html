@@ -66,7 +66,11 @@
           </div>
           <div class="col-md-12 mb-4">
             <label class="fw-bold">{{ 'COMPANY VAT NUMBER' | translate }} <span class="asterisk">*</span></label>
-            <app-vat-number-lookup formControlName="vatNumber"></app-vat-number-lookup>
+            <app-vat-number-lookup
+              formControlName="vatNumber"
+              [vatRegistrationCountry]="formGroup.get('vatRegistrationCountry')?.value"
+              [country]="formGroup.get('country')?.value"
+            ></app-vat-number-lookup>
           </div>
           <div class="col-12 mb-4">
             <mat-label class="fw-bold mb-1">{{ 'COMPANY REGISTRATION NUMBER' | translate }} <span class="asterisk">*</span></mat-label>

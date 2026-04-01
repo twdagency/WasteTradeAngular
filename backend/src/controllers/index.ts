@@ -40,4 +40,5 @@ export * from './translation.controller';
 export * from './upload-file.controller';
 export * from './admin.controller';
 export * from './user.controller';
+export * from './vat.controller';
 export * from './waste-trade-notifications.controller';

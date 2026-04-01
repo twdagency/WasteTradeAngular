@@ -48,6 +48,21 @@ export type CompanyUserInvitation = {
   expiresAt: string;
 };
 
+// VAT Validation (VATSense) Types
+export interface VatValidationResponse {
+  success: boolean;
+  code: number;
+  data?: {
+    valid: boolean;
+    company?: {
+      vat_number: string;
+      country_code: string;
+      company_name: string;
+      company_address: string;
+    };
+  };
+}
+
 // VAT Number Lookup Types
 export type VatLookupParams = {
   vatNumber: string;
