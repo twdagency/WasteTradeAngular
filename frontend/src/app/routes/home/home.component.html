@@ -1,0 +1,423 @@
+<!-- ===== NAVBAR ===== -->
+<nav class="home-nav" [class.menu-open]="menuOpen()">
+  <div class="nav-inner container">
+    <a routerLink="/" class="nav-logo" (click)="closeMenu()">
+      <img src="assets/images/header-logo.svg" alt="WasteTrade" height="36" />
+    </a>
+
+    <button class="hamburger" (click)="toggleMenu()" aria-label="Toggle navigation">
+      <mat-icon>{{ menuOpen() ? 'close' : 'menu' }}</mat-icon>
+    </button>
+
+    <ul class="nav-links" [class.open]="menuOpen()">
+      <li class="nav-dropdown">
+        <a href="javascript:void(0)">Marketplace <mat-icon class="dd-arrow">expand_more</mat-icon></a>
+        <ul class="dropdown-menu">
+          <li><a (click)="closeMenu()" routerLink="/marketplace">Buy Materials</a></li>
+          <li><a (click)="closeMenu()" routerLink="/marketplace/wanted">Wanted Materials</a></li>
+        </ul>
+      </li>
+      <li class="nav-dropdown">
+        <a href="javascript:void(0)">Company <mat-icon class="dd-arrow">expand_more</mat-icon></a>
+        <ul class="dropdown-menu">
+          <li><a (click)="closeMenu()" routerLink="/about">About Us</a></li>
+          <li><a (click)="closeMenu()" routerLink="/news">News</a></li>
+          <li><a (click)="closeMenu()" routerLink="/vacancies">Vacancies</a></li>
+          <li><a (click)="closeMenu()" routerLink="/resources">Resources</a></li>
+        </ul>
+      </li>
+      <li class="nav-dropdown">
+        <a href="javascript:void(0)">Materials <mat-icon class="dd-arrow">expand_more</mat-icon></a>
+        <ul class="dropdown-menu">
+          @for (m of materials; track m.abbreviation) {
+            <li><a (click)="closeMenu()" [href]="m.learnMoreUrl" target="_blank">{{ m.abbreviation }} — {{ m.name }}</a></li>
+          }
+        </ul>
+      </li>
+      <li><a (click)="closeMenu()" routerLink="/haulage">Haulage</a></li>
+    </ul>
+
+    <div class="nav-actions">
+      <app-language-selector />
+      <button mat-stroked-button class="nav-btn login-btn" (click)="navigateToLogin()">Login</button>
+      <button mat-flat-button class="nav-btn register-btn" (click)="navigateToRegister()">Register</button>
+    </div>
+  </div>
+</nav>
+
+<!-- ===== HERO ===== -->
+<section class="hero">
+  <div class="hero-gradient-bg"></div>
+  <div class="hero-overlay"></div>
+  <div class="hero-decoration" aria-hidden="true">
+    <div class="hero-float hero-float-1"><mat-icon>recycling</mat-icon></div>
+    <div class="hero-float hero-float-2"><mat-icon>public</mat-icon></div>
+    <div class="hero-float hero-float-3"><mat-icon>eco</mat-icon></div>
+  </div>
+  <div class="hero-content container">
+    <span class="kicker light">Trading waste commodities globally</span>
+    <h1 class="hero-title">The Global <span class="highlight">Waste</span> Marketplace</h1>
+    <p class="hero-subtitle">
+      WasteTrade is the pioneering online marketplace that connects waste generators,
+      such as manufacturers, with recyclers and end users of waste commodities around the globe.
+    </p>
+    <div class="hero-ctas">
+      <button mat-flat-button class="hero-btn primary" (click)="navigateToRegister()">
+        <mat-icon>storefront</mat-icon> Register as Buyer / Seller
+      </button>
+      <button mat-flat-button class="hero-btn accent" (click)="navigateToHaulierRegister()">
+        <mat-icon>local_shipping</mat-icon> Register as Haulier
+      </button>
+      <button mat-stroked-button class="hero-btn ghost" routerLink="/marketplace">
+        Explore Marketplace
+      </button>
+    </div>
+    <div class="hero-stats">
+      @for (stat of heroStats; track stat.label; let last = $last) {
+        <div class="stat-item">
+          <span class="stat-number">{{ formatNumber(stat.current()) }}{{ stat.suffix }}</span>
+          <span class="stat-label">{{ stat.label }}</span>
+        </div>
+        @if (!last) {
+          <div class="stat-diamond"></div>
+        }
+      }
+    </div>
+  </div>
+</section>
+
+<!-- ===== MATERIALS MARQUEE ===== -->
+<section class="trust-bar">
+  <p class="trust-label">Materials traded on the WasteTrade platform</p>
+  <div class="marquee-track">
+    <div class="marquee-content" aria-hidden="true">
+      @for (item of marqueeItems; track $index) {
+        <span class="trust-logo"><mat-icon>recycling</mat-icon> {{ item }}</span>
+      }
+      @for (item of marqueeItems; track $index) {
+        <span class="trust-logo"><mat-icon>recycling</mat-icon> {{ item }}</span>
+      }
+    </div>
+  </div>
+</section>
+
+<!-- ===== BUY / SELL ===== -->
+<section class="buy-sell container animate-on-scroll">
+  <div class="bs-card buy-card">
+    <div class="bs-card-image">
+      <img src="assets/images/product-placeholder-image.png" alt="Buy waste materials" loading="lazy" />
+    </div>
+    <div class="bs-card-body">
+      <h3>Buy Material</h3>
+      <ul class="bs-features">
+        <li>All WasteTrade buyers are fully accredited and certified</li>
+        <li>All sellers are fully vetted to ensure accurate listings</li>
+        <li>Year-round access to thousands of tonnes of materials</li>
+        <li>Filter by precise specifications to find suitable listings</li>
+      </ul>
+      <button mat-flat-button class="bs-btn" routerLink="/marketplace">Buy Material</button>
+    </div>
+  </div>
+  <div class="bs-card sell-card">
+    <div class="bs-card-image">
+      <img src="assets/images/product-placeholder-image.png" alt="Sell waste materials" loading="lazy" />
+    </div>
+    <div class="bs-card-body">
+      <h3>Sell Material</h3>
+      <ul class="bs-features">
+        <li>Access our global network of verified recycling facilities</li>
+        <li>Maximise the value of your waste commodities</li>
+        <li>Recycle your materials ethically with full transparency</li>
+        <li>A carbon-efficient circular economy for your waste</li>
+      </ul>
+      <button mat-flat-button class="bs-btn" (click)="navigateToRegister()">Sell Material</button>
+    </div>
+  </div>
+</section>
+
+<!-- ===== ECO SOLUTIONS — BENTO GRID ===== -->
+<section class="eco-solutions">
+  <div class="container">
+    <div class="eco-header animate-on-scroll">
+      <span class="kicker">Why WasteTrade</span>
+      <h2 class="section-title left">Eco Solutions for the Waste Industry</h2>
+    </div>
+    <div class="bento-grid reveal-stagger" data-stagger>
+      @for (eco of ecoSolutions; track eco.title) {
+        <div class="bento-card" [class]="'bento-' + eco.area" [style.--accent]="eco.color">
+          <div class="bento-icon">
+            <mat-icon>{{ eco.icon }}</mat-icon>
+          </div>
+          <h3>{{ eco.title }}</h3>
+          <p>{{ eco.description }}</p>
+        </div>
+      }
+    </div>
+    <div class="eco-ctas animate-on-scroll">
+      <button mat-flat-button class="primary-btn" routerLink="/marketplace">Buy Materials</button>
+      <button mat-stroked-button class="secondary-btn" routerLink="/marketplace/wanted">View Wanted Materials</button>
+    </div>
+  </div>
+</section>
+
+<!-- ===== HOW IT WORKS — TIMELINE ===== -->
+<section class="how-it-works container">
+  <h2 class="section-title animate-on-scroll">How It Works</h2>
+  <p class="section-subtitle animate-on-scroll">From listing to delivery in four simple steps</p>
+  <div class="timeline reveal-stagger" data-stagger>
+    <div class="timeline-track" aria-hidden="true"></div>
+    @for (step of steps; track step.number) {
+      <div class="timeline-step">
+        <div class="timeline-node">
+          <mat-icon>{{ step.icon }}</mat-icon>
+        </div>
+        <div class="timeline-label">Step {{ step.number }}</div>
+        <h3>{{ step.title }}</h3>
+        <p>{{ step.description }}</p>
+      </div>
+    }
+  </div>
+</section>
+
+<!-- ===== MATERIALS TABS ===== -->
+<section class="materials-section">
+  <div class="container">
+    <h2 class="section-title animate-on-scroll">Materials We Trade</h2>
+    <p class="section-subtitle animate-on-scroll">
+      Connecting producers, recyclers and manufacturers of waste commodities globally.
+    </p>
+
+    <div class="material-chips reveal-stagger" data-stagger>
+      @for (m of materials; track m.abbreviation) {
+        <span class="material-chip">{{ m.abbreviation }}</span>
+      }
+    </div>
+
+    <mat-tab-group class="material-tabs animate-on-scroll" animationDuration="300ms">
+      @for (m of materials; track m.abbreviation) {
+        <mat-tab [label]="m.abbreviation">
+          <div class="material-tab-content">
+            <div class="material-tab-text">
+              <span class="material-badge">{{ m.abbreviation }}</span>
+              <h3>{{ m.name }}</h3>
+              <p>{{ m.description }}</p>
+              <a [href]="m.learnMoreUrl" target="_blank" class="material-learn-more">
+                Learn more about {{ m.abbreviation }} <mat-icon>arrow_forward</mat-icon>
+              </a>
+            </div>
+            <div class="material-tab-image">
+              <img [src]="m.image" [alt]="m.name" loading="lazy" />
+            </div>
+          </div>
+        </mat-tab>
+      }
+    </mat-tab-group>
+  </div>
+</section>
+
+<!-- ===== LISTINGS CAROUSEL ===== -->
+<section class="listings-section container">
+  <h2 class="section-title animate-on-scroll">Live Marketplace</h2>
+  <p class="section-subtitle animate-on-scroll">Browse the latest available materials on WasteTrade</p>
+
+  <div class="listings-carousel reveal-stagger" data-stagger>
+    @for (l of listings; track $index) {
+      <div class="listing-card">
+        <div class="listing-badge">Available now</div>
+        <div class="listing-material">
+          <strong class="listing-item">{{ l.materialType }}-{{ l.materialItem }}</strong>
+        </div>
+        <div class="listing-detail">
+          <mat-icon>scale</mat-icon>
+          <span>Average Weight per Load {{ l.weight }} {{ l.unit }}</span>
+        </div>
+        <div class="listing-detail">
+          <img
+            [src]="'https://flagcdn.com/20x15/' + l.countryCode + '.png'"
+            [alt]="l.location"
+            width="20"
+            height="15"
+            class="listing-flag"
+          />
+          <span>Material Location {{ l.location }}</span>
+        </div>
+      </div>
+    }
+  </div>
+
+  <div class="listings-ctas animate-on-scroll">
+    <button mat-flat-button class="primary-btn" routerLink="/marketplace">Buy Materials</button>
+    <button mat-stroked-button class="secondary-btn" routerLink="/marketplace/wanted">View Wanted Materials</button>
+  </div>
+</section>
+
+<!-- ===== OUR MISSION ===== -->
+<section class="mission-section">
+  <div class="container animate-on-scroll">
+    <div class="mission-grid">
+      <div class="mission-text">
+        <span class="kicker light">About us</span>
+        <h2 class="section-title left light">Our Mission</h2>
+        <p>
+          WasteTrade is the pioneering online marketplace that connects waste generators
+          and re-processors around the world in a secure virtual environment.
+        </p>
+        <p>
+          We believe that waste is a resource, not a problem. By connecting the right sellers with the
+          right buyers, we unlock the value that lies in materials that would otherwise go to waste.
+        </p>
+        <div class="mission-btns">
+          <button mat-flat-button class="primary-btn" routerLink="/about">Learn More</button>
+          <button mat-stroked-button class="ghost-btn" (click)="navigateToRegister()">Join WasteTrade</button>
+        </div>
+      </div>
+      <div class="mission-video">
+        <iframe
+          [src]="missionVideoUrl"
+          title="WasteTrade — The Industry Problem"
+          allow="autoplay; fullscreen; picture-in-picture"
+          allowfullscreen
+        ></iframe>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== TESTIMONIALS ===== -->
+<section class="testimonials-section">
+  <div class="container">
+    <h2 class="section-title light animate-on-scroll">What Our Partners Say</h2>
+    <div class="testimonials-grid reveal-stagger" data-stagger>
+      @for (t of testimonials; track t.author) {
+        <div class="testimonial-card">
+          <div class="quote-mark">&ldquo;</div>
+          <p class="quote-text">{{ t.quote }}</p>
+          <div class="testimonial-author">
+            <div class="author-avatar">{{ t.author[0] }}</div>
+            <div class="author-info">
+              <strong>{{ t.author }}</strong>
+              <span>{{ t.role }}, {{ t.company }}</span>
+            </div>
+          </div>
+        </div>
+      }
+    </div>
+  </div>
+</section>
+
+<!-- ===== HAULIER CTA ===== -->
+<section class="haulier-cta animate-on-scroll">
+  <div class="haulier-overlay"></div>
+  <div class="haulier-content container">
+    <h2>Are You a Haulier?</h2>
+    <p>Join our growing network of Logistics partners and get exclusive access to consignments all over the world.</p>
+    <div class="haulier-btns">
+      <button mat-flat-button class="haulier-register-btn" (click)="navigateToHaulierRegister()">Register</button>
+      <button mat-stroked-button class="haulier-learn-btn" routerLink="/haulage">Learn More</button>
+    </div>
+  </div>
+</section>
+
+<!-- ===== LATEST NEWS ===== -->
+<section class="news-section container">
+  <span class="kicker center animate-on-scroll">Stay informed</span>
+  <h2 class="section-title animate-on-scroll">Latest News</h2>
+
+  <div class="news-grid animate-on-scroll">
+    <div class="news-featured">
+      <div class="news-featured-image">
+        <img [src]="news[0].image" [alt]="news[0].title" loading="lazy" />
+        <span class="news-tag">Latest News</span>
+      </div>
+      <div class="news-featured-body">
+        <span class="news-meta">{{ news[0].date }} · {{ news[0].readTime }}</span>
+        <h3>{{ news[0].title }}</h3>
+        <p>{{ news[0].excerpt }}</p>
+        <a href="javascript:void(0)" class="news-read-more">Read Article <mat-icon>arrow_forward</mat-icon></a>
+      </div>
+    </div>
+
+    <div class="news-side">
+      @for (post of news.slice(1); track post.title) {
+        <div class="news-side-card">
+          <img [src]="post.image" [alt]="post.title" loading="lazy" class="news-thumb" />
+          <div class="news-side-body">
+            <span class="news-meta">By {{ post.author }} | {{ post.date }}</span>
+            <h4>{{ post.title }}</h4>
+            <a href="javascript:void(0)" class="news-read-more sm">Read More <mat-icon>arrow_forward</mat-icon></a>
+          </div>
+        </div>
+      }
+    </div>
+  </div>
+
+  <div class="news-cta animate-on-scroll">
+    <button mat-stroked-button class="secondary-btn" routerLink="/news">View All News</button>
+  </div>
+</section>
+
+<!-- ===== TRANSFORMING / FEATURES ===== -->
+<section class="transforming-section">
+  <div class="container">
+    <h2 class="section-title animate-on-scroll">Transforming the Waste Industry</h2>
+    @for (row of featureRows; track row.title) {
+      <div class="feature-row animate-on-scroll" [class.reversed]="row.reversed">
+        <div class="feature-image">
+          <img [src]="row.image" [alt]="row.title" loading="lazy" />
+          <span class="feature-number">{{ row.number }}</span>
+        </div>
+        <div class="feature-text">
+          @if (row.stat) {
+            <div class="feature-stat">{{ row.stat }}</div>
+          }
+          <h3>{{ row.title }}</h3>
+          <p>{{ row.description }}</p>
+          <button mat-flat-button class="primary-btn" (click)="navigateToRegister()">Get Started</button>
+        </div>
+      </div>
+    }
+  </div>
+</section>
+
+<!-- ===== RESOURCES ===== -->
+<section class="resources-section container">
+  <h2 class="section-title animate-on-scroll">Resources</h2>
+
+  <div class="resources-grid reveal-stagger" data-stagger>
+    @for (res of resources; track res.title) {
+      <div class="resource-card">
+        <div class="resource-thumb">
+          <img [src]="res.image" [alt]="res.title" loading="lazy" />
+        </div>
+        <h4>{{ res.title }}</h4>
+      </div>
+    }
+  </div>
+
+  <div class="resources-cta animate-on-scroll">
+    <button mat-stroked-button class="secondary-btn" routerLink="/resources">View WasteTrade Guides</button>
+  </div>
+</section>
+
+<!-- ===== FAQ ===== -->
+<section class="faq-section container">
+  <h2 class="section-title animate-on-scroll">Frequently Asked Questions</h2>
+  <mat-accordion class="faq-accordion animate-on-scroll">
+    @for (faq of faqs; track faq.question) {
+      <mat-expansion-panel>
+        <mat-expansion-panel-header>
+          <mat-panel-title>{{ faq.question }}</mat-panel-title>
+        </mat-expansion-panel-header>
+        <p>{{ faq.answer }}</p>
+      </mat-expansion-panel>
+    }
+  </mat-accordion>
+</section>
+
+<app-footer />
+
+@if (showBackToTop()) {
+  <button class="back-to-top" (click)="scrollToTop()" aria-label="Back to top">
+    <mat-icon>keyboard_arrow_up</mat-icon>
+  </button>
+}
