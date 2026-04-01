@@ -504,6 +504,10 @@ export class HaulierFormComponent implements OnInit, OnDestroy {
     control.updateValueAndValidity({ emitEvent: false });
   }
 
+  onVatCountryChange() {
+    this.formGroup.get('vatNumber')?.setValue(null);
+  }
+
   onAreaChange(event: MatRadioChange) {
     this.selectedAreasCovered.clear();
     if (event.value === 'EU') {

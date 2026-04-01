@@ -178,6 +178,7 @@
       class="d-flex justify-content-between radio-mat-error fw-bold"
       name="vatRegistrationCountry"
       style="max-width: 75%"
+      (change)="onVatCountryChange()"
     >
       <mat-radio-button value="EU">
         <span class="fw-bold">{{ 'EU (European Union)' | translate }}</span>
@@ -203,8 +204,6 @@
       [lastNameFormControl]="formGroup.get('lastName')"
       [registrationType]="'haulage'"
       [isDialogMode]="isDialog"
-      [vatRegistrationCountry]="formGroup.get('vatRegistrationCountry')?.value ?? null"
-      [country]="formGroup.get('country')?.value ?? null"
     ></app-vat-number-lookup>
   </div>
 

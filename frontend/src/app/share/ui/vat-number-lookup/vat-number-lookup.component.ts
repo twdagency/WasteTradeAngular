@@ -48,15 +48,6 @@ export interface CompanyLookupResult {
       @if (vatControl.hasError('maxlength')) {
         <mat-error>{{ 'VAT Number cannot exceed 20 characters' | translate }}</mat-error>
       }
-      @if (vatControl.hasError('invalidVat')) {
-        <mat-error>{{ 'This VAT number could not be verified. Please double-check and try again.' | translate }}</mat-error>
-      }
-      @if (vatControl.hasError('vatLookupFailed')) {
-        <mat-error>{{ 'Unable to verify VAT right now. Please try again later.' | translate }}</mat-error>
-      }
-      @if (vatValid()) {
-        <mat-hint class="text-success">{{ 'VAT validated successfully' | translate }}</mat-hint>
-      }
     </mat-form-field>
   `,
   imports: [MatFormFieldModule, MatInputModule, MatProgressSpinnerModule, ReactiveFormsModule, TranslatePipe],
@@ -73,8 +64,6 @@ export class VatNumberLookupComponent implements ControlValueAccessor {
   isRequired = input<boolean>(false);
   registrationType = input<'trading' | 'haulage'>('trading');
   isDialogMode = input<boolean>(false);
-  vatRegistrationCountry = input<string | null>(null);
-  country = input<string | null>(null);
 
   readonly emailFormControl = input<any>();
   readonly firstNameFormControl = input<any>();
@@ -82,7 +71,6 @@ export class VatNumberLookupComponent implements ControlValueAccessor {
 
   vatControl = new FormControl<string>('');
   isLoading = signal<boolean>(false);
-  vatValid = signal<boolean>(false);
 
   private dialog = inject(MatDialog);
   private destroyRef = inject(DestroyRef);
@@ -99,13 +87,6 @@ export class VatNumberLookupComponent implements ControlValueAccessor {
         : [Validators.maxLength(20)];
       this.vatControl.setValidators(validators);
       this.vatControl.updateValueAndValidity();
-    });
-
-    effect(() => {
-      // Reset validation state when VAT registration country changes
-      this.vatRegistrationCountry();
-      this.vatValid.set(false);
-      this.clearVatApiErrors();
     });
 
     this.vatControl.valueChanges.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((value) => {
@@ -178,12 +159,6 @@ export class VatNumberLookupComponent implements ControlValueAccessor {
     const trimmed = (value || '').trim();
 
     if (!trimmed) {
-      this.vatValid.set(false);
-      this.clearVatApiErrors();
-      return;
-    }
-
-    if (this.vatControl.hasError('required') || this.vatControl.hasError('maxlength')) {
       return;
     }
 
@@ -192,61 +167,6 @@ export class VatNumberLookupComponent implements ControlValueAccessor {
       return;
     }
 
-    const regCountry = this.vatRegistrationCountry();
-
-    if (regCountry && regCountry !== 'Other') {
-      this.performVatValidation(normalizedVat, regCountry);
-    } else {
-      this.performCompanyLookup(normalizedVat);
-    }
-  }
-
-  private performVatValidation(rawVat: string, regCountry: string): void {
-    const selectedCountryCode = (this.country() ?? '').trim();
-    const countryPrefix = selectedCountryCode || (regCountry === 'UK' ? 'GB' : regCountry);
-    const vatToValidate = /^[A-Za-z]{2}/.test(rawVat) || !countryPrefix ? rawVat : `${countryPrefix}${rawVat}`;
-
-    this.clearVatApiErrors();
-    this.vatValid.set(false);
-    this.isLoading.set(true);
-
-    this.registrationService
-      .validateVatNumber(vatToValidate)
-      .pipe(
-        catchError((err) => {
-          const status = err?.status ?? 0;
-          if (status >= 500 || status === 0) {
-            this.setVatLookupFailedError();
-          } else {
-            this.setVatInvalidError();
-          }
-          this.isLoading.set(false);
-          return of(null);
-        }),
-      )
-      .subscribe((res) => {
-        if (!res) {
-          return;
-        }
-
-        if (res.success && res.data?.valid) {
-          this.clearVatApiErrors();
-          this.vatValid.set(true);
-          this.isLoading.set(false);
-          this.performCompanyLookup(this.normalizeVatNumber((this.vatControl.value || '').trim()));
-          return;
-        }
-
-        if (!res.success && (res.code ?? 0) >= 500) {
-          this.setVatLookupFailedError();
-        } else {
-          this.setVatInvalidError();
-        }
-        this.isLoading.set(false);
-      });
-  }
-
-  private performCompanyLookup(normalizedVat: string): void {
     this.isLoading.set(true);
 
     this.registrationService
@@ -274,22 +194,5 @@ export class VatNumberLookupComponent implements ControlValueAccessor {
           this.showExistingCompanyModal(companyData);
         }
       });
-  }
-
-  private setVatInvalidError(): void {
-    const errors = this.vatControl.errors ?? {};
-    this.vatControl.setErrors({ ...errors, invalidVat: true });
-  }
-
-  private setVatLookupFailedError(): void {
-    const errors = this.vatControl.errors ?? {};
-    this.vatControl.setErrors({ ...errors, vatLookupFailed: true });
-  }
-
-  private clearVatApiErrors(): void {
-    if (!this.vatControl.errors) return;
-    const { invalidVat, vatLookupFailed, ...otherErrors } = this.vatControl.errors;
-    const remainingErrors = Object.keys(otherErrors).length ? otherErrors : null;
-    this.vatControl.setErrors(remainingErrors);
   }
 }

@@ -64,14 +64,47 @@
               <mat-error class="mt-0 mat-error">{{ 'This field is required' | translate }}</mat-error>
             }
           </div>
-          <div class="col-md-12 mb-4">
-            <label class="fw-bold">{{ 'COMPANY VAT NUMBER' | translate }} <span class="asterisk">*</span></label>
-            <app-vat-number-lookup
-              formControlName="vatNumber"
-              [vatRegistrationCountry]="formGroup.get('vatRegistrationCountry')?.value ?? null"
-              [country]="formGroup.get('country')?.value ?? null"
-            ></app-vat-number-lookup>
-          </div>
+          @if (formGroup.get('vatRegistrationCountry')?.value) {
+            <div class="col-md-12 mb-4">
+              <label class="fw-bold">{{ 'COMPANY VAT NUMBER' | translate }} <span class="asterisk">*</span></label>
+              @if (formGroup.get('vatRegistrationCountry')?.value === 'Other') {
+                <mat-form-field appearance="outline" class="w-100">
+                  <input matInput placeholder="{{ 'Type here' | translate }}" type="text" formControlName="vatNumberOther" />
+                  @if (formGroup.get('vatNumberOther')?.hasError('required')) {
+                    <mat-error>{{ 'This field is required' | translate }}</mat-error>
+                  }
+                  @if (formGroup.get('vatNumberOther')?.hasError('maxlength')) {
+                    <mat-error>{{ 'Company Vat Number cannot exceed 20 characters' | translate }}</mat-error>
+                  }
+                </mat-form-field>
+              } @else {
+                <mat-form-field appearance="outline" class="w-100">
+                  <input
+                    matInput
+                    placeholder="{{ 'Type here' | translate }}"
+                    type="text"
+                    formControlName="vatNumberEuUk"
+                    (blur)="validateVatNumber()"
+                  />
+                  @if (formGroup.get('vatNumberEuUk')?.hasError('required')) {
+                    <mat-error>{{ 'This field is required' | translate }}</mat-error>
+                  }
+                  @if (formGroup.get('vatNumberEuUk')?.hasError('maxlength')) {
+                    <mat-error>{{ 'Company Vat Number cannot exceed 20 characters' | translate }}</mat-error>
+                  }
+                  @if (formGroup.get('vatNumberEuUk')?.hasError('invalidVat')) {
+                    <mat-error>{{ 'This VAT number could not be verified. Please double-check and try again.' | translate }}</mat-error>
+                  }
+                  @if (formGroup.get('vatNumberEuUk')?.hasError('vatLookupFailed')) {
+                    <mat-error>{{ 'Unable to verify VAT right now. Please try again later.' | translate }}</mat-error>
+                  }
+                  @if (vatValid()) {
+                    <mat-hint class="text-success">{{ 'VAT validated successfully' | translate }}</mat-hint>
+                  }
+                </mat-form-field>
+              }
+            </div>
+          }
           <div class="col-12 mb-4">
             <mat-label class="fw-bold mb-1">{{ 'COMPANY REGISTRATION NUMBER' | translate }} <span class="asterisk">*</span></mat-label>
             <mat-form-field appearance="outline" class="w-100">
