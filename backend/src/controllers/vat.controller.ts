@@ -28,7 +28,8 @@ export class VatController {
             return data;
         } catch (error: any) {
             const status = error.response?.status;
-            if (status === 404 || status === 400) {
+
+            if (status === 404) {
                 return {
                     success: false,
                     code: status,
@@ -36,6 +37,25 @@ export class VatController {
                     message: 'VAT number is invalid',
                 };
             }
+
+            if (status === 400) {
+                const body = error.response?.data;
+                if (body?.error) {
+                    console.error('[VATSense] Validation error:', body.error);
+                }
+                return {
+                    success: false,
+                    code: status,
+                    data: {valid: false},
+                    message: body?.error ?? 'VAT number is invalid',
+                };
+            }
+
+            console.error('[VATSense] Upstream error:', {
+                status,
+                data: error.response?.data,
+                message: error.message,
+            });
 
             return {
                 success: false,

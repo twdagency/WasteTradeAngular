@@ -195,17 +195,19 @@
     }
   </div>
 
-  <div class="mb-4">
-    <label class="fw-bold d-block mb-2">{{ 'VAT NUMBER' | translate }} <span class="asterisk">*</span></label>
-    <app-vat-number-lookup
-      formControlName="vatNumber"
-      [emailFormControl]="emailComponent?.valueControl"
-      [firstNameFormControl]="formGroup.get('firstName')"
-      [lastNameFormControl]="formGroup.get('lastName')"
-      [registrationType]="'haulage'"
-      [isDialogMode]="isDialog"
-    ></app-vat-number-lookup>
-  </div>
+  @if (formGroup.get('vatRegistrationCountry')?.value) {
+    <div class="mb-4">
+      <label class="fw-bold d-block mb-2">{{ 'VAT NUMBER' | translate }} <span class="asterisk">*</span></label>
+      <app-vat-number-lookup
+        formControlName="vatNumber"
+        [emailFormControl]="emailComponent?.valueControl"
+        [firstNameFormControl]="formGroup.get('firstName')"
+        [lastNameFormControl]="formGroup.get('lastName')"
+        [registrationType]="'haulage'"
+        [isDialogMode]="isDialog"
+      ></app-vat-number-lookup>
+    </div>
+  }
 
   <div class="mb-4">
     <label class="fw-bold d-block mb-2">{{ 'STREET ADDRESS' | translate }} <span class="asterisk">*</span></label>

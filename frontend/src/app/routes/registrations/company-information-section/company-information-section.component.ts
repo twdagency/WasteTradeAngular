@@ -296,12 +296,15 @@ export class CompanyInformationSectionComponent implements OnInit, OnDestroy {
           return;
         }
 
-        if (!res.success && (res.code ?? 0) >= 500) {
-          this.setVatLookupFailedError();
+        const code = res.code ?? 0;
+        if (!res.success && (code === 400 || code === 404)) {
+          this.setVatInvalidError();
           this.vatValid.set(false);
           return;
-        } else {
-          this.setVatInvalidError();
+        }
+
+        if (!res.success) {
+          this.setVatLookupFailedError();
           this.vatValid.set(false);
         }
       });
