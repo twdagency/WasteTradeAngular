@@ -4,8 +4,10 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatRadioModule } from '@angular/material/radio';
 import { MatSelectModule } from '@angular/material/select';
+import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { countries } from '@app/statics';
@@ -21,6 +23,8 @@ import { RegistrationsService } from 'app/services/registrations.service';
 import { SeoService } from 'app/services/seo.service';
 import { addLanguagePrefix } from 'app/utils/language.utils';
 import { catchError, combineLatest, concatMap, filter, finalize, of, take } from 'rxjs';
+import { CompanyLookupResult } from 'app/share/ui/vat-number-lookup/vat-number-lookup.component';
+import { ExistingCompanyFoundModalComponent } from 'app/share/ui/vat-number-lookup/existing-company-found-modal/existing-company-found-modal.component';
 
 @Component({
   selector: 'app-company-information-section',
@@ -34,6 +38,7 @@ import { catchError, combineLatest, concatMap, filter, finalize, of, take } from
     MatIconModule,
     MatButtonModule,
     MatRadioModule,
+    MatProgressSpinnerModule,
     RouterModule,
     ReactiveFormsModule,
     UnAuthLayoutComponent,
@@ -61,7 +66,9 @@ export class CompanyInformationSectionComponent implements OnInit, OnDestroy {
   authService = inject(AuthService);
   submitting = signal(false);
   vatValid = signal(false);
+  vatChecking = signal(false);
   service = inject(RegistrationsService);
+  dialog = inject(MatDialog);
   snackBar = inject(MatSnackBar);
   router = inject(Router);
   route = inject(ActivatedRoute);
@@ -269,6 +276,7 @@ export class CompanyInformationSectionComponent implements OnInit, OnDestroy {
     const vatToValidate = /^[A-Za-z]{2}/.test(rawVat) || !countryPrefix ? rawVat : `${countryPrefix}${rawVat}`;
 
     this.clearVatApiErrors();
+    this.vatChecking.set(true);
 
     this.service
       .validateVatNumber(vatToValidate)
@@ -284,6 +292,7 @@ export class CompanyInformationSectionComponent implements OnInit, OnDestroy {
           }
           return of(null);
         }),
+        finalize(() => this.vatChecking.set(false)),
       )
       .subscribe((res) => {
         if (!res) {
@@ -293,6 +302,7 @@ export class CompanyInformationSectionComponent implements OnInit, OnDestroy {
         if (res.success && res.data?.valid) {
           this.clearVatApiErrors();
           this.vatValid.set(true);
+          this.lookupCompanyByVat(rawVat);
           return;
         }
 
@@ -354,6 +364,56 @@ export class CompanyInformationSectionComponent implements OnInit, OnDestroy {
 
     euUkControl?.updateValueAndValidity({ emitEvent: false });
     otherControl?.updateValueAndValidity({ emitEvent: false });
+  }
+
+  private lookupCompanyByVat(vatNumber: string) {
+    const normalizedVat = vatNumber.trim().replace(/\s+/g, ' ');
+    if (!normalizedVat) return;
+
+    this.service
+      .lookupCompanyByVat(normalizedVat, 'trading')
+      .pipe(catchError(() => of(null)))
+      .subscribe((result) => {
+        if (result?.data) {
+          const companyData: CompanyLookupResult = {
+            id: result.data.id,
+            name: result.data.name,
+            vatNumber: result.data.vatNumber,
+            email: result.data.email,
+            addressLine1: result.data.addressLine1,
+            city: result.data.city,
+            country: result.data.country,
+            companyType: result.data.companyType,
+            status: result.data.status,
+          };
+          this.showExistingCompanyModal(companyData);
+        }
+      });
+  }
+
+  private showExistingCompanyModal(company: CompanyLookupResult) {
+    const authData = this.authService.user?.user;
+
+    const userData = {
+      email: authData?.email || '',
+      firstName: authData?.firstName || '',
+      lastName: authData?.lastName || '',
+    };
+
+    const dialogRef = this.dialog.open(ExistingCompanyFoundModalComponent, {
+      width: '100%',
+      maxWidth: '960px',
+      disableClose: true,
+      data: { company, userData },
+    });
+
+    dialogRef.afterClosed().subscribe((result) => {
+      if (result?.action === 'no') {
+        const vatControl = this.getCurrentVatControl();
+        vatControl?.setValue('');
+        this.vatValid.set(false);
+      }
+    });
   }
 
   private syncVatControls(existingVat?: string) {

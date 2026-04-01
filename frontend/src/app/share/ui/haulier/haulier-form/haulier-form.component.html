@@ -216,8 +216,14 @@
             placeholder="{{ 'Type here' | translate }}"
             type="text"
             formControlName="vatNumberEuUk"
+            style="padding-right: 40px"
             (blur)="validateVatNumber()"
           />
+          @if (vatChecking()) {
+            <div class="d-inline-block position-absolute" style="top: 18px; right: 10px">
+              <mat-spinner matSuffix diameter="20"></mat-spinner>
+            </div>
+          }
           @if (formGroup.get('vatNumberEuUk')?.hasError('required')) {
             <mat-error>{{ 'This field is required' | translate }}</mat-error>
           }

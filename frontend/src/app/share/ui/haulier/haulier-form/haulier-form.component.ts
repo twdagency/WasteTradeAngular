@@ -21,6 +21,7 @@ import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatRadioChange, MatRadioModule } from '@angular/material/radio';
 import { MatSelectModule } from '@angular/material/select';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -64,6 +65,8 @@ import {
 } from 'rxjs';
 import { ConfirmModalComponent } from '../../confirm-modal/confirm-modal.component';
 import { haulierAreaCover } from '../../listing/filter/constant';
+import { CompanyLookupResult } from '../../vat-number-lookup/vat-number-lookup.component';
+import { ExistingCompanyFoundModalComponent } from '../../vat-number-lookup/existing-company-found-modal/existing-company-found-modal.component';
 
 @Component({
   selector: 'app-haulier-form',
@@ -81,6 +84,7 @@ import { haulierAreaCover } from '../../listing/filter/constant';
     TelephoneFormControlComponent,
     MatDatepickerModule,
     MatButtonModule,
+    MatProgressSpinnerModule,
     TitleCasePipe,
     TranslateModule,
     AsyncPipe,
@@ -151,6 +155,7 @@ export class HaulierFormComponent implements OnInit, OnDestroy {
   });
 
   vatValid = signal(false);
+  vatChecking = signal(false);
   showEUcountry = signal(false);
   selectAllCountry = signal(false);
   selectAllContainerTypes = signal(false);
@@ -543,6 +548,7 @@ export class HaulierFormComponent implements OnInit, OnDestroy {
     const vatToValidate = /^[A-Za-z]{2}/.test(rawVat) || !countryPrefix ? rawVat : `${countryPrefix}${rawVat}`;
 
     this.clearVatApiErrors();
+    this.vatChecking.set(true);
 
     this.registrationService
       .validateVatNumber(vatToValidate)
@@ -558,6 +564,7 @@ export class HaulierFormComponent implements OnInit, OnDestroy {
           }
           return of(null);
         }),
+        finalize(() => this.vatChecking.set(false)),
       )
       .subscribe((res) => {
         if (!res) {
@@ -567,6 +574,7 @@ export class HaulierFormComponent implements OnInit, OnDestroy {
         if (res.success && res.data?.valid) {
           this.clearVatApiErrors();
           this.vatValid.set(true);
+          this.lookupCompanyByVat(rawVat);
           return;
         }
 
@@ -641,6 +649,56 @@ export class HaulierFormComponent implements OnInit, OnDestroy {
       this.formGroup.get('vatNumberEuUk')?.setValue(valueToSet);
       this.formGroup.get('vatNumberOther')?.setValue(null);
     }
+  }
+
+  private lookupCompanyByVat(vatNumber: string) {
+    const normalizedVat = vatNumber.trim().replace(/\s+/g, ' ');
+    if (!normalizedVat) return;
+
+    this.registrationService
+      .lookupCompanyByVat(normalizedVat, 'haulage')
+      .pipe(catchError(() => of(null)))
+      .subscribe((result) => {
+        if (result?.data) {
+          const companyData: CompanyLookupResult = {
+            id: result.data.id,
+            name: result.data.name,
+            vatNumber: result.data.vatNumber,
+            email: result.data.email,
+            addressLine1: result.data.addressLine1,
+            city: result.data.city,
+            country: result.data.country,
+            companyType: result.data.companyType,
+            status: result.data.status,
+          };
+          this.showExistingCompanyModal(companyData);
+        }
+      });
+  }
+
+  private showExistingCompanyModal(company: CompanyLookupResult) {
+    const authData = this.authService.user?.user;
+
+    const userData = {
+      email: this.emailComponent?.valueControl?.value || authData?.email || '',
+      firstName: this.formGroup.get('firstName')?.value || authData?.firstName || '',
+      lastName: this.formGroup.get('lastName')?.value || authData?.lastName || '',
+    };
+
+    const dialogRef = this.dialog.open(ExistingCompanyFoundModalComponent, {
+      width: '100%',
+      maxWidth: '960px',
+      disableClose: true,
+      data: { company, userData },
+    });
+
+    dialogRef.afterClosed().subscribe((result) => {
+      if (result?.action === 'no') {
+        const vatControl = this.getCurrentVatControl();
+        vatControl?.setValue('');
+        this.vatValid.set(false);
+      }
+    });
   }
 
   onAreaChange(event: MatRadioChange) {
