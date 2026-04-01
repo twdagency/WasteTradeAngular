@@ -209,6 +209,7 @@
           }
         </mat-form-field>
       } @else {
+        <small class="text-success d-block mb-1">{{ 'Ensure the VAT number includes the appropriate country code.' | translate }}</small>
         <mat-form-field appearance="outline" class="w-100">
           <input
             matInput
@@ -224,7 +225,7 @@
             <mat-error>{{ 'VAT Number cannot exceed 20 characters' | translate }}</mat-error>
           }
           @if (formGroup.get('vatNumberEuUk')?.hasError('invalidVat')) {
-            <mat-error>{{ 'This VAT number could not be verified. Please make sure you added the country code and try again.' | translate }}</mat-error>
+            <mat-error>{{ 'No data found for this VAT number. Please double-check and try again.' | translate }}</mat-error>
           }
           @if (formGroup.get('vatNumberEuUk')?.hasError('vatLookupFailed')) {
             <mat-error>{{ 'Unable to verify VAT right now. Please try again later.' | translate }}</mat-error>

@@ -866,6 +866,22 @@ export class HaulierFormComponent implements OnInit, OnDestroy {
               this.dialogRef?.close(true);
             }
           });
+      } else {
+        this.registrationHaulier(this.buildPayloadWithVat(this.formGroup.value))
+          .pipe(
+            concatMap((res) => {
+              if (!res) return of(null);
+              this.analyticsService.trackEvent(GaEventName.SIGN_UP, { method: 'email' });
+              this.authService.setToken(res.data.accessToken);
+              return this.authService.checkToken();
+            }),
+            finalize(() => this.submitting.set(false)),
+          )
+          .subscribe((res) => {
+            if (res) {
+              this.router.navigateByUrl(ROUTES_WITH_SLASH.accountPendingResult);
+            }
+          });
       }
     }
   }
