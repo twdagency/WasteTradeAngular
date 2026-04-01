@@ -68,8 +68,8 @@
             <label class="fw-bold">{{ 'COMPANY VAT NUMBER' | translate }} <span class="asterisk">*</span></label>
             <app-vat-number-lookup
               formControlName="vatNumber"
-              [vatRegistrationCountry]="formGroup.get('vatRegistrationCountry')?.value"
-              [country]="formGroup.get('country')?.value"
+              [vatRegistrationCountry]="formGroup.get('vatRegistrationCountry')?.value ?? null"
+              [country]="formGroup.get('country')?.value ?? null"
             ></app-vat-number-lookup>
           </div>
           <div class="col-12 mb-4">

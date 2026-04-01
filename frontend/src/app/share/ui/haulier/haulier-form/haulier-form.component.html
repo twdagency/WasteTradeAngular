@@ -203,8 +203,8 @@
       [lastNameFormControl]="formGroup.get('lastName')"
       [registrationType]="'haulage'"
       [isDialogMode]="isDialog"
-      [vatRegistrationCountry]="formGroup.get('vatRegistrationCountry')?.value"
-      [country]="formGroup.get('country')?.value"
+      [vatRegistrationCountry]="formGroup.get('vatRegistrationCountry')?.value ?? null"
+      [country]="formGroup.get('country')?.value ?? null"
     ></app-vat-number-lookup>
   </div>
 
