@@ -32,7 +32,6 @@ import {
   FileUploadComponent,
   InputWithConfirmControlComponent,
   TelephoneFormControlComponent,
-  VatNumberLookupComponent,
 } from '@app/ui';
 import { marker as localized$ } from '@colsen1991/ngx-translate-extract-marker';
 import { TranslateModule, TranslatePipe } from '@ngx-translate/core';
@@ -85,7 +84,6 @@ import { haulierAreaCover } from '../../listing/filter/constant';
     TitleCasePipe,
     TranslateModule,
     AsyncPipe,
-    VatNumberLookupComponent,
   ],
   providers: [TranslatePipe, DatePipe],
 })
@@ -125,7 +123,8 @@ export class HaulierFormComponent implements OnInit, OnDestroy {
     companyName: new FormControl<string | null>(null, [Validators.required, Validators.maxLength(100)]),
     registrationNumber: new FormControl<string | null>(null, [Validators.required, Validators.maxLength(20)]),
     vatRegistrationCountry: new FormControl<string | null>(null, [Validators.required]),
-    vatNumber: new FormControl<string | null>(null, [Validators.maxLength(20)]),
+    vatNumberEuUk: new FormControl<string | null>(null, [Validators.maxLength(20)]),
+    vatNumberOther: new FormControl<string | null>(null, [Validators.maxLength(20)]),
     addressLine1: new FormControl<string | null>(null, [Validators.required, Validators.maxLength(100)]),
     postalCode: new FormControl<string | null>(null, [Validators.required, Validators.maxLength(20)]),
     city: new FormControl<string | null>(null, [Validators.required, Validators.maxLength(50)]),
@@ -151,6 +150,7 @@ export class HaulierFormComponent implements OnInit, OnDestroy {
     companyMobileNumber: new FormControl<string | null>(null),
   });
 
+  vatValid = signal(false);
   showEUcountry = signal(false);
   selectAllCountry = signal(false);
   selectAllContainerTypes = signal(false);
@@ -243,7 +243,8 @@ export class HaulierFormComponent implements OnInit, OnDestroy {
       'companyName',
       'registrationNumber',
       'vatRegistrationCountry',
-      'vatNumber',
+      'vatNumberEuUk',
+      'vatNumberOther',
       'addressLine1',
       'postalCode',
       'city',
@@ -432,7 +433,6 @@ export class HaulierFormComponent implements OnInit, OnDestroy {
 
       vatRegistrationCountry: h.vatRegistrationCountry ?? null,
 
-      vatNumber: h.vatNumber ?? null,
       addressLine1: h.addressLine1 ?? null,
       postalCode: h.postalCode ?? null,
       city: h.city ?? null,
@@ -454,6 +454,9 @@ export class HaulierFormComponent implements OnInit, OnDestroy {
       companyPhoneNumber: h.companyPhoneNumber ?? null,
       companyMobileNumber: h.companyMobileNumber ?? null,
     });
+
+    this.syncVatControls(h.vatNumber ?? '');
+    this.updateVatControlValidators(h.vatRegistrationCountry ?? null);
 
     this.setFormArrayValues(this.selectedContainerType, h.containerTypes ?? [], containerTypeList);
     this.setFormArrayValues(this.selectedAreasCovered, h.areasCovered ?? [], euCountryList);
@@ -505,7 +508,139 @@ export class HaulierFormComponent implements OnInit, OnDestroy {
   }
 
   onVatCountryChange() {
-    this.formGroup.get('vatNumber')?.setValue(null);
+    this.vatValid.set(false);
+    const country = this.formGroup.get('vatRegistrationCountry')?.value;
+    this.updateVatControlValidators(country);
+    this.syncVatControls();
+  }
+
+  validateVatNumber() {
+    const vatControl = this.getCurrentVatControl();
+    const countryControl = this.formGroup.get('country');
+    const vatRegistrationCountryControl = this.formGroup.get('vatRegistrationCountry');
+
+    if (!vatControl) {
+      return;
+    }
+
+    const rawVat = (vatControl.value ?? '').toString().trim();
+    const selectedCountryCode = (countryControl?.value ?? '').toString().trim();
+
+    if (!rawVat) {
+      this.clearVatApiErrors();
+      return;
+    }
+
+    if (vatControl.hasError('required') || vatControl.hasError('maxlength')) {
+      return;
+    }
+
+    const regCountry = vatRegistrationCountryControl?.value;
+    let countryPrefix = selectedCountryCode || (regCountry === 'UK' ? 'GB' : '');
+    if (regCountry === 'EU' && !selectedCountryCode) {
+      countryPrefix = '';
+    }
+    const vatToValidate = /^[A-Za-z]{2}/.test(rawVat) || !countryPrefix ? rawVat : `${countryPrefix}${rawVat}`;
+
+    this.clearVatApiErrors();
+
+    this.registrationService
+      .validateVatNumber(vatToValidate)
+      .pipe(
+        catchError((err) => {
+          const status = err?.status ?? 0;
+          if (status >= 500 || status === 0) {
+            this.setVatLookupFailedError();
+            this.vatValid.set(false);
+          } else {
+            this.setVatInvalidError();
+            this.vatValid.set(false);
+          }
+          return of(null);
+        }),
+      )
+      .subscribe((res) => {
+        if (!res) {
+          return;
+        }
+
+        if (res.success && res.data?.valid) {
+          this.clearVatApiErrors();
+          this.vatValid.set(true);
+          return;
+        }
+
+        const code = res.code ?? 0;
+        if (!res.success && (code === 400 || code === 404)) {
+          this.setVatInvalidError();
+          this.vatValid.set(false);
+          return;
+        }
+
+        if (!res.success) {
+          this.setVatLookupFailedError();
+          this.vatValid.set(false);
+        }
+      });
+  }
+
+  private setVatInvalidError() {
+    const vatControl = this.getCurrentVatControl();
+    if (!vatControl) return;
+    const errors = vatControl.errors ?? {};
+    vatControl.setErrors({ ...errors, invalidVat: true });
+  }
+
+  private setVatLookupFailedError() {
+    const vatControl = this.getCurrentVatControl();
+    if (!vatControl) return;
+    const errors = vatControl.errors ?? {};
+    vatControl.setErrors({ ...errors, vatLookupFailed: true });
+  }
+
+  private clearVatApiErrors() {
+    const vatControl = this.getCurrentVatControl();
+    if (!vatControl || !vatControl.errors) return;
+    const { invalidVat, vatLookupFailed, ...otherErrors } = vatControl.errors;
+    const remainingErrors = Object.keys(otherErrors).length ? otherErrors : null;
+    vatControl.setErrors(remainingErrors);
+  }
+
+  getCurrentVatControl() {
+    const country = this.formGroup.get('vatRegistrationCountry')?.value;
+    return country === 'Other' ? this.formGroup.get('vatNumberOther') : this.formGroup.get('vatNumberEuUk');
+  }
+
+  private updateVatControlValidators(country: string | null | undefined) {
+    const euUkControl = this.formGroup.get('vatNumberEuUk');
+    const otherControl = this.formGroup.get('vatNumberOther');
+
+    if (!country) {
+      otherControl?.setValidators([Validators.maxLength(20)]);
+      euUkControl?.setValidators([Validators.maxLength(20)]);
+    } else if (country === 'Other') {
+      otherControl?.setValidators([Validators.required, Validators.maxLength(20)]);
+      euUkControl?.setValidators([Validators.maxLength(20)]);
+    } else {
+      euUkControl?.setValidators([Validators.required, Validators.maxLength(20)]);
+      otherControl?.setValidators([Validators.maxLength(20)]);
+    }
+
+    euUkControl?.updateValueAndValidity({ emitEvent: false });
+    otherControl?.updateValueAndValidity({ emitEvent: false });
+  }
+
+  private syncVatControls(existingVat?: string) {
+    const country = this.formGroup.get('vatRegistrationCountry')?.value;
+    const valueToSet = existingVat ?? '';
+
+    if (country === 'Other') {
+      this.formGroup.get('vatNumberOther')?.setValue(valueToSet);
+      this.formGroup.get('vatNumberEuUk')?.setValue(null);
+    } else {
+      this.formGroup.get('vatNumberEuUk')?.setValue(valueToSet);
+      this.formGroup.get('vatNumberOther')?.setValue(null);
+    }
   }
 
   onAreaChange(event: MatRadioChange) {
@@ -566,8 +701,20 @@ export class HaulierFormComponent implements OnInit, OnDestroy {
     this.licenceAdded = [];
   }
 
+  private buildPayloadWithVat(value: any): any {
+    const { vatNumberEuUk, vatNumberOther, ...payload } = value;
+    payload.vatNumber = this.getCurrentVatControl()?.value ?? '';
+    return payload;
+  }
+
   send() {
     this.formGroup.markAllAsTouched();
+
+    const vatCountry = this.formGroup.get('vatRegistrationCountry')?.value;
+    const currentVatControl = this.getCurrentVatControl();
+    if (vatCountry && vatCountry !== 'Other' && currentVatControl?.value && !this.vatValid()) {
+      return;
+    }
 
     if (this.isDialog) {
       const ref = this.dialog.open(ConfirmModalComponent, {
@@ -585,12 +732,12 @@ export class HaulierFormComponent implements OnInit, OnDestroy {
         .afterClosed()
         .pipe(takeUntilDestroyed(this.destroyRef))
         .subscribe((confirmed) => {
-          if (confirmed) this.submit(this.formGroup.value);
+          if (confirmed) this.submit(this.buildPayloadWithVat(this.formGroup.value));
         });
       return;
     }
 
-    this.submit(this.formGroup.value);
+    this.submit(this.buildPayloadWithVat(this.formGroup.value));
   }
 
   buildDocuments() {
@@ -709,7 +856,7 @@ export class HaulierFormComponent implements OnInit, OnDestroy {
     } else {
       this.submitting.set(true);
       if (this.isDialog) {
-        const payload = this.formGroup.value;
+        const payload = this.buildPayloadWithVat(this.formGroup.value);
         this.uploadHaulierProfile(payload)
           .pipe(finalize(() => this.submitting.set(false)))
           .subscribe((res) => {
@@ -1059,7 +1206,21 @@ export class HaulierFormComponent implements OnInit, OnDestroy {
       delete formValue.passwordConfirm;
       delete formValue.step;
 
+      if (formValue.vatNumber && !formValue.vatNumberEuUk && !formValue.vatNumberOther) {
+        const country = formValue.vatRegistrationCountry;
+        if (country === 'EU' || country === 'UK') {
+          formValue.vatNumberEuUk = formValue.vatNumber;
+        } else {
+          formValue.vatNumberOther = formValue.vatNumber;
+        }
+        delete formValue.vatNumber;
+      }
+
       this.formGroup.patchValue(formValue);
+
+      if (formValue.vatRegistrationCountry) {
+        this.updateVatControlValidators(formValue.vatRegistrationCountry);
+      }
 
       // Restore email fields separately if they exist
       setTimeout(() => {

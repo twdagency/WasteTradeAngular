@@ -93,7 +93,7 @@
                     <mat-error>{{ 'Company Vat Number cannot exceed 20 characters' | translate }}</mat-error>
                   }
                   @if (formGroup.get('vatNumberEuUk')?.hasError('invalidVat')) {
-                    <mat-error>{{ 'This VAT number could not be verified. Please double-check and try again.' | translate }}</mat-error>
+                    <mat-error>{{ 'This VAT number could not be verified. Please make sure you added the country code and try again.' | translate }}</mat-error>
                   }
                   @if (formGroup.get('vatNumberEuUk')?.hasError('vatLookupFailed')) {
                     <mat-error>{{ 'Unable to verify VAT right now. Please try again later.' | translate }}</mat-error>
