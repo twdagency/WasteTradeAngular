@@ -67,6 +67,9 @@ import { ConfirmModalComponent } from '../../confirm-modal/confirm-modal.compone
 import { haulierAreaCover } from '../../listing/filter/constant';
 import { CompanyLookupResult } from '../../vat-number-lookup/vat-number-lookup.component';
 import { ExistingCompanyFoundModalComponent } from '../../vat-number-lookup/existing-company-found-modal/existing-company-found-modal.component';
+import { VatCompanyNameMismatchModalComponent } from '../../vat-number-lookup/vat-company-name-mismatch-modal/vat-company-name-mismatch-modal.component';
+import { companyNamesMatch } from 'app/share/utils/company-name.utils';
+import { VatValidationResponse } from 'app/types/requests/company-user-request';
 
 @Component({
   selector: 'app-haulier-form',
@@ -574,7 +577,7 @@ export class HaulierFormComponent implements OnInit, OnDestroy {
         if (res.success && res.data?.valid) {
           this.clearVatApiErrors();
           this.vatValid.set(true);
-          this.lookupCompanyByVat(rawVat);
+          this.afterVatValidatedForHaulier(rawVat, res);
           return;
         }
 
@@ -649,6 +652,32 @@ export class HaulierFormComponent implements OnInit, OnDestroy {
       this.formGroup.get('vatNumberEuUk')?.setValue(valueToSet);
       this.formGroup.get('vatNumberOther')?.setValue(null);
     }
+  }
+
+  private afterVatValidatedForHaulier(rawVat: string, res: VatValidationResponse): void {
+    const vatSenseName = res.data?.company?.company_name?.trim() ?? '';
+    const entered = (this.formGroup.get('companyName')?.value ?? '').toString().trim();
+
+    if (!vatSenseName || companyNamesMatch(entered, vatSenseName)) {
+      this.lookupCompanyByVat(rawVat);
+      return;
+    }
+
+    const ref = this.dialog.open(VatCompanyNameMismatchModalComponent, {
+      width: '100%',
+      maxWidth: '960px',
+      disableClose: true,
+      data: { enteredCompanyName: entered, vatSenseCompanyName: vatSenseName },
+    });
+
+    ref.afterClosed().subscribe((result?: { companyName: string }) => {
+      if (!result?.companyName?.trim()) {
+        this.vatValid.set(false);
+        return;
+      }
+      this.formGroup.get('companyName')?.setValue(result.companyName.trim());
+      this.lookupCompanyByVat(rawVat);
+    });
   }
 
   private lookupCompanyByVat(vatNumber: string) {

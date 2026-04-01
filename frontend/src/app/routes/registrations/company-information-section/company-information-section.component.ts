@@ -22,9 +22,12 @@ import { DraftRegisterService } from 'app/services/draft-register.service';
 import { RegistrationsService } from 'app/services/registrations.service';
 import { SeoService } from 'app/services/seo.service';
 import { addLanguagePrefix } from 'app/utils/language.utils';
-import { catchError, combineLatest, concatMap, filter, finalize, of, take } from 'rxjs';
+import { catchError, combineLatest, concatMap, filter, finalize, of, switchMap, take } from 'rxjs';
 import { CompanyLookupResult } from 'app/share/ui/vat-number-lookup/vat-number-lookup.component';
 import { ExistingCompanyFoundModalComponent } from 'app/share/ui/vat-number-lookup/existing-company-found-modal/existing-company-found-modal.component';
+import { VatCompanyNameMismatchModalComponent } from 'app/share/ui/vat-number-lookup/vat-company-name-mismatch-modal/vat-company-name-mismatch-modal.component';
+import { companyNamesMatch } from 'app/share/utils/company-name.utils';
+import { VatValidationResponse } from 'app/types/requests/company-user-request';
 
 @Component({
   selector: 'app-company-information-section',
@@ -302,7 +305,7 @@ export class CompanyInformationSectionComponent implements OnInit, OnDestroy {
         if (res.success && res.data?.valid) {
           this.clearVatApiErrors();
           this.vatValid.set(true);
-          this.lookupCompanyByVat(rawVat);
+          this.afterVatValidatedForTrading(rawVat, res);
           return;
         }
 
@@ -364,6 +367,55 @@ export class CompanyInformationSectionComponent implements OnInit, OnDestroy {
 
     euUkControl?.updateValueAndValidity({ emitEvent: false });
     otherControl?.updateValueAndValidity({ emitEvent: false });
+  }
+
+  private afterVatValidatedForTrading(rawVat: string, res: VatValidationResponse): void {
+    const vatSenseName = res.data?.company?.company_name?.trim() ?? '';
+    const entered = this.authService.user?.company?.name?.trim() ?? '';
+
+    if (!vatSenseName || companyNamesMatch(entered, vatSenseName)) {
+      this.lookupCompanyByVat(rawVat);
+      return;
+    }
+
+    const ref = this.dialog.open(VatCompanyNameMismatchModalComponent, {
+      width: '100%',
+      maxWidth: '960px',
+      disableClose: true,
+      data: { enteredCompanyName: entered, vatSenseCompanyName: vatSenseName },
+    });
+
+    ref.afterClosed().subscribe((result?: { companyName: string }) => {
+      if (!result?.companyName?.trim()) {
+        this.vatValid.set(false);
+        return;
+      }
+      if (!this.companyId) {
+        this.vatValid.set(false);
+        return;
+      }
+      const name = result.companyName.trim();
+      this.service
+        .updateCompanyInfo(this.companyId, { name })
+        .pipe(
+          switchMap(() => this.authService.checkToken()),
+          catchError(() => {
+            this.snackBar.open(
+              this.translate.transform(localized$(`Failed to update company name. Please try again.`)),
+              this.translate.transform(localized$('Ok')),
+              { duration: 3000 },
+            );
+            return of(false);
+          }),
+        )
+        .subscribe((next) => {
+          if (next === false) {
+            this.vatValid.set(false);
+            return;
+          }
+          this.lookupCompanyByVat(rawVat);
+        });
+    });
   }
 
   private lookupCompanyByVat(vatNumber: string) {
