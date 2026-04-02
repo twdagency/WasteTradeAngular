@@ -91,6 +91,7 @@ export class LoginComponent {
     this.submitting.set(true);
     this.authService.login({ email, password }).subscribe({
       next: () => {
+        this.submitting.set(false);
         this.analyticsService.trackEvent(GaEventName.LOGIN, { method: 'email' });
         const targetRoute = this.authService.getDefaultRouteByRole();
         this.router.navigateByUrl(addLanguagePrefix(targetRoute));

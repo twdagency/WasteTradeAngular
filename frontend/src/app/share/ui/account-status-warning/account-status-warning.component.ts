@@ -8,7 +8,7 @@ import { ROUTES_WITH_SLASH } from 'app/constants/route.const';
 import { AuthService } from 'app/services/auth.service';
 import { BannerType } from 'app/types/requests/auth';
 import { addLanguagePrefix } from 'app/utils/language.utils';
-import { filter, map, switchMap } from 'rxjs';
+import { filter, map, switchMap, timer } from 'rxjs';
 import { UploadDocumentsDialogComponent } from '../upload-documents-dialog/upload-documents-dialog.component';
 
 @Component({
@@ -25,7 +25,8 @@ export class AccountStatusWarningComponent {
   status = toSignal(
     this.authService.user$.pipe(
       filter((user) => !!user),
-      switchMap(() => this.authService.getAccountStatus()),
+      // Defer so login navigation + first route data (e.g. listings) are not blocked by this request.
+      switchMap(() => timer(0).pipe(switchMap(() => this.authService.getAccountStatus()))),
       map((res) => res.data),
     ),
     {
