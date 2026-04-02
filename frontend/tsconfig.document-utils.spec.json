@@ -1,0 +1,12 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "outDir": "./out-tsc/spec-document-utils",
+    "types": ["jasmine"]
+  },
+  "include": [
+    "src/app/routes/account-settings/document/document-filename.utils.spec.ts",
+    "src/app/routes/account-settings/document/document-filename.utils.ts",
+    "src/**/*.d.ts"
+  ]
+}

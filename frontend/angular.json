@@ -106,6 +106,9 @@
             "polyfills": ["zone.js", "zone.js/testing"],
             "tsConfig": "tsconfig.spec.json",
             "inlineStyleLanguage": "scss",
+            "stylePreprocessorOptions": {
+              "includePaths": ["src/styles"]
+            },
             "assets": [
               {
                 "glob": "**/*",
@@ -114,6 +117,12 @@
             ],
             "styles": ["src/styles.scss"],
             "scripts": []
+          },
+          "configurations": {
+            "document-utils": {
+              "tsConfig": "tsconfig.document-utils.spec.json",
+              "include": ["src/app/routes/account-settings/document/document-filename.utils.spec.ts"]
+            }
           }
         }
       }

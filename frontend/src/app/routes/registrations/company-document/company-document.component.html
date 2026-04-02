@@ -1,4 +1,4 @@
-<app-un-auth-layout>
+<app-un-auth-layout [logoToBuy]="true">
   <app-account-onboarding-status [showStatusOnly]="true" [type]="'completing'"></app-account-onboarding-status>
   <div class="col-md-12 mx-auto d-flex justify-content-between g-3 my-5 row">
     <div class="" style="width: 320px">
@@ -74,7 +74,7 @@
                     (filesAdded)="handleFileReady($event, 'document', CompanyDocumentType.EnvironmentalPermit)"
                     (uploadValid)="documentValid.set($event)"
                     [notAcceptable]="['.doc', '.docx', '.xls', '.xlsx']"
-                    [expiryDateMode]="'optional'"
+                    [expiryDateMode]="'required'"
                     [fileList]="environmentPermitDocuments"
                   ></app-file-upload>
                   <p>{{ 'Accepted file types: jpg, png, jpeg, pdf, Max. file size: 25 MB, Max. files: 6' | translate }}</p>
@@ -96,7 +96,7 @@
                     (filesAdded)="handleFileReady($event, 'document', CompanyDocumentType.WasteExemption)"
                     (uploadValid)="documentValid.set($event)"
                     [notAcceptable]="['.doc', '.docx', '.xls', '.xlsx']"
-                    [expiryDateMode]="'optional'"
+                    [expiryDateMode]="'required'"
                     [fileList]="wasteExemptionDocuments"
                   ></app-file-upload>
                   <p>{{ 'Accepted file types: jpg, png, jpeg, pdf, Max. file size: 25 MB, Max. files: 6' | translate }}</p>
@@ -130,7 +130,7 @@
                         (filesAdded)="handleFileReady($event, 'document', 'other')"
                         (uploadValid)="documentValid.set($event)"
                         [notAcceptable]="['.doc', '.docx', '.xls', '.xlsx']"
-                        [expiryDateMode]="'optional'"
+                        [expiryDateMode]="'required'"
                         [fileList]="otherDocuments"
                       ></app-file-upload>
                       <p>{{ 'Accepted file types: jpg, png, jpeg, pdf, Max. file size: 25 MB, Max. files: 6' | translate }}</p>
@@ -189,7 +189,7 @@
                 (filesAdded)="handleFileReady($event, 'licence', CompanyDocumentType.WasteCarrierLicense)"
                 [maxFile]="1"
                 (uploadValid)="wasteLicenceValid.set($event)"
-                [expiryDateMode]="'optional'"
+                [expiryDateMode]="'required'"
                 [fileList]="wasteCarrierLicenseDocuments"
               ></app-file-upload>
               <p class="small">

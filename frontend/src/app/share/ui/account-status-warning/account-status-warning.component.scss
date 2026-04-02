@@ -1,5 +1,19 @@
+$header-compact-height: 70px;
+$layout-lg: 1400px;
+
+:host {
+  display: block;
+  position: sticky;
+  top: $header-compact-height;
+  z-index: 15;
+
+  @media screen and (min-width: $layout-lg) {
+    top: 0;
+  }
+}
+
 .warning-bar {
-  padding: 10px 0;
+  padding: 10px 16px;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -7,6 +21,9 @@
   line-height: 22px;
   color: #1d1d1b;
   flex-wrap: wrap;
+  box-sizing: border-box;
+  background-color: #feeed7;
+  box-shadow: 0 2px 4px rgb(0 0 0 / 8%);
 }
 
 mat-icon {
@@ -14,8 +31,4 @@ mat-icon {
   font-size: 29px;
   width: 29px;
   height: 29px;
-}
-
-.warning-bar {
-  background-color: #feeed7;
 }

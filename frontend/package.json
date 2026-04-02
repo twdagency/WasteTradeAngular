@@ -9,6 +9,7 @@
     "i18n:init": "node node_modules/@vendure/ngx-translate-extract/bin/cli.js --input ./src --output ./src/assets/i18n/{template,en}.json --key-as-default-value --replace --format json",
     "i18n:extract": "node node_modules/@vendure/ngx-translate-extract/bin/cli.js --input ./src --output ./src/assets/i18n/{en,es}.json --clean --format json",
     "test": "ng test",
+    "test:document-utils": "ng test --configuration=document-utils --no-watch --browsers=ChromeHeadless",
     "serve": "node dist/watse-trade/server/server.mjs",
     "serve:ssr:watse-trade": "node dist/watse-trade/server/server.mjs"
   },

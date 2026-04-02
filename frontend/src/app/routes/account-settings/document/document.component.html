@@ -19,7 +19,7 @@
             <div class="d-md-flex flex-md-row flex-column align-items-center px-3 py-2 right-side w-100 text-break">
               <div class="flex-column col-md-10">
                 <div class="fw-bold">
-                  {{ item.documentName }}
+                  {{ displayUploadedFileName(item.documentUrl) || item.documentName }}
                 </div>
                 <div>
                   <span class="fw-bold">{{ 'Expiry Date: ' | translate }}</span>
@@ -38,13 +38,13 @@
   </div>
 </ng-template>
 
-<div class="col-12 overflow-hidden">
+<div class="col-12 overflow-x-hidden">
   @if (!isReusable) {
     <h4 class="fw-bold mt-3 mb-4">{{ 'Company Documents' | translate }}</h4>
   }
   <div class="d-flex flex-column flex-lg-row gap-4">
     <div
-      class="d-flex flex-column flex-md-row justify-content-between col-12 overflow-hidden gap-4"
+      class="d-flex flex-column flex-md-row justify-content-between col-12 gap-4"
       [class.border]="!isReusable"
       [class.border-primary]="!isReusable"
       [class.col-lg-8]="!isReusable"
@@ -53,7 +53,7 @@
       [class.p-lg-5]="!isReusable"
       [class.rounded-4]="!isReusable"
     >
-      <div class="col-12 col-md-8 col-lg-9 d-flex flex-column justify-content-between overflow-hidden flex-grow-1 min-w-0">
+      <div class="col-12 col-md-8 col-lg-9 d-flex flex-column justify-content-between flex-grow-1 min-w-0">
         <div class="g-3 mb-4 mx-0" [class.row]="!isReusable">
           <div class="col-12" [class.px-2]="!isReusable">
             <div class="mb-3">
@@ -96,15 +96,44 @@
           }
 
           @if (otherDocuments.length > 0) {
-            <ng-container
-              *ngTemplateOutlet="
-                document;
-                context: {
-                  items: otherDocuments,
-                  type: 'OTHER DOCUMENT DESCRIPTION',
-                }
-              "
-            ></ng-container>
+            <div class="w-100 overflow-visible min-w-0">
+              <div class="fw-bold text-uppercase">{{ 'OTHER DOCUMENT' | translate }}</div>
+              @for (item of otherDocuments; track item.id) {
+                <div class="mb-2 w-100 overflow-visible">
+                  <div class="mb-2">
+                    <div class="fw-normal text-break">{{ otherDocumentDescription(item) || '—' }}</div>
+                  </div>
+                  <div
+                  class="d-flex flex-column flex-md-row gap-3 align-items-stretch align-items-md-center w-100 cursor-pointer mb-3"
+                  (click)="viewDocument(item)"
+                  matTooltip="{{ 'View document' | translate }}"
+                >
+                  <div class="w-100 rounded border d-flex">
+                    <div class="col-md-1 col-2 background-grey d-flex justify-content-center align-items-center p-2 left-side">
+                      <mat-icon class="me-1">file_copy</mat-icon>
+                    </div>
+                    <div class="d-md-flex flex-md-row flex-column align-items-center px-3 py-2 right-side w-100 text-break">
+                      <div class="flex-column col-md-10">
+                        <div class="fw-bold">
+                          {{ displayUploadedFileName(item.documentUrl) || item.documentName }}
+                        </div>
+                        <div>
+                          <span class="fw-bold">{{ 'Expiry Date: ' | translate }}</span>
+                          <span>{{ item?.expiryDate | expiryDate }}</span>
+                        </div>
+                      </div>
+                      <div class="col-md-2 d-flex align-items-center justify-content-md-end justify-content-start mt-md-0 mt-3">
+                        <mat-icon [style.color]="getOfferStatusColor($any(item.status))">fiber_manual_record</mat-icon>
+                        <div class="fw-500" [style.color]="getOfferStatusColor($any(item.status))">
+                          {{ (item?.status | titlecase) || '-' }}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                </div>
+              }
+            </div>
           }
           <div class="mb-1 mt-5 mb-3">
             <span class="fw-bold"> {{ 'DO YOU HAVE A WASTE CARRIER LICENCE?' | translate }}</span>

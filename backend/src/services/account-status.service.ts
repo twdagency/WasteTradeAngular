@@ -12,7 +12,12 @@ import {
 
 export interface AccountStatusResult {
     showBanner: boolean;
-    bannerType?: 'incomplete_onboarding' | 'verification_pending' | 'verification_failed' | 'document_expiring';
+    bannerType?:
+        | 'incomplete_onboarding'
+        | 'verification_pending'
+        | 'verification_failed'
+        | 'document_expiring'
+        | 'missing_documents';
     message: string;
     documentDetails?: {
         name: string;
@@ -74,7 +79,11 @@ export class AccountStatusService {
 
         // PRIORITY 2: Check for incomplete onboarding (only if not rejected by admin)
         const onboardingStatus = await this.checkOnboardingCompletion(company.id!);
-        if (!onboardingStatus.isComplete && company.status !== CompanyStatus.ACTIVE) {
+        const onlyDocumentsMissing =
+            onboardingStatus.missingSteps.length === 1 &&
+            onboardingStatus.missingSteps[0] === 'company_documents';
+
+        if (!onboardingStatus.isComplete && !onlyDocumentsMissing && company.status !== CompanyStatus.ACTIVE) {
             const config = BANNER_MESSAGES.incompleteOnboarding;
             return {
                 showBanner: true,
@@ -97,7 +106,19 @@ export class AccountStatusService {
             };
         }
 
-        // PRIORITY 4: Check for pending verification status
+        // PRIORITY 4: Missing documents (user completed onboarding but skipped upload)
+        // This check is independent of company status — even ACTIVE companies
+        // should see the banner if they never uploaded documents.
+        if (onlyDocumentsMissing) {
+            const config = BANNER_MESSAGES.missingDocuments;
+            return {
+                showBanner: true,
+                bannerType: 'missing_documents',
+                message: config.message,
+            };
+        }
+
+        // PRIORITY 5: Check for pending verification status
         if (company.status === CompanyStatus.PENDING) {
             const config = BANNER_MESSAGES.verificationPending;
             return {
