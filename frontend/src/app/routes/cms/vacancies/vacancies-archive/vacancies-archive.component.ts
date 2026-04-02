@@ -6,11 +6,12 @@ import { SeoService } from 'app/services/seo.service';
 import { CmsJob, StrapiMeta } from 'app/types/cms.types';
 import { ROUTES } from 'app/constants/route.const';
 import { FooterComponent } from 'app/layout/footer/footer.component';
+import { CmsHeaderComponent } from 'app/layout/cms-header/cms-header.component';
 
 @Component({
   selector: 'app-vacancies-archive',
   standalone: true,
-  imports: [CommonModule, RouterModule, FooterComponent],
+  imports: [CommonModule, RouterModule, FooterComponent, CmsHeaderComponent],
   templateUrl: './vacancies-archive.component.html',
   styleUrl: './vacancies-archive.component.scss',
 })

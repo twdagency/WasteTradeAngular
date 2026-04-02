@@ -6,11 +6,12 @@ import { SeoService } from 'app/services/seo.service';
 import { CmsArticle, CmsCategory, StrapiMeta } from 'app/types/cms.types';
 import { ROUTES } from 'app/constants/route.const';
 import { FooterComponent } from 'app/layout/footer/footer.component';
+import { CmsHeaderComponent } from 'app/layout/cms-header/cms-header.component';
 
 @Component({
   selector: 'app-news-archive',
   standalone: true,
-  imports: [CommonModule, RouterModule, FooterComponent],
+  imports: [CommonModule, RouterModule, FooterComponent, CmsHeaderComponent],
   templateUrl: './news-archive.component.html',
   styleUrl: './news-archive.component.scss',
 })

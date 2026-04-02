@@ -7,12 +7,13 @@ import { CmsJob } from 'app/types/cms.types';
 import { StrapiBlocksPipe } from 'app/share/pipes/strapi-blocks.pipe';
 import { ROUTES } from 'app/constants/route.const';
 import { FooterComponent } from 'app/layout/footer/footer.component';
+import { CmsHeaderComponent } from 'app/layout/cms-header/cms-header.component';
 import { Subscription, switchMap } from 'rxjs';
 
 @Component({
   selector: 'app-vacancy-single',
   standalone: true,
-  imports: [CommonModule, RouterModule, StrapiBlocksPipe, FooterComponent],
+  imports: [CommonModule, RouterModule, StrapiBlocksPipe, FooterComponent, CmsHeaderComponent],
   templateUrl: './vacancy-single.component.html',
   styleUrl: './vacancy-single.component.scss',
 })

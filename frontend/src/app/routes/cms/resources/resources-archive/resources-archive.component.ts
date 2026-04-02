@@ -6,6 +6,7 @@ import { SeoService } from 'app/services/seo.service';
 import { CmsResource, ResourceCategory, StrapiMeta } from 'app/types/cms.types';
 import { ROUTES } from 'app/constants/route.const';
 import { FooterComponent } from 'app/layout/footer/footer.component';
+import { CmsHeaderComponent } from 'app/layout/cms-header/cms-header.component';
 
 const RESOURCE_CATEGORIES: ResourceCategory[] = [
   'WasteTrade Guides',
@@ -22,7 +23,7 @@ const RESOURCE_CATEGORIES: ResourceCategory[] = [
 @Component({
   selector: 'app-resources-archive',
   standalone: true,
-  imports: [CommonModule, RouterModule, FooterComponent],
+  imports: [CommonModule, RouterModule, FooterComponent, CmsHeaderComponent],
   templateUrl: './resources-archive.component.html',
   styleUrl: './resources-archive.component.scss',
 })

@@ -1,0 +1,49 @@
+@if (isLoggedIn()) {
+  <app-header [isHaulier]="isHaulier()" />
+} @else {
+  <nav class="public-nav" [class.menu-open]="menuOpen()">
+    <div class="nav-inner container">
+      <a routerLink="/" class="nav-logo" (click)="closeMenu()">
+        <img src="assets/images/header-logo.svg" alt="WasteTrade" height="36" />
+      </a>
+
+      <button class="hamburger" (click)="toggleMenu()" aria-label="Toggle navigation">
+        <mat-icon>{{ menuOpen() ? 'close' : 'menu' }}</mat-icon>
+      </button>
+
+      <ul class="nav-links" [class.open]="menuOpen()">
+        <li class="nav-dropdown">
+          <a href="javascript:void(0)">Marketplace <mat-icon class="dd-arrow">expand_more</mat-icon></a>
+          <ul class="dropdown-menu">
+            <li><a (click)="closeMenu()" routerLink="/buy">Buy Materials</a></li>
+            <li><a (click)="closeMenu()" routerLink="/wanted">Wanted Materials</a></li>
+          </ul>
+        </li>
+        <li class="nav-dropdown">
+          <a href="javascript:void(0)">Company <mat-icon class="dd-arrow">expand_more</mat-icon></a>
+          <ul class="dropdown-menu">
+            <li><a (click)="closeMenu()" routerLink="/about">About Us</a></li>
+            <li><a (click)="closeMenu()" routerLink="/news">News</a></li>
+            <li><a (click)="closeMenu()" routerLink="/vacancies">Vacancies</a></li>
+            <li><a (click)="closeMenu()" routerLink="/resources">Resources</a></li>
+          </ul>
+        </li>
+        <li class="nav-dropdown">
+          <a href="javascript:void(0)">Materials <mat-icon class="dd-arrow">expand_more</mat-icon></a>
+          <ul class="dropdown-menu">
+            @for (m of materials; track m.abbreviation) {
+              <li><a (click)="closeMenu()" [href]="m.url" target="_blank">{{ m.abbreviation }} — {{ m.name }}</a></li>
+            }
+          </ul>
+        </li>
+        <li><a (click)="closeMenu()" routerLink="/haulage">Haulage</a></li>
+      </ul>
+
+      <div class="nav-actions">
+        <app-language-selector />
+        <button mat-stroked-button class="nav-btn login-btn" (click)="navigateToLogin()">Login</button>
+        <button mat-flat-button class="nav-btn register-btn" (click)="navigateToRegister()">Register</button>
+      </div>
+    </div>
+  </nav>
+}
