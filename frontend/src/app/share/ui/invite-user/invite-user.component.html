@@ -4,12 +4,12 @@
   </button>
   <h2 class="mb-4 fw-bold">{{ 'Invite User' | translate }}</h2>
 
-  <form [formGroup]="inviteForm" class="invite-form">
+  <form [formGroup]="inviteForm" class="invite-form" autocomplete="on">
     <div>
       <label class="form-label"> {{ 'EMAIL ADDRESS' | translate }} <span>*</span> </label>
 
       <mat-form-field appearance="outline" class="w-100">
-        <input matInput type="email" formControlName="email" />
+        <input matInput type="email" autocomplete="email" name="email" formControlName="email" />
 
         @if (inviteForm.get('email')?.hasError('required')) {
           <mat-error>
@@ -30,7 +30,7 @@
         <label class="form-label"> {{ 'FIRST NAME' | translate }} <span>*</span> </label>
 
         <mat-form-field appearance="outline" class="w-100">
-          <input matInput formControlName="firstName" />
+          <input matInput type="text" autocomplete="given-name" name="given-name" formControlName="firstName" />
 
           @if (inviteForm.get('firstName')?.hasError('required')) {
             <mat-error>
@@ -50,7 +50,7 @@
         <label class="form-label"> {{ 'LAST NAME' | translate }} <span>*</span> </label>
 
         <mat-form-field appearance="outline" class="w-100">
-          <input matInput formControlName="lastName" />
+          <input matInput type="text" autocomplete="family-name" name="family-name" formControlName="lastName" />
 
           @if (inviteForm.get('lastName')?.hasError('required')) {
             <mat-error>

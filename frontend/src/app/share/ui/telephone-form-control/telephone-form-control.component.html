@@ -9,7 +9,7 @@
     <div class="d-flex rounded">
       <div class="col-5" [class.col-md-3]="!isHalf" [class.col-md-4]="isHalf">
         <mat-form-field appearance="fill" class="w-100 no-outline left-side">
-          <mat-select [formControl]="countryCodeControl">
+          <mat-select [formControl]="countryCodeControl" autocomplete="tel-country-code">
             <mat-select-trigger>
               @if (countryCodeControl.value; as selected) {
                 <div class="d-flex align-items-center">
@@ -30,7 +30,7 @@
 
       <div class="col-7" [class.col-md-9]="!isHalf" [class.col-md-8]="isHalf">
         <mat-form-field appearance="fill" class="w-100 no-outline bg-white right-side">
-          <input matInput placeholder="ex. 741234480" type="tel" autocomplete="tel-national" name="telephone" [formControl]="telephoneControl" />
+          <input matInput placeholder="ex. 741234480" type="tel" autocomplete="tel-national" name="tel-national" [formControl]="telephoneControl" />
         </mat-form-field>
       </div>
     </div>

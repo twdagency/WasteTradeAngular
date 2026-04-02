@@ -36,11 +36,19 @@ interface RequestToJoinModalData {
       </button>
       <h2 class="mb-5 fw-bold">Request to Join {{ data.company.name }}</h2>
 
-      <form [formGroup]="formGroup" (ngSubmit)="sendRequest()" class="request-form">
+      <form [formGroup]="formGroup" (ngSubmit)="sendRequest()" class="request-form" autocomplete="on">
         <div class="mb-5">
           <label class="form-label">{{ 'EMAIL ADDRESS' | translate }} <span class="asterisk">*</span></label>
           <mat-form-field appearance="outline" class="w-100">
-            <input matInput type="email" formControlName="email" [readonly]="!!userEmail()" class="bg-light" />
+            <input
+              matInput
+              type="email"
+              autocomplete="email"
+              name="email"
+              formControlName="email"
+              [readonly]="!!userEmail()"
+              class="bg-light"
+            />
             @if (formGroup.get('email')?.hasError('required')) {
               <mat-error>{{ 'Please complete all required fields.' | translate }}</mat-error>
             }
@@ -54,7 +62,7 @@ interface RequestToJoinModalData {
           <div class="col-md-6">
             <label class="form-label">{{ 'FIRST NAME' | translate }} <span class="asterisk">*</span></label>
             <mat-form-field appearance="outline" class="w-100">
-              <input matInput type="text" formControlName="firstName" [maxlength]="50" />
+              <input matInput type="text" autocomplete="given-name" name="given-name" formControlName="firstName" [maxlength]="50" />
               @if (formGroup.get('firstName')?.hasError('required')) {
                 <mat-error>{{ 'Please complete all required fields.' | translate }}</mat-error>
               }
@@ -67,7 +75,7 @@ interface RequestToJoinModalData {
           <div class="col-md-6">
             <label class="form-label">{{ 'LAST NAME' | translate }} <span class="asterisk">*</span></label>
             <mat-form-field appearance="outline" class="w-100">
-              <input matInput type="text" formControlName="lastName" [maxlength]="50" />
+              <input matInput type="text" autocomplete="family-name" name="family-name" formControlName="lastName" [maxlength]="50" />
               @if (formGroup.get('lastName')?.hasError('required')) {
                 <mat-error>{{ 'Please complete all required fields.' | translate }}</mat-error>
               }

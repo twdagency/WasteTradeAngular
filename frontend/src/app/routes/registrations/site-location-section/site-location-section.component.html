@@ -115,7 +115,7 @@
           <div class="col-md-12 mb-4">
             <label class="fw-bold">{{ 'STREET ADDRESS' | translate }} <span class="asterisk">*</span></label>
             <mat-form-field appearance="outline" class="w-100" [class.disable-mat-form-field]="selectPreviousAddress()">
-              <input matInput placeholder="{{ 'Type here' | translate }}" type="text" autocomplete="street-address" name="street-address" formControlName="street" />
+              <input matInput placeholder="{{ 'Type here' | translate }}" type="text" autocomplete="address-line1" name="address-line1" formControlName="street" />
               @if (formGroup.get('street')?.hasError('required')) {
                 <mat-error>{{ 'This field is required' | translate }}</mat-error>
               }
@@ -154,7 +154,7 @@
             <div class="col-md-6">
               <mat-label class="fw-bold mb-1">{{ 'COUNTRY' | translate }} <span class="asterisk">*</span></mat-label>
               <mat-form-field appearance="outline" class="w-100" [class.disable-mat-form-field]="selectPreviousAddress()">
-                <mat-select formControlName="country" placeholder="{{ 'Please Select' | translate }}">
+                <mat-select formControlName="country" placeholder="{{ 'Please Select' | translate }}" autocomplete="country">
                   @for (item of countryList; track $index; let i = $index) {
                     <mat-option color="primary" [value]="item.isoCode">{{ item.name }}</mat-option>
                   }

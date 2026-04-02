@@ -57,6 +57,7 @@ import {
   debounceTime,
   finalize,
   map,
+  merge,
   of,
   shareReplay,
   startWith,
@@ -1103,11 +1104,17 @@ export class HaulierFormComponent implements OnInit, OnDestroy {
   }
 
   readonly disableSaveDraft = toSignal(
-    this.emailFormControl!.valueChanges.pipe(
+    merge(
+      this.formGroup.get('email')!.valueChanges,
+      this.formGroup.get('password')!.valueChanges,
+    ).pipe(
       map(() => {
-        return !this.emailComponent.valueControl.value || !this.passwordComponent.valueControl.value;
+        const emailVal = this.emailComponent?.valueControl?.value;
+        const passwordVal = this.passwordComponent?.valueControl?.value;
+        return !emailVal || !passwordVal;
       }),
     ),
+    { initialValue: true },
   );
 
   readonly disableButton$ = combineLatest([

@@ -26,14 +26,14 @@
         </div>
       </div>
       <!-- material wanted -->
-      <form [formGroup]="formGroup">
+      <form [formGroup]="formGroup" autocomplete="on">
         <div class="mb-5">
           <h6 class="fw-bold mb-2 fs-24" style="max-width: 700px; width: 100%">{{ 'Material Wanted' | translate }}</h6>
           <div class="border-thin px-4 py-5 rounded rounded-4">
             <div class="col-md-9 col-12 mx-auto mb-5">
               <div class="mb-2 fw-bold">{{ 'COUNTRY WASTE REQUIRED IN*' | translate }}</div>
               <mat-form-field appearance="outline" class="w-100">
-                <mat-select formControlName="country" placeholder="{{ 'Please Select' | translate }}">
+                <mat-select formControlName="country" placeholder="{{ 'Please Select' | translate }}" autocomplete="country">
                   @for (country of countryOption; track country.isoCode) {
                     <mat-option [value]="country.isoCode" class="option-bold-label">{{ country.name }}</mat-option>
                   }

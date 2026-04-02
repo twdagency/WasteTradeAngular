@@ -3,13 +3,21 @@
     <h2 class="dialog-title mb-0">{{ (isEditMode ? 'Edit Admin' : 'Add New Admin') | translate }}</h2>
   </div>
 
-  <form [formGroup]="addAdminForm" class="add-admin-form">
+  <form [formGroup]="addAdminForm" class="add-admin-form" autocomplete="on">
     <div class="row mb-5 g-3">
       <!-- First Name -->
       <div class="col-md-6">
         <mat-label class="">{{ 'FIRST NAME' | translate }} <span class="asterisk">*</span></mat-label>
         <mat-form-field appearance="outline" class="w-100">
-          <input matInput formControlName="firstName" placeholder="{{ 'e.g. Mark' | translate }}" type="text" maxlength="50" />
+          <input
+            matInput
+            formControlName="firstName"
+            placeholder="{{ 'e.g. Mark' | translate }}"
+            type="text"
+            maxlength="50"
+            autocomplete="given-name"
+            name="given-name"
+          />
           @if (addAdminForm.get('firstName')?.hasError('required')) {
             <mat-error>{{ 'Enter a valid name, max 50 characters.' | translate }}</mat-error>
           }
@@ -23,7 +31,15 @@
       <div class="col-md-6">
         <mat-label class="">{{ 'LAST NAME' | translate }} <span class="asterisk">*</span></mat-label>
         <mat-form-field appearance="outline" class="w-100">
-          <input matInput formControlName="lastName" placeholder="{{ 'e.g. Smith' | translate }}" type="text" maxlength="50" />
+          <input
+            matInput
+            formControlName="lastName"
+            placeholder="{{ 'e.g. Smith' | translate }}"
+            type="text"
+            maxlength="50"
+            autocomplete="family-name"
+            name="family-name"
+          />
           @if (addAdminForm.get('lastName')?.hasError('required')) {
             <mat-error>{{ 'Enter a valid name, max 50 characters.' | translate }}</mat-error>
           }
@@ -38,7 +54,7 @@
     <div class="col-md-12 mb-5">
       <mat-label class="">{{ 'EMAIL ADDRESS' | translate }} <span class="asterisk">*</span></mat-label>
       <mat-form-field appearance="outline" class="w-100">
-        <input matInput type="email" formControlName="email" placeholder="{{ 'sample@gmail.com' | translate }}" />
+        <input matInput type="email" autocomplete="email" name="email" formControlName="email" placeholder="{{ 'sample@gmail.com' | translate }}" />
         @if (addAdminForm.get('email')?.hasError('required')) {
           <mat-error>{{ 'This field is required' | translate }}</mat-error>
         }

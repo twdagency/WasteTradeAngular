@@ -8,11 +8,11 @@
   </div>
 
   <mat-dialog-content class="overflow-x-hidden">
-    <form [formGroup]="formGroup">
+    <form [formGroup]="formGroup" autocomplete="on">
       <div class="col-md-12 mb-4">
         <label class="fw-bold fs-16">{{ 'STREET ADDRESS' | translate }}*</label>
         <mat-form-field appearance="outline" class="w-100">
-          <input matInput placeholder="{{ 'Type here' | translate }}" type="text" formControlName="addressLine1" />
+          <input matInput placeholder="{{ 'Type here' | translate }}" type="text" autocomplete="address-line1" name="address-line1" formControlName="addressLine1" />
           @if (formGroup.get('addressLine1')?.hasError('required')) {
             <mat-error>{{ 'This field is required. Please complete it before saving.' | translate }}</mat-error>
           }
@@ -25,7 +25,7 @@
         <div class="col-md-6">
           <mat-label class="fw-bold mb-1 fs-16">{{ 'POSTCODE' | translate }}*</mat-label>
           <mat-form-field appearance="outline" class="w-100">
-            <input matInput placeholder="{{ 'Type here' | translate }}" type="text" formControlName="postalCode" />
+            <input matInput placeholder="{{ 'Type here' | translate }}" type="text" autocomplete="postal-code" name="postal-code" formControlName="postalCode" />
             @if (formGroup.get('postalCode')?.hasError('required')) {
               <mat-error>{{ 'This field is required. Please complete it before saving.' | translate }}</mat-error>
             }
@@ -37,7 +37,7 @@
         <div class="col-md-6">
           <mat-label class="fw-bold mb-1 fs-16">{{ 'CITY' | translate }}*</mat-label>
           <mat-form-field appearance="outline" class="w-100">
-            <input matInput placeholder="{{ 'Type here' | translate }}" type="text" formControlName="city" />
+            <input matInput placeholder="{{ 'Type here' | translate }}" type="text" autocomplete="address-level2" name="address-level2" formControlName="city" />
             @if (formGroup.get('city')?.hasError('required')) {
               <mat-error>{{ 'This field is required. Please complete it before saving.' | translate }}</mat-error>
             }
@@ -52,7 +52,7 @@
         <div class="col-md-6">
           <mat-label class="fw-bold mb-1 fs-16">{{ 'COUNTY / STATE / REGION' | translate }}*</mat-label>
           <mat-form-field appearance="outline" class="w-100">
-            <input matInput placeholder="{{ 'Type here' | translate }}" type="text" formControlName="stateProvince" />
+            <input matInput placeholder="{{ 'Type here' | translate }}" type="text" autocomplete="address-level1" name="address-level1" formControlName="stateProvince" />
             @if (formGroup.get('stateProvince')?.hasError('required')) {
               <mat-error>{{ 'This field is required. Please complete it before saving.' | translate }}</mat-error>
             }
@@ -64,7 +64,7 @@
         <div class="col-md-6">
           <mat-label class="fw-bold mb-1 fs-16">{{ 'COUNTRY' | translate }}*</mat-label>
           <mat-form-field appearance="outline" class="w-100">
-            <mat-select formControlName="country" placeholder="{{ 'Please Select' | translate }}">
+            <mat-select formControlName="country" placeholder="{{ 'Please Select' | translate }}" autocomplete="country">
               @for (item of countryList; track $index; let i = $index) {
                 <mat-option color="primary" [value]="item.isoCode">{{ item.name }}</mat-option>
               }
@@ -79,7 +79,7 @@
         <div class="col-md-6 mb-4">
           <mat-label class="fw-bold mb-1 fs-16">{{ 'COMPANY EMAIL' | translate }}*</mat-label>
           <mat-form-field appearance="outline" class="w-100">
-            <input matInput placeholder="{{ 'Type here' | translate }}" type="text" formControlName="email" />
+            <input matInput placeholder="{{ 'Type here' | translate }}" type="email" autocomplete="email" name="email" formControlName="email" />
             @if (formGroup.get('email')?.hasError('required')) {
               <mat-error>{{ 'This field is required. Please complete it before saving.' | translate }}</mat-error>
             }
