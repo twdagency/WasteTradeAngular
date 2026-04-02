@@ -41,7 +41,7 @@ export async function uploadToStrapi(cfg, fileUrlOrBuffer, filename) {
     form.append('files', Buffer.from(res.data), { filename: filename || `file${ext}` });
   }
 
-  const response = await axios.post(`${cfg.baseUrl}/upload`, form, {
+  const response = await axios.post(`${cfg.baseUrl}/api/upload`, form, {
     headers: { ...headers, ...form.getHeaders() },
     maxBodyLength: Infinity,
     maxContentLength: Infinity,
@@ -92,11 +92,12 @@ export async function ensureAuthor(cfg, name, cache) {
   const list = await axios.get(`${cfg.baseUrl}/api/authors?filters[name][$eq]=${encodeURIComponent(name)}`, { headers });
   const existing = list.data?.data?.[0];
   if (existing) {
-    cache.set(name, existing.id);
-    return existing.id;
+    const id = existing.documentId ?? existing.id;
+    cache.set(name, id);
+    return id;
   }
   const created = await createStrapiEntry(cfg, 'authors', { name });
-  const id = created?.id ?? created?.documentId;
+  const id = created?.documentId ?? created?.id;
   cache.set(name, id);
   return id;
 }
@@ -110,11 +111,12 @@ export async function ensureCategory(cfg, name, cache) {
   const list = await axios.get(`${cfg.baseUrl}/api/categories?filters[name][$eq]=${encodeURIComponent(name)}`, { headers });
   const existing = list.data?.data?.[0];
   if (existing) {
-    cache.set(name, existing.id);
-    return existing.id;
+    const id = existing.documentId ?? existing.id;
+    cache.set(name, id);
+    return id;
   }
   const created = await createStrapiEntry(cfg, 'categories', { name });
-  const id = created?.id ?? created?.documentId;
+  const id = created?.documentId ?? created?.id;
   cache.set(name, id);
   return id;
 }

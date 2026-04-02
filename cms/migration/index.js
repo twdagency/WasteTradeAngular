@@ -193,7 +193,10 @@ async function mapWpItemToStrapi(wpItem, strapiType, strapiCfg) {
       fileId = mediaCache.get(url)?.id ?? null;
     }
     if (!fileId && wpItem._links?.['wp:attachment']?.[0]?.href) {
-      const attRes = await axios.get(wpItem._links['wp:attachment'][0].href, { timeout: 10000 });
+      const wpHeaders = cfg.wpAuth
+        ? { Authorization: `Basic ${Buffer.from(cfg.wpAuth).toString('base64')}` }
+        : {};
+      const attRes = await axios.get(wpItem._links['wp:attachment'][0].href, { headers: wpHeaders, timeout: 10000 });
       const att = Array.isArray(attRes.data) ? attRes.data[0] : attRes.data;
       if (att?.source_url) {
         const idRes = await resolveMediaIds(cfg.wpUrl, [att.id], cfg.wpAuth);
