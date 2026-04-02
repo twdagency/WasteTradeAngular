@@ -22,6 +22,7 @@ import { FooterComponent } from '../../layout/footer/footer.component';
 import { LanguageSelectorComponent } from '../../layout/common/language-selector/language-selector.component';
 import { SeoService } from 'app/services/seo.service';
 import { ROUTES_WITH_SLASH } from 'app/constants/route.const';
+import { addLanguagePrefix } from 'app/utils/language.utils';
 
 interface MaterialItem {
   name: string;
@@ -127,6 +128,7 @@ export class HomeComponent implements OnInit, OnDestroy {
   showBackToTop = signal(false);
   private scrollHandler: (() => void) | null = null;
   private observer: IntersectionObserver | null = null;
+  private counterObserver: IntersectionObserver | null = null;
   private countersAnimated = false;
 
   constructor() {
@@ -168,19 +170,19 @@ export class HomeComponent implements OnInit, OnDestroy {
     const statsEl = host.querySelector('.hero-stats');
     if (!statsEl) return;
 
-    const counterObserver = new IntersectionObserver(
+    this.counterObserver = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
           if (entry.isIntersecting && !this.countersAnimated) {
             this.countersAnimated = true;
             this.heroStats.forEach((stat) => this.countUp(stat.current, stat.target, 2000));
-            counterObserver.unobserve(entry.target);
+            this.counterObserver!.unobserve(entry.target);
           }
         });
       },
       { threshold: 0.3 }
     );
-    counterObserver.observe(statsEl);
+    this.counterObserver.observe(statsEl);
   }
 
   private countUp(current: WritableSignal<number>, target: number, duration: number) {
@@ -529,6 +531,7 @@ export class HomeComponent implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     this.observer?.disconnect();
+    this.counterObserver?.disconnect();
     if (this.scrollHandler && isPlatformBrowser(this.platformId)) {
       window.removeEventListener('scroll', this.scrollHandler);
     }
@@ -553,10 +556,10 @@ export class HomeComponent implements OnInit, OnDestroy {
   }
 
   navigateToRegister() {
-    this.router.navigateByUrl('/create-account');
+    this.router.navigateByUrl(addLanguagePrefix('/create-account'));
   }
 
   navigateToHaulierRegister() {
-    this.router.navigateByUrl('/create-haulier-account');
+    this.router.navigateByUrl(addLanguagePrefix('/create-haulier-account'));
   }
 }
