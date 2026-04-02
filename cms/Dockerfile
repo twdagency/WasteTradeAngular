@@ -22,5 +22,5 @@ COPY --from=deps /app/node_modules ./node_modules
 COPY --from=build /app/dist ./dist
 COPY . .
 
-EXPOSE 1337 8080
+EXPOSE 1337
 CMD ["npm", "run", "start"]
