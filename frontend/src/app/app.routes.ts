@@ -599,6 +599,51 @@ const appRoutes: Routes = [
       import('./routes/request-success/request-success.component').then((m) => m.RequestSuccessComponent),
     data: { role: 'trader' },
   },
+
+  // CMS pages
+  {
+    path: ROUTES.vacancies,
+    loadComponent: () =>
+      import('./routes/cms/vacancies/vacancies-archive/vacancies-archive.component').then(
+        (m) => m.VacanciesArchiveComponent,
+      ),
+  },
+  {
+    path: `${ROUTES.vacancies}/:slug`,
+    loadComponent: () =>
+      import('./routes/cms/vacancies/vacancy-single/vacancy-single.component').then(
+        (m) => m.VacancySingleComponent,
+      ),
+  },
+  {
+    path: ROUTES.news,
+    loadComponent: () =>
+      import('./routes/cms/news/news-archive/news-archive.component').then(
+        (m) => m.NewsArchiveComponent,
+      ),
+  },
+  {
+    path: `${ROUTES.news}/:slug`,
+    loadComponent: () =>
+      import('./routes/cms/news/news-single/news-single.component').then(
+        (m) => m.NewsSingleComponent,
+      ),
+  },
+  {
+    path: ROUTES.resources,
+    loadComponent: () =>
+      import('./routes/cms/resources/resources-archive/resources-archive.component').then(
+        (m) => m.ResourcesArchiveComponent,
+      ),
+  },
+  {
+    path: `${ROUTES.resources}/:slug`,
+    loadComponent: () =>
+      import('./routes/cms/resources/resource-single/resource-single.component').then(
+        (m) => m.ResourceSingleComponent,
+      ),
+  },
+
   { path: '**', pathMatch: 'full', redirectTo: '' },
 ];
 

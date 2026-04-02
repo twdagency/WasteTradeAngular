@@ -40,6 +40,9 @@ export const ROUTES = {
   landingPage: 'landing-page',
   requestSuccessHaulier: 'request-success-haulier',
   requestSuccessTrader: 'request-success-trader',
+  vacancies: 'vacancies',
+  resources: 'resources',
+  news: 'news',
 };
 
 const ROUTES_BASE = {
@@ -82,6 +85,9 @@ const ROUTES_BASE = {
   landingPage: '/landing-page',
   requestSuccessHaulier: '/request-success-haulier',
   requestSuccessTrader: '/request-success-trader',
+  vacancies: '/vacancies',
+  resources: '/resources',
+  news: '/news',
 };
 
 // Create a Proxy to automatically add language prefix to all routes

@@ -1,0 +1,86 @@
+<section class="news-hero">
+  <div class="container">
+    <h1>News</h1>
+  </div>
+</section>
+
+<section class="news-content">
+  <div class="container">
+    <div class="category-filter">
+      <button
+        class="category-btn"
+        [class.active]="!activeCategory()"
+        (click)="onCategoryChange(undefined)"
+      >
+        All Articles
+      </button>
+      @for (cat of categories(); track cat.id) {
+        <button
+          class="category-btn"
+          [class.active]="activeCategory() === cat.name"
+          (click)="onCategoryChange(cat.name)"
+        >
+          {{ cat.name }}
+        </button>
+      }
+    </div>
+
+    @if (loading()) {
+      <div class="loading-state">
+        <p>Loading articles...</p>
+      </div>
+    } @else if (articles().length === 0) {
+      <div class="empty-state">
+        <h2>No articles found</h2>
+        <p>Check back soon for new content.</p>
+      </div>
+    } @else {
+      <div class="articles-grid">
+        @for (article of articles(); track article.id) {
+          <a [routerLink]="['/', routes.news, article.slug]" class="article-card">
+            @if (getImageUrl(article)) {
+              <div class="article-card__image">
+                <img [src]="getImageUrl(article)" [alt]="article.title" loading="lazy" />
+              </div>
+            }
+            <div class="article-card__body">
+              @if (article.category) {
+                <span class="article-card__category">{{ article.category.name }}</span>
+              }
+              <h3 class="article-card__title">{{ article.title }}</h3>
+              @if (article.excerpt) {
+                <p class="article-card__excerpt">{{ article.excerpt }}</p>
+              }
+              <div class="article-card__footer">
+                <time class="article-card__date">{{ formatDate(article) }}</time>
+                <span class="article-card__cta">Read More →</span>
+              </div>
+            </div>
+          </a>
+        }
+      </div>
+
+      @if (totalPages > 1) {
+        <div class="pagination">
+          <button
+            class="pagination__btn"
+            [disabled]="currentPage() === 1"
+            (click)="onPageChange(currentPage() - 1)"
+          >
+            ← Previous
+          </button>
+          <span class="pagination__info">Page {{ currentPage() }} of {{ totalPages }}</span>
+          <button
+            class="pagination__btn"
+            [disabled]="currentPage() === totalPages"
+            (click)="onPageChange(currentPage() + 1)"
+          >
+            Next →
+          </button>
+        </div>
+      }
+    }
+  </div>
+</section>
+
+<app-footer />

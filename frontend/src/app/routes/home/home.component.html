@@ -13,8 +13,8 @@
       <li class="nav-dropdown">
         <a href="javascript:void(0)">Marketplace <mat-icon class="dd-arrow">expand_more</mat-icon></a>
         <ul class="dropdown-menu">
-          <li><a (click)="closeMenu()" routerLink="/marketplace">Buy Materials</a></li>
-          <li><a (click)="closeMenu()" routerLink="/marketplace/wanted">Wanted Materials</a></li>
+          <li><a (click)="closeMenu()" routerLink="/buy">Buy Materials</a></li>
+          <li><a (click)="closeMenu()" routerLink="/wanted">Wanted Materials</a></li>
         </ul>
       </li>
       <li class="nav-dropdown">
@@ -68,7 +68,7 @@
       <button mat-flat-button class="hero-btn accent" (click)="navigateToHaulierRegister()">
         <mat-icon>local_shipping</mat-icon> Register as Haulier
       </button>
-      <button mat-stroked-button class="hero-btn ghost" routerLink="/marketplace">
+      <button mat-stroked-button class="hero-btn ghost" routerLink="/buy">
         Explore Marketplace
       </button>
     </div>
@@ -115,7 +115,7 @@
         <li>Year-round access to thousands of tonnes of materials</li>
         <li>Filter by precise specifications to find suitable listings</li>
       </ul>
-      <button mat-flat-button class="bs-btn" routerLink="/marketplace">Buy Material</button>
+      <button mat-flat-button class="bs-btn" routerLink="/buy">Buy Material</button>
     </div>
   </div>
   <div class="bs-card sell-card">
@@ -154,8 +154,8 @@
       }
     </div>
     <div class="eco-ctas animate-on-scroll">
-      <button mat-flat-button class="primary-btn" routerLink="/marketplace">Buy Materials</button>
-      <button mat-stroked-button class="secondary-btn" routerLink="/marketplace/wanted">View Wanted Materials</button>
+      <button mat-flat-button class="primary-btn" routerLink="/buy">Buy Materials</button>
+      <button mat-stroked-button class="secondary-btn" routerLink="/wanted">View Wanted Materials</button>
     </div>
   </div>
 </section>
@@ -246,8 +246,8 @@
   </div>
 
   <div class="listings-ctas animate-on-scroll">
-    <button mat-flat-button class="primary-btn" routerLink="/marketplace">Buy Materials</button>
-    <button mat-stroked-button class="secondary-btn" routerLink="/marketplace/wanted">View Wanted Materials</button>
+    <button mat-flat-button class="primary-btn" routerLink="/buy">Buy Materials</button>
+    <button mat-stroked-button class="secondary-btn" routerLink="/wanted">View Wanted Materials</button>
   </div>
 </section>
 
