@@ -19,15 +19,17 @@ type MulterCompatibleResponse = any;
 
 @injectable({ scope: BindingScope.TRANSIENT })
 export class S3WrapperService {
+    private bucketReady: Promise<void>;
+
     constructor(
         @inject(AwsS3Bindings.AwsS3Provider)
         private s3: AWS.S3,
         @repository(FileRepository)
         public fileRepository: FileRepository,
     ) {
-        if (AWS_S3_BUCKET) {
-            this.ensureBucket().catch(() => {});
-        }
+        this.bucketReady = AWS_S3_BUCKET
+            ? this.ensureBucket().catch(() => {})
+            : Promise.resolve();
     }
 
     private async ensureBucket(): Promise<void> {
@@ -74,6 +76,7 @@ export class S3WrapperService {
     }
 
     public async uploadFileToS3(fileKey: string, originalFileName: string, fileBuffer: Buffer): Promise<string> {
+        await this.bucketReady;
 
         const mimeType: string | false = mime.lookup(originalFileName);
         const contentType: string = mimeType || 'application/octet-stream';

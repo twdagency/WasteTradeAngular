@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit, inject, signal } from '@angular/core';
+import { Component, OnInit, OnDestroy, inject, signal } from '@angular/core';
 import { ActivatedRoute, RouterModule } from '@angular/router';
 import { CmsService } from 'app/services/cms.service';
 import { SeoService } from 'app/services/seo.service';
@@ -7,6 +7,7 @@ import { CmsArticle } from 'app/types/cms.types';
 import { StrapiBlocksPipe } from 'app/share/pipes/strapi-blocks.pipe';
 import { ROUTES } from 'app/constants/route.const';
 import { FooterComponent } from 'app/layout/footer/footer.component';
+import { Subscription, switchMap } from 'rxjs';
 
 @Component({
   selector: 'app-news-single',
@@ -15,10 +16,11 @@ import { FooterComponent } from 'app/layout/footer/footer.component';
   templateUrl: './news-single.component.html',
   styleUrl: './news-single.component.scss',
 })
-export class NewsSingleComponent implements OnInit {
+export class NewsSingleComponent implements OnInit, OnDestroy {
   private readonly route = inject(ActivatedRoute);
   private readonly cms = inject(CmsService);
   private readonly seo = inject(SeoService);
+  private paramSub?: Subscription;
 
   article = signal<CmsArticle | null>(null);
   relatedArticles = signal<CmsArticle[]>([]);
@@ -27,9 +29,21 @@ export class NewsSingleComponent implements OnInit {
   routes = ROUTES;
 
   ngOnInit(): void {
-    const slug = this.route.snapshot.paramMap.get('slug');
-    if (slug) {
-      this.cms.getArticleBySlug(slug).subscribe({
+    this.paramSub = this.route.paramMap
+      .pipe(switchMap((params) => {
+        const slug = params.get('slug');
+        this.loading.set(true);
+        this.notFound.set(false);
+        this.article.set(null);
+        this.relatedArticles.set([]);
+        if (!slug) {
+          this.notFound.set(true);
+          this.loading.set(false);
+          return [];
+        }
+        return this.cms.getArticleBySlug(slug);
+      }))
+      .subscribe({
         next: (article) => {
           if (article) {
             this.article.set(article);
@@ -50,13 +64,16 @@ export class NewsSingleComponent implements OnInit {
           this.loading.set(false);
         },
       });
-    }
+  }
+
+  ngOnDestroy(): void {
+    this.paramSub?.unsubscribe();
   }
 
   private loadRelated(article: CmsArticle): void {
     const category = article.category?.name;
     if (category) {
-      this.cms.getArticles(1, 3, category).subscribe({
+      this.cms.getArticles(1, 4, category).subscribe({
         next: (res) => {
           this.relatedArticles.set(res.data.filter((a) => a.id !== article.id).slice(0, 3));
         },

@@ -22,17 +22,19 @@ export class StrapiBlocksPipe implements PipeTransform {
         return `<p>${this.renderInlineNodes(block.children)}</p>`;
       case 'heading':
         return `<h${block.level}>${this.renderInlineNodes(block.children)}</h${block.level}>`;
-      case 'list':
+      case 'list': {
         const tag = block.format === 'ordered' ? 'ol' : 'ul';
         const items = block.children
           .map((item) => `<li>${this.renderInlineNodes(item.children)}</li>`)
           .join('');
         return `<${tag}>${items}</${tag}>`;
+      }
       case 'image': {
-        const url = block.image?.url?.startsWith('http')
+        const rawUrl = block.image?.url?.startsWith('http')
           ? block.image.url
           : `${environment.cmsUrl}${block.image?.url}`;
-        const alt = block.image?.alternativeText || '';
+        const url = this.sanitizeUrl(rawUrl);
+        const alt = this.escapeAttr(block.image?.alternativeText || '');
         return `<figure><img src="${url}" alt="${alt}" loading="lazy" /></figure>`;
       }
       case 'quote':
@@ -51,8 +53,9 @@ export class StrapiBlocksPipe implements PipeTransform {
 
   private renderInlineNode(node: StrapiInlineNode): string {
     if (node.type === 'link') {
-      const children = node.children ? this.renderInlineNodes(node.children) : node.text || '';
-      return `<a href="${node.url}" target="_blank" rel="noopener noreferrer">${children}</a>`;
+      const href = this.sanitizeUrl(node.url || '');
+      const children = node.children ? this.renderInlineNodes(node.children) : this.escapeHtml(node.text || '');
+      return `<a href="${href}" target="_blank" rel="noopener noreferrer">${children}</a>`;
     }
 
     let text = this.escapeHtml(node.text || '');
@@ -62,6 +65,28 @@ export class StrapiBlocksPipe implements PipeTransform {
     if (node.strikethrough) text = `<s>${text}</s>`;
     if (node.code) text = `<code>${text}</code>`;
     return text;
+  }
+
+  private sanitizeUrl(url: string): string {
+    const escaped = this.escapeAttr(url);
+    try {
+      const parsed = new URL(escaped, window.location.origin);
+      if (parsed.protocol === 'http:' || parsed.protocol === 'https:' || parsed.protocol === 'mailto:') {
+        return escaped;
+      }
+    } catch {
+      // malformed URL
+    }
+    return '';
+  }
+
+  private escapeAttr(text: string): string {
+    return text
+      .replace(/&/g, '&amp;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#39;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;');
   }
 
   private escapeHtml(text: string): string {

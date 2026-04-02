@@ -22,7 +22,8 @@ export class CmsService {
   getArticles(page = 1, pageSize = 25, category?: string): Observable<StrapiResponse<CmsArticle>> {
     let params = new HttpParams()
       .set('populate', '*')
-      .set('sort', 'publishedDate:desc,createdAt:desc')
+      .set('sort[0]', 'publishedDate:desc')
+      .set('sort[1]', 'createdAt:desc')
       .set('pagination[page]', page.toString())
       .set('pagination[pageSize]', pageSize.toString());
 
