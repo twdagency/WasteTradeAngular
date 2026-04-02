@@ -4,6 +4,7 @@ export interface BannerConfig {
 
 export interface BannerMessages {
     incompleteOnboarding: BannerConfig;
+    missingDocuments: BannerConfig;
     verificationPending: BannerConfig;
     verificationFailed: BannerConfig;
     documentExpiring: BannerConfig;
@@ -17,6 +18,9 @@ export interface BannerMessages {
 export const BANNER_MESSAGES: BannerMessages = {
     incompleteOnboarding: {
         message: 'Complete account (all onboarding steps are not complete)',
+    },
+    missingDocuments: {
+        message: 'Upload your documents to complete your account verification',
     },
     verificationPending: {
         message: 'Your account is being verified',

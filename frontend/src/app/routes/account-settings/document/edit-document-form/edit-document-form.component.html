@@ -27,7 +27,7 @@
           (filesAdded)="handleFileReady($event, 'document', CompanyDocumentType.EnvironmentalPermit)"
           (uploadValid)="documentValid.set($event)"
           [notAcceptable]="['.doc', '.xls', '.xlsx']"
-          [expiryDateMode]="'optional'"
+          [expiryDateMode]="'required'"
           [fileList]="environmentPermitDocuments"
           [maxFileSize]="5 * 1024 * 1024"
         ></app-file-upload>
@@ -41,7 +41,7 @@
           (filesAdded)="handleFileReady($event, 'document', CompanyDocumentType.WasteExemption)"
           (uploadValid)="documentValid.set($event)"
           [notAcceptable]="['.doc', '.xls', '.xlsx']"
-          [expiryDateMode]="'optional'"
+          [expiryDateMode]="'required'"
           [fileList]="wasteExemptionDocuments"
           [maxFileSize]="5 * 1024 * 1024"
         ></app-file-upload>
@@ -66,7 +66,7 @@
           (filesAdded)="handleFileReady($event, 'document', 'other')"
           (uploadValid)="documentValid.set($event)"
           [notAcceptable]="['.doc', '.xls', '.xlsx']"
-          [expiryDateMode]="'optional'"
+          [expiryDateMode]="'required'"
           [fileList]="otherDocuments"
           [maxFileSize]="5 * 1024 * 1024"
         ></app-file-upload>
@@ -95,7 +95,7 @@
             (filesAdded)="handleFileReady($event, 'licence', CompanyDocumentType.WasteCarrierLicense)"
             [maxFile]="1"
             (uploadValid)="wasteLicenceValid.set($event)"
-            [expiryDateMode]="'optional'"
+            [expiryDateMode]="'required'"
             [notAcceptable]="['.doc', '.xls', '.xlsx']"
             [fileList]="wasteCarrierLicenseDocuments"
           ></app-file-upload>

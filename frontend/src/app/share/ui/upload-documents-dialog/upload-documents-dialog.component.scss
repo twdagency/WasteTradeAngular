@@ -1,0 +1,32 @@
+.dialog-wrapper {
+  padding: 32px;
+  max-height: 80vh;
+  overflow-y: auto;
+}
+
+.close-button {
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background-color: #1d1d1b;
+  color: #fff;
+
+  mat-icon {
+    font-size: 18px;
+    width: 18px;
+    height: 18px;
+  }
+}
+
+.upload-section {
+  padding-left: 32px;
+}
+
+.action-button {
+  text-transform: uppercase;
+  min-width: 120px;
+}

@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, input } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { Router, RouterModule } from '@angular/router';
 import { ROUTES_WITH_SLASH } from 'app/constants/route.const';
@@ -14,7 +14,11 @@ import { FooterComponent } from '../footer/footer.component';
 export class UnAuthLayoutComponent {
   private router = inject(Router);
 
-  goHome() {
-    this.router.navigateByUrl(ROUTES_WITH_SLASH.home);
+  /** When true (e.g. company onboarding steps), logo navigates to Buy instead of home. */
+  logoToBuy = input(false);
+
+  onLogoClick() {
+    const url = this.logoToBuy() ? ROUTES_WITH_SLASH.buy : ROUTES_WITH_SLASH.home;
+    this.router.navigateByUrl(url);
   }
 }

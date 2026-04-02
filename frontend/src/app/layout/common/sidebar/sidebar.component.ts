@@ -363,8 +363,8 @@ export class SidebarComponent {
     this.router.navigateByUrl(newLink);
   }
 
-  toLandingPage() {
-    this.router.navigate([ROUTES_WITH_SLASH.landingPage]);
+  goToBuyPage() {
+    this.router.navigateByUrl(ROUTES_WITH_SLASH.buy);
   }
 
   onComingSoon() {

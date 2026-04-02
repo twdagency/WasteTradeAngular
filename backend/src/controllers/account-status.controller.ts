@@ -42,6 +42,7 @@ export class AccountStatusController {
                                         'verification_pending',
                                         'verification_failed',
                                         'document_expiring',
+                                        'missing_documents',
                                     ],
                                     example: 'incomplete_onboarding',
                                 },

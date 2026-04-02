@@ -1,0 +1,108 @@
+<div class="dialog-wrapper">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h4 class="fw-bold mb-0">{{ 'Upload Your Documents' | translate }}</h4>
+    <div class="close-button" (click)="onClose()">
+      <mat-icon>close</mat-icon>
+    </div>
+  </div>
+
+  <div class="mb-4">
+    <label class="fw-bold d-block mb-3">
+      {{ 'WHICH PERMIT/LICENCE DO YOU HAVE?' | translate }}
+      <span class="asterisk">*</span>
+    </label>
+
+    <div class="d-flex flex-column">
+      <mat-checkbox
+        class="bold-label"
+        [checked]="environmentalPermit()"
+        (change)="environmentalPermit.set($event.checked)"
+      >
+        {{ 'Environmental Permit' | translate }}
+      </mat-checkbox>
+
+      @if (environmentalPermit()) {
+        <div class="mb-4 upload-section">
+          <h6 class="mt-2 mb-2 fw-bold">{{ 'UPLOAD DOCUMENT' | translate }} <span class="asterisk">*</span></h6>
+          <app-file-upload
+            [maxFile]="6"
+            [notAcceptable]="['.doc', '.docx', '.xls', '.xlsx']"
+            [expiryDateMode]="'required'"
+            (filesAdded)="onFilesAdded($event, CompanyDocumentType.EnvironmentalPermit)"
+          ></app-file-upload>
+          <p class="small text-muted">{{ 'Accepted file types: jpg, png, jpeg, pdf, Max. file size: 25 MB, Max. files: 6' | translate }}</p>
+        </div>
+      }
+
+      <mat-checkbox
+        class="bold-label"
+        [checked]="wasteExemptions()"
+        (change)="wasteExemptions.set($event.checked)"
+      >
+        {{ 'Waste Exemptions' | translate }}
+      </mat-checkbox>
+
+      @if (wasteExemptions()) {
+        <div class="mb-4 upload-section">
+          <h6 class="mt-2 mb-2 fw-bold">{{ 'UPLOAD DOCUMENT' | translate }} <span class="asterisk">*</span></h6>
+          <app-file-upload
+            [maxFile]="6"
+            [notAcceptable]="['.doc', '.docx', '.xls', '.xlsx']"
+            [expiryDateMode]="'required'"
+            (filesAdded)="onFilesAdded($event, CompanyDocumentType.WasteExemption)"
+          ></app-file-upload>
+          <p class="small text-muted">{{ 'Accepted file types: jpg, png, jpeg, pdf, Max. file size: 25 MB, Max. files: 6' | translate }}</p>
+        </div>
+      }
+
+      <mat-checkbox
+        class="bold-label"
+        [checked]="other()"
+        (change)="other.set($event.checked)"
+      >
+        {{ 'Other' | translate }}
+      </mat-checkbox>
+
+      @if (other()) {
+        <div class="mb-4 upload-section">
+          <label class="fw-bold">{{ 'DOCUMENT DESCRIPTION' | translate }} <span class="asterisk">*</span></label>
+          <mat-form-field appearance="outline" class="w-100">
+            <input matInput placeholder="{{ 'Type here' | translate }}" type="text" [formControl]="otherDocumentType" />
+            @if (otherDocumentType.hasError('required')) {
+              <mat-error>{{ 'This field is required' | translate }}</mat-error>
+            }
+          </mat-form-field>
+
+          <h6 class="mt-2 mb-2 fw-bold">{{ 'UPLOAD DOCUMENT' | translate }} <span class="asterisk">*</span></h6>
+          <app-file-upload
+            [maxFile]="6"
+            [notAcceptable]="['.doc', '.docx', '.xls', '.xlsx']"
+            [expiryDateMode]="'required'"
+            (filesAdded)="onFilesAdded($event, 'other')"
+          ></app-file-upload>
+          <p class="small text-muted">{{ 'Accepted file types: jpg, png, jpeg, pdf, Max. file size: 25 MB, Max. files: 6' | translate }}</p>
+        </div>
+      }
+    </div>
+  </div>
+
+  <div class="d-flex gap-3 justify-content-end">
+    <button
+      mat-stroked-button
+      class="action-button border-primary primary text-uppercase fw-bold"
+      [disabled]="submitting()"
+      (click)="onClose()"
+    >
+      {{ 'Cancel' | translate }}
+    </button>
+    <button
+      mat-flat-button
+      class="action-button text-uppercase fw-bold"
+      [disabled]="!isValid() || submitting()"
+      [class.overlay-spinner]="submitting()"
+      (click)="onSubmit()"
+    >
+      {{ 'Submit' | translate }}
+    </button>
+  </div>
+</div>

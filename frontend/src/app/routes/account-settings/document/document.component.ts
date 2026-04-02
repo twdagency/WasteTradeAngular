@@ -7,7 +7,8 @@ import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
 import { MatRadioModule } from '@angular/material/radio';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import { TranslateModule } from '@ngx-translate/core';
+import { marker as localized$ } from '@colsen1991/ngx-translate-extract-marker';
+import { TranslateModule, TranslatePipe } from '@ngx-translate/core';
 import { CompanyDocumentType, User } from 'app/models';
 import { IDocument } from 'app/models/listing-material-detail.model';
 import { AnalyticsService } from 'app/services/analytics.service';
@@ -16,11 +17,17 @@ import { PermissionDisableDirective, PermissionTooltipDirective } from 'app/shar
 import { ExpiryDatePipe } from 'app/share/pipes/expiry-date.pipe';
 import { getOfferStatusColor } from 'app/share/utils/offer';
 import { EditDocumentFormComponent } from './edit-document-form/edit-document-form.component';
+import {
+  displayUploadedFileNameFromUrl,
+  extractFileNameFromUrl,
+  stripGeneratedUploadPrefix as stripUploadKeyPrefix,
+} from './document-filename.utils';
 
 @Component({
   selector: 'app-document',
   templateUrl: './document.component.html',
   styleUrl: './document.component.scss',
+  providers: [TranslatePipe],
   imports: [
     MatIconModule,
     MatButtonModule,
@@ -54,6 +61,7 @@ export class DocumentComponent implements OnChanges {
   authService = inject(AuthService);
   dialog = inject(MatDialog);
   analyticsService = inject(AnalyticsService);
+  private translate = inject(TranslatePipe);
 
   constructor() {
     this.user = toSignal(this.authService.user$);
@@ -75,14 +83,19 @@ export class DocumentComponent implements OnChanges {
       ...new Set(
         docs
           .filter((d) => d.documentType !== CompanyDocumentType.WasteCarrierLicense)
-          .map((d) =>
-            d.documentType
-              .split('_')
-              .map((token) => token[0]?.toUpperCase() + token.slice(1))
-              .join(' '),
-          ),
+          .map((d) => this.permitSummaryLabelForType(d.documentType)),
       ),
     ].join(', ');
+  }
+
+  private permitSummaryLabelForType(documentType: string): string {
+    if (documentType === CompanyDocumentType.EnvironmentalPermit || documentType === CompanyDocumentType.WasteExemption) {
+      return documentType
+        .split('_')
+        .map((token) => token[0]?.toUpperCase() + token.slice(1))
+        .join(' ');
+    }
+    return this.translate.transform(localized$('Other Document'));
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -121,7 +134,33 @@ export class DocumentComponent implements OnChanges {
   }
 
   extractFileName(url: string): string {
-    return url.split('/').pop() || '';
+    return extractFileNameFromUrl(url);
+  }
+
+  stripGeneratedUploadPrefix(fileName: string): string {
+    return stripUploadKeyPrefix(fileName);
+  }
+
+  displayUploadedFileName(url: string): string {
+    return displayUploadedFileNameFromUrl(url);
+  }
+
+  /** Custom "other" permit text from API (documentType / documentName), excluding stored file name. */
+  otherDocumentDescription(item: IDocument): string {
+    const type = String(item.documentType ?? '').trim();
+    const name = String(item.documentName ?? '').trim();
+    const urlFile = this.displayUploadedFileName(item.documentUrl).toLowerCase();
+
+    if (type && name && type === name) {
+      return type;
+    }
+    if (type) {
+      return type;
+    }
+    if (name && name.toLowerCase() !== urlFile) {
+      return name;
+    }
+    return type || name;
   }
 
   openEditDocuments() {
@@ -140,9 +179,10 @@ export class DocumentComponent implements OnChanges {
   }
 
   viewDocument(item: IDocument) {
-    const fileExtension = item.documentUrl.split('.').pop()?.toLowerCase();
+    const displayName = this.displayUploadedFileName(item.documentUrl) || item.documentName;
+    const fileExtension = displayName.split('.').pop()?.toLowerCase();
     this.analyticsService.trackEvent('view_document', {
-      file_name: item.documentName,
+      file_name: displayName,
       file_extension: fileExtension,
     });
     window.open(item.documentUrl, '_blank');

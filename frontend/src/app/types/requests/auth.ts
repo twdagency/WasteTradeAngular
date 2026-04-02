@@ -44,6 +44,7 @@ export enum BannerType {
   VERIFICATION_PENDING = 'verification_pending',
   VERIFICATION_FAILED = 'verification_failed',
   DOCUMENT_EXPIRING = 'document_expiring',
+  MISSING_DOCUMENTS = 'missing_documents',
 }
 
 export type AccountStatus = {
