@@ -1,18 +1,4 @@
-@if (loading()) {
-  <div class="loading-state">
-    <div class="container">
-      <p>Loading article...</p>
-    </div>
-  </div>
-} @else if (notFound()) {
-  <div class="not-found">
-    <div class="container">
-      <h1>Article Not Found</h1>
-      <p>The article you're looking for doesn't exist or has been removed.</p>
-      <a [routerLink]="['/', routes.news]" class="back-link">← Back to News</a>
-    </div>
-  </div>
-} @else if (article(); as a) {
+@if (article(); as a) {
   <article class="article-page">
     <header class="article-header">
       <div class="container">
@@ -69,6 +55,20 @@
       </section>
     }
   </article>
+} @else if (loading()) {
+  <div class="loading-state">
+    <div class="container">
+      <p>Loading article...</p>
+    </div>
+  </div>
+} @else if (notFound()) {
+  <div class="not-found">
+    <div class="container">
+      <h1>Article Not Found</h1>
+      <p>The article you're looking for doesn't exist or has been removed.</p>
+      <a [routerLink]="['/', routes.news]" class="back-link">← Back to News</a>
+    </div>
+  </div>
 }
 
 <app-footer />

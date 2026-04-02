@@ -1,18 +1,4 @@
-@if (loading()) {
-  <div class="loading-state">
-    <div class="container">
-      <p>Loading resource...</p>
-    </div>
-  </div>
-} @else if (notFound()) {
-  <div class="not-found">
-    <div class="container">
-      <h1>Resource Not Found</h1>
-      <p>The resource you're looking for doesn't exist or has been removed.</p>
-      <a [routerLink]="['/', routes.resources]" class="back-link">← Back to Resources</a>
-    </div>
-  </div>
-} @else if (resource(); as r) {
+@if (resource(); as r) {
   <section class="resource-header">
     <div class="container">
       <a [routerLink]="['/', routes.resources]" class="breadcrumb">← Back to Resources</a>
@@ -36,6 +22,20 @@
       <div class="content" [innerHTML]="r.content | strapiBlocks"></div>
     </div>
   </section>
+} @else if (loading()) {
+  <div class="loading-state">
+    <div class="container">
+      <p>Loading resource...</p>
+    </div>
+  </div>
+} @else if (notFound()) {
+  <div class="not-found">
+    <div class="container">
+      <h1>Resource Not Found</h1>
+      <p>The resource you're looking for doesn't exist or has been removed.</p>
+      <a [routerLink]="['/', routes.resources]" class="back-link">← Back to Resources</a>
+    </div>
+  </div>
 }
 
 <app-footer />

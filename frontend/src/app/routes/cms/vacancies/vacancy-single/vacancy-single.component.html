@@ -1,18 +1,4 @@
-@if (loading()) {
-  <div class="loading-state">
-    <div class="container">
-      <p>Loading vacancy...</p>
-    </div>
-  </div>
-} @else if (notFound()) {
-  <div class="not-found">
-    <div class="container">
-      <h1>Vacancy Not Found</h1>
-      <p>The vacancy you're looking for doesn't exist or has been removed.</p>
-      <a [routerLink]="['/', routes.vacancies]" class="back-link">← Back to Vacancies</a>
-    </div>
-  </div>
-} @else if (job(); as j) {
+@if (job(); as j) {
   <section class="vacancy-hero">
     <div class="container">
       <a [routerLink]="['/', routes.vacancies]" class="breadcrumb">← All Vacancies</a>
@@ -39,6 +25,20 @@
       <div class="content-body" [innerHTML]="j.description | strapiBlocks"></div>
     </div>
   </section>
+} @else if (loading()) {
+  <div class="loading-state">
+    <div class="container">
+      <p>Loading vacancy...</p>
+    </div>
+  </div>
+} @else if (notFound()) {
+  <div class="not-found">
+    <div class="container">
+      <h1>Vacancy Not Found</h1>
+      <p>The vacancy you're looking for doesn't exist or has been removed.</p>
+      <a [routerLink]="['/', routes.vacancies]" class="back-link">← Back to Vacancies</a>
+    </div>
+  </div>
 }
 
 <app-footer />
