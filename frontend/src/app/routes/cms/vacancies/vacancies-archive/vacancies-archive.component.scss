@@ -1,0 +1,156 @@
+:host {
+  display: block;
+}
+
+.vacancies-hero {
+  background: linear-gradient(135deg, #1a5632 0%, #2d8a4e 100%);
+  color: #fff;
+  padding: 80px 0 60px;
+  text-align: center;
+
+  h1 {
+    font-size: 2.5rem;
+    font-weight: 700;
+    margin-bottom: 16px;
+  }
+
+  p {
+    font-size: 1.125rem;
+    max-width: 700px;
+    margin: 0 auto;
+    opacity: 0.9;
+    line-height: 1.6;
+  }
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+.vacancies-list {
+  padding: 60px 0 80px;
+  background: #f8f9fa;
+}
+
+.loading-state,
+.empty-state {
+  text-align: center;
+  padding: 60px 0;
+
+  h2 {
+    font-size: 1.5rem;
+    color: #333;
+    margin-bottom: 8px;
+  }
+
+  p {
+    color: #666;
+  }
+}
+
+.jobs-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
+  gap: 24px;
+}
+
+.job-card {
+  display: flex;
+  flex-direction: column;
+  background: #fff;
+  border-radius: 12px;
+  padding: 28px;
+  text-decoration: none;
+  color: inherit;
+  border: 1px solid #e5e7eb;
+  transition: box-shadow 0.2s, transform 0.2s;
+
+  &:hover {
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+    transform: translateY(-2px);
+  }
+
+  &__title {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: #1a5632;
+    margin: 0 0 16px;
+  }
+
+  &__meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+    margin-bottom: 20px;
+    font-size: 0.875rem;
+    color: #555;
+  }
+
+  &__location,
+  &__salary,
+  &__type {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+
+    .icon {
+      font-size: 1rem;
+    }
+  }
+
+  &__cta {
+    margin-top: auto;
+    color: #2d8a4e;
+    font-weight: 600;
+    font-size: 0.875rem;
+  }
+}
+
+.pagination {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  margin-top: 48px;
+
+  &__btn {
+    padding: 10px 20px;
+    background: #1a5632;
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: opacity 0.2s;
+
+    &:disabled {
+      opacity: 0.4;
+      cursor: not-allowed;
+    }
+
+    &:hover:not(:disabled) {
+      opacity: 0.85;
+    }
+  }
+
+  &__info {
+    font-size: 0.875rem;
+    color: #555;
+  }
+}
+
+@media (max-width: 768px) {
+  .vacancies-hero {
+    padding: 60px 0 40px;
+
+    h1 {
+      font-size: 1.75rem;
+    }
+  }
+
+  .jobs-grid {
+    grid-template-columns: 1fr;
+  }
+}

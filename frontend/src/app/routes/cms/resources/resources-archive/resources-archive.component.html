@@ -1,0 +1,93 @@
+<section class="resources-hero">
+  <div class="container">
+    <h1>Waste Resources</h1>
+    <p>
+      Find information about WasteTrade, our services, plastics, recycling and more
+      here in our resources hub.
+    </p>
+  </div>
+</section>
+
+<section class="resources-content">
+  <div class="container">
+    <div class="resources-layout">
+      <aside class="sidebar">
+        <h3>Categories</h3>
+        <nav class="sidebar-nav">
+          <a
+            class="sidebar-link"
+            [class.active]="!activeCategory()"
+            (click)="onCategoryChange(undefined)"
+          >
+            All Resources
+          </a>
+          @for (cat of allCategories; track cat) {
+            <a
+              class="sidebar-link"
+              [class.active]="activeCategory() === cat"
+              (click)="onCategoryChange(cat)"
+            >
+              {{ cat }}
+            </a>
+          }
+        </nav>
+      </aside>
+
+      <main class="resources-main">
+        @if (loading()) {
+          <div class="loading-state">
+            <p>Loading resources...</p>
+          </div>
+        } @else if (resources().length === 0) {
+          <div class="empty-state">
+            <h2>No resources found</h2>
+            <p>Check back soon for new content.</p>
+          </div>
+        } @else {
+          <div class="resources-grid">
+            @for (resource of resources(); track resource.id) {
+              <a [routerLink]="['/', routes.resources, resource.slug]" class="resource-card">
+                @if (getImageUrl(resource)) {
+                  <div class="resource-card__image">
+                    <img [src]="getImageUrl(resource)" [alt]="resource.title" loading="lazy" />
+                  </div>
+                }
+                <div class="resource-card__body">
+                  @if (resource.resourceCategory) {
+                    <span class="resource-card__category">{{ resource.resourceCategory }}</span>
+                  }
+                  <h3 class="resource-card__title">{{ resource.title }}</h3>
+                  @if (resource.excerpt) {
+                    <p class="resource-card__excerpt">{{ resource.excerpt }}</p>
+                  }
+                </div>
+              </a>
+            }
+          </div>
+
+          @if (totalPages > 1) {
+            <div class="pagination">
+              <button
+                class="pagination__btn"
+                [disabled]="currentPage() === 1"
+                (click)="onPageChange(currentPage() - 1)"
+              >
+                ← Previous
+              </button>
+              <span class="pagination__info">Page {{ currentPage() }} of {{ totalPages }}</span>
+              <button
+                class="pagination__btn"
+                [disabled]="currentPage() === totalPages"
+                (click)="onPageChange(currentPage() + 1)"
+              >
+                Next →
+              </button>
+            </div>
+          }
+        }
+      </main>
+    </div>
+  </div>
+</section>
+
+<app-footer />
