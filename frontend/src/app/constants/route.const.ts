@@ -1,6 +1,7 @@
 import { addLanguagePrefix } from '../utils/language.utils';
 
 export const ROUTES = {
+  home: '',
   login: 'login',
   buy: 'buy',
   wanted: 'wanted',
@@ -42,6 +43,7 @@ export const ROUTES = {
 };
 
 const ROUTES_BASE = {
+  home: '/',
   login: '/login',
   buy: '/buy',
   wanted: '/wanted',

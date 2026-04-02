@@ -5,6 +5,7 @@ import {
   RequestToJoinCompanyRequest,
   RequestToJoinCompanyResponse,
   VatLookupResponse,
+  VatValidationResponse,
 } from 'app/types/requests/company-user-request';
 import { map, Observable } from 'rxjs';
 
@@ -56,6 +57,13 @@ export class RegistrationsService {
 
   updateCompanyLocation(payload: Partial<CompanyLocation>) {
     return this.httpClient.post('/company-locations', payload);
+  }
+
+  // VAT validation via VATSense API
+  validateVatNumber(vatNumber: string) {
+    return this.httpClient.get<VatValidationResponse>('/vat/validate', {
+      params: { vat_number: vatNumber },
+    });
   }
 
   // VAT lookup for existing company

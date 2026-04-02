@@ -178,6 +178,7 @@
       class="d-flex justify-content-between radio-mat-error fw-bold"
       name="vatRegistrationCountry"
       style="max-width: 75%"
+      (change)="onVatCountryChange()"
     >
       <mat-radio-button value="EU">
         <span class="fw-bold">{{ 'EU (European Union)' | translate }}</span>
@@ -194,17 +195,54 @@
     }
   </div>
 
-  <div class="mb-4">
-    <label class="fw-bold d-block mb-2">{{ 'VAT NUMBER' | translate }} <span class="asterisk">*</span></label>
-    <app-vat-number-lookup
-      formControlName="vatNumber"
-      [emailFormControl]="emailComponent?.valueControl"
-      [firstNameFormControl]="formGroup.get('firstName')"
-      [lastNameFormControl]="formGroup.get('lastName')"
-      [registrationType]="'haulage'"
-      [isDialogMode]="isDialog"
-    ></app-vat-number-lookup>
-  </div>
+  @if (formGroup.get('vatRegistrationCountry')?.value) {
+    <div class="mb-4">
+      <label class="fw-bold d-block mb-2">{{ 'VAT NUMBER' | translate }} <span class="asterisk">*</span></label>
+      @if (formGroup.get('vatRegistrationCountry')?.value === 'Other') {
+        <mat-form-field appearance="outline" class="w-100">
+          <input matInput placeholder="{{ 'Type here' | translate }}" type="text" formControlName="vatNumberOther" />
+          @if (formGroup.get('vatNumberOther')?.hasError('required')) {
+            <mat-error>{{ 'This field is required' | translate }}</mat-error>
+          }
+          @if (formGroup.get('vatNumberOther')?.hasError('maxlength')) {
+            <mat-error>{{ 'VAT Number cannot exceed 20 characters' | translate }}</mat-error>
+          }
+        </mat-form-field>
+      } @else {
+        <small class="text-success d-block mb-1">{{ 'Ensure the VAT number includes the appropriate country code.' | translate }}</small>
+        <mat-form-field appearance="outline" class="w-100">
+          <input
+            matInput
+            placeholder="{{ 'Type here' | translate }}"
+            type="text"
+            formControlName="vatNumberEuUk"
+            style="padding-right: 40px"
+            (blur)="validateVatNumber()"
+          />
+          @if (vatChecking()) {
+            <div class="d-inline-block position-absolute" style="top: 18px; right: 10px">
+              <mat-spinner matSuffix diameter="20"></mat-spinner>
+            </div>
+          }
+          @if (formGroup.get('vatNumberEuUk')?.hasError('required')) {
+            <mat-error>{{ 'This field is required' | translate }}</mat-error>
+          }
+          @if (formGroup.get('vatNumberEuUk')?.hasError('maxlength')) {
+            <mat-error>{{ 'VAT Number cannot exceed 20 characters' | translate }}</mat-error>
+          }
+          @if (formGroup.get('vatNumberEuUk')?.hasError('invalidVat')) {
+            <mat-error>{{ 'No data found for this VAT number. Please double-check and try again.' | translate }}</mat-error>
+          }
+          @if (formGroup.get('vatNumberEuUk')?.hasError('vatLookupFailed')) {
+            <mat-error>{{ 'Unable to verify VAT right now. Please try again later.' | translate }}</mat-error>
+          }
+          @if (vatValid()) {
+            <mat-hint class="text-success">{{ 'VAT validated successfully' | translate }}</mat-hint>
+          }
+        </mat-form-field>
+      }
+    </div>
+  }
 
   <div class="mb-4">
     <label class="fw-bold d-block mb-2">{{ 'STREET ADDRESS' | translate }} <span class="asterisk">*</span></label>

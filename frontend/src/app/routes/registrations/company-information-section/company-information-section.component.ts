@@ -4,12 +4,14 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatRadioModule } from '@angular/material/radio';
 import { MatSelectModule } from '@angular/material/select';
+import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { countries } from '@app/statics';
-import { AccountOnboardingStatusComponent, TelephoneFormControlComponent, VatNumberLookupComponent } from '@app/ui';
+import { AccountOnboardingStatusComponent, TelephoneFormControlComponent } from '@app/ui';
 import { marker as localized$ } from '@colsen1991/ngx-translate-extract-marker';
 import { TranslateModule, TranslatePipe } from '@ngx-translate/core';
 import { GaEventName } from 'app/constants/ga-event';
@@ -20,7 +22,12 @@ import { DraftRegisterService } from 'app/services/draft-register.service';
 import { RegistrationsService } from 'app/services/registrations.service';
 import { SeoService } from 'app/services/seo.service';
 import { addLanguagePrefix } from 'app/utils/language.utils';
-import { catchError, combineLatest, concatMap, filter, finalize, of, take } from 'rxjs';
+import { catchError, combineLatest, concatMap, filter, finalize, of, switchMap, take } from 'rxjs';
+import { CompanyLookupResult } from 'app/share/ui/vat-number-lookup/vat-number-lookup.component';
+import { ExistingCompanyFoundModalComponent } from 'app/share/ui/vat-number-lookup/existing-company-found-modal/existing-company-found-modal.component';
+import { VatCompanyNameMismatchModalComponent } from 'app/share/ui/vat-number-lookup/vat-company-name-mismatch-modal/vat-company-name-mismatch-modal.component';
+import { companyNamesMatch } from 'app/share/utils/company-name.utils';
+import { VatValidationResponse } from 'app/types/requests/company-user-request';
 
 @Component({
   selector: 'app-company-information-section',
@@ -34,12 +41,12 @@ import { catchError, combineLatest, concatMap, filter, finalize, of, take } from
     MatIconModule,
     MatButtonModule,
     MatRadioModule,
+    MatProgressSpinnerModule,
     RouterModule,
     ReactiveFormsModule,
     UnAuthLayoutComponent,
     TelephoneFormControlComponent,
     TranslateModule,
-    VatNumberLookupComponent,
   ],
   providers: [TranslatePipe],
 })
@@ -50,7 +57,8 @@ export class CompanyInformationSectionComponent implements OnInit, OnDestroy {
     companyType: new FormControl<string | null>(null, [Validators.required]),
     registrationNumber: new FormControl<string | null>(null, [Validators.required, Validators.maxLength(20)]),
     vatRegistrationCountry: new FormControl<string | null>(null, [Validators.required]),
-    vatNumber: new FormControl<string | null>(null, [Validators.maxLength(20)]),
+    vatNumberEuUk: new FormControl<string | null>(null, [Validators.maxLength(20)]),
+    vatNumberOther: new FormControl<string | null>(null, [Validators.maxLength(20)]),
     addressLine1: new FormControl<string | null>(null, [Validators.required, Validators.maxLength(100)]),
     postalCode: new FormControl<string | null>(null, [Validators.required, Validators.maxLength(20)]),
     city: new FormControl<string | null>(null, [Validators.required, Validators.maxLength(50)]),
@@ -60,7 +68,10 @@ export class CompanyInformationSectionComponent implements OnInit, OnDestroy {
   });
   authService = inject(AuthService);
   submitting = signal(false);
+  vatValid = signal(false);
+  vatChecking = signal(false);
   service = inject(RegistrationsService);
+  dialog = inject(MatDialog);
   snackBar = inject(MatSnackBar);
   router = inject(Router);
   route = inject(ActivatedRoute);
@@ -73,7 +84,6 @@ export class CompanyInformationSectionComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.setupSeo();
 
-    // Handle resume token from URL if present
     const token = this.route.snapshot.queryParams['token'];
 
     combineLatest([this.authService.user$, token ? this.draftService.resumeRegistrationFlow(token) : of(undefined)])
@@ -96,48 +106,51 @@ export class CompanyInformationSectionComponent implements OnInit, OnDestroy {
         }),
       )
       .subscribe(([user, draftDataRes]) => {
-        let formData = {};
         const draftData = draftDataRes?.data.dataDraft;
+        let existingVat = '';
 
-        // Priority 1: Use draft data if available (from resume)
         if (draftData) {
-          formData = {
+          this.formGroup.patchValue({
             companyType: draftData.companyType ?? '',
             registrationNumber: draftData.registrationNumber ?? '',
             vatRegistrationCountry: draftData.vatRegistrationCountry ?? '',
-            vatNumber: draftData.vatNumber ?? '',
+            vatNumberEuUk: draftData.vatNumberEuUk ?? '',
+            vatNumberOther: draftData.vatNumberOther ?? '',
             addressLine1: draftData.addressLine1 ?? '',
             postalCode: draftData.postalCode ?? '',
             city: draftData.city ?? '',
             country: draftData.country ?? '',
             stateProvince: draftData.stateProvince ?? '',
             phoneNumber: draftData.phoneNumber ?? '',
-          };
+          });
           this.companyId = draftData.companyId || user?.company?.id;
-        }
-        // Priority 2: Use existing user company data
-        else if (user?.company) {
-          formData = {
+        } else if (user?.company) {
+          existingVat = user.company?.vatNumber ?? '';
+          this.formGroup.patchValue({
             companyType: user.company?.companyType ?? '',
             registrationNumber: user.company?.registrationNumber ?? '',
             vatRegistrationCountry: user.company?.vatRegistrationCountry ?? '',
-            vatNumber: user.company?.vatNumber ?? '',
             addressLine1: user.company?.addressLine1 ?? '',
             postalCode: user.company?.postalCode ?? '',
             city: user.company?.city ?? '',
             country: user.company?.country ?? '',
             stateProvince: user.company?.stateProvince ?? '',
             phoneNumber: user.company.phoneNumber ?? '',
-          };
+          });
           this.companyId = user.company?.id;
+          this.syncVatControls(existingVat);
         }
 
-        // Apply the form data
-        this.formGroup.patchValue(formData);
-
-        // Initialize auto-save tracking
         this.draftService.trackingAutoSave(() => this.saveAndResumeLater(true));
       });
+
+    this.formGroup.get('vatRegistrationCountry')?.valueChanges.subscribe((country) => {
+      this.vatValid.set(false);
+      this.updateVatControlValidators(country);
+      this.syncVatControls();
+    });
+
+    this.updateVatControlValidators(this.formGroup.get('vatRegistrationCountry')?.value);
   }
 
   setupSeo() {
@@ -160,8 +173,15 @@ export class CompanyInformationSectionComponent implements OnInit, OnDestroy {
       return;
     }
 
+    const vatCountry = this.formGroup.get('vatRegistrationCountry')?.value;
+    const currentVatControl = this.getCurrentVatControl();
+    if (vatCountry && vatCountry !== 'Other' && currentVatControl?.value && !this.vatValid()) {
+      return;
+    }
+
     this.formGroup.markAllAsTouched();
-    const { ...payload }: any = this.formGroup.value;
+    const { vatNumberEuUk, vatNumberOther, ...payload }: any = this.formGroup.value;
+    payload.vatNumber = currentVatControl?.value ?? '';
 
     navigateTo === '/company-document' ? this.submitting.set(true) : this.submitting.set(false);
 
@@ -185,7 +205,6 @@ export class CompanyInformationSectionComponent implements OnInit, OnDestroy {
           }
           return of(null);
         }),
-        // refresh /me to set latest user data into auth service
         concatMap((res) => {
           if (res) {
             return this.authService.checkToken();
@@ -205,7 +224,6 @@ export class CompanyInformationSectionComponent implements OnInit, OnDestroy {
   }
 
   saveAndResumeLater(isAutoSave: boolean = false) {
-    // Include token in URL for resume flow
     const resumeToken = this.draftService.getResumeToken();
     const currentUrl = resumeToken ? `${this.router.url.split('?')[0]}?token=${resumeToken}` : this.router.url;
 
@@ -216,13 +234,250 @@ export class CompanyInformationSectionComponent implements OnInit, OnDestroy {
     };
 
     this.draftService.saveDraft(formData, currentUrl, isAutoSave).subscribe({
-      next: () => {
-        // Success is handled by the service (shows toast and redirects)
-      },
+      next: () => {},
       error: (error) => {
-        // Error is handled by the service (shows error message)
         console.error('Failed to save draft:', error);
       },
     });
+  }
+
+  // --- VAT validation (VATSense) ---
+
+  validateVatNumber() {
+    const vatControl = this.getCurrentVatControl();
+    const vatRegistrationCountryControl = this.formGroup.get('vatRegistrationCountry');
+
+    if (vatRegistrationCountryControl?.value === 'Other') {
+      this.vatValid.set(false);
+      this.clearVatApiErrors();
+      return;
+    }
+
+    const countryControl = this.formGroup.get('country');
+
+    if (!vatControl) {
+      return;
+    }
+
+    const rawVat = (vatControl.value ?? '').toString().trim();
+    const selectedCountryCode = (countryControl?.value ?? '').toString().trim();
+
+    if (!rawVat) {
+      this.clearVatApiErrors();
+      return;
+    }
+
+    if (vatControl.hasError('required') || vatControl.hasError('maxlength')) {
+      return;
+    }
+
+    const regCountry = vatRegistrationCountryControl?.value;
+    let countryPrefix = selectedCountryCode || (regCountry === 'UK' ? 'GB' : '');
+    if (regCountry === 'EU' && !selectedCountryCode) {
+      countryPrefix = '';
+    }
+    const vatToValidate = /^[A-Za-z]{2}/.test(rawVat) || !countryPrefix ? rawVat : `${countryPrefix}${rawVat}`;
+
+    this.clearVatApiErrors();
+    this.vatChecking.set(true);
+
+    this.service
+      .validateVatNumber(vatToValidate)
+      .pipe(
+        catchError((err) => {
+          const status = err?.status ?? 0;
+          if (status >= 500 || status === 0) {
+            this.setVatLookupFailedError();
+            this.vatValid.set(false);
+          } else {
+            this.setVatInvalidError();
+            this.vatValid.set(false);
+          }
+          return of(null);
+        }),
+        finalize(() => this.vatChecking.set(false)),
+      )
+      .subscribe((res) => {
+        if (!res) {
+          return;
+        }
+
+        if (res.success && res.data?.valid) {
+          this.clearVatApiErrors();
+          this.vatValid.set(true);
+          this.afterVatValidatedForTrading(rawVat, res);
+          return;
+        }
+
+        const code = res.code ?? 0;
+        if (!res.success && (code === 400 || code === 404)) {
+          this.setVatInvalidError();
+          this.vatValid.set(false);
+          return;
+        }
+
+        if (!res.success) {
+          this.setVatLookupFailedError();
+          this.vatValid.set(false);
+        }
+      });
+  }
+
+  private setVatInvalidError() {
+    const vatControl = this.getCurrentVatControl();
+    if (!vatControl) return;
+    const errors = vatControl.errors ?? {};
+    vatControl.setErrors({ ...errors, invalidVat: true });
+  }
+
+  private setVatLookupFailedError() {
+    const vatControl = this.getCurrentVatControl();
+    if (!vatControl) return;
+    const errors = vatControl.errors ?? {};
+    vatControl.setErrors({ ...errors, vatLookupFailed: true });
+  }
+
+  private clearVatApiErrors() {
+    const vatControl = this.getCurrentVatControl();
+    if (!vatControl || !vatControl.errors) return;
+    const { invalidVat, vatLookupFailed, ...otherErrors } = vatControl.errors;
+    const remainingErrors = Object.keys(otherErrors).length ? otherErrors : null;
+    vatControl.setErrors(remainingErrors);
+  }
+
+  private getCurrentVatControl() {
+    const country = this.formGroup.get('vatRegistrationCountry')?.value;
+    return country === 'Other' ? this.formGroup.get('vatNumberOther') : this.formGroup.get('vatNumberEuUk');
+  }
+
+  private updateVatControlValidators(country: string | null | undefined) {
+    const euUkControl = this.formGroup.get('vatNumberEuUk');
+    const otherControl = this.formGroup.get('vatNumberOther');
+
+    if (!country) {
+      otherControl?.setValidators([Validators.maxLength(20)]);
+      euUkControl?.setValidators([Validators.maxLength(20)]);
+    } else if (country === 'Other') {
+      otherControl?.setValidators([Validators.required, Validators.maxLength(20)]);
+      euUkControl?.setValidators([Validators.maxLength(20)]);
+    } else {
+      euUkControl?.setValidators([Validators.required, Validators.maxLength(20)]);
+      otherControl?.setValidators([Validators.maxLength(20)]);
+    }
+
+    euUkControl?.updateValueAndValidity({ emitEvent: false });
+    otherControl?.updateValueAndValidity({ emitEvent: false });
+  }
+
+  private afterVatValidatedForTrading(rawVat: string, res: VatValidationResponse): void {
+    const vatSenseName = res.data?.company?.company_name?.trim() ?? '';
+    const entered = this.authService.user?.company?.name?.trim() ?? '';
+
+    if (!vatSenseName || companyNamesMatch(entered, vatSenseName)) {
+      this.lookupCompanyByVat(rawVat);
+      return;
+    }
+
+    const ref = this.dialog.open(VatCompanyNameMismatchModalComponent, {
+      width: '100%',
+      maxWidth: '960px',
+      disableClose: true,
+      data: { enteredCompanyName: entered, vatSenseCompanyName: vatSenseName },
+    });
+
+    ref.afterClosed().subscribe((result?: { companyName: string }) => {
+      if (!result?.companyName?.trim()) {
+        this.vatValid.set(false);
+        return;
+      }
+      if (!this.companyId) {
+        this.vatValid.set(false);
+        return;
+      }
+      const name = result.companyName.trim();
+      this.service
+        .updateCompanyInfo(this.companyId, { name })
+        .pipe(
+          switchMap(() => this.authService.checkToken()),
+          catchError(() => {
+            this.snackBar.open(
+              this.translate.transform(localized$(`Failed to update company name. Please try again.`)),
+              this.translate.transform(localized$('Ok')),
+              { duration: 3000 },
+            );
+            return of(false);
+          }),
+        )
+        .subscribe((next) => {
+          if (next === false) {
+            this.vatValid.set(false);
+            return;
+          }
+          this.lookupCompanyByVat(rawVat);
+        });
+    });
+  }
+
+  private lookupCompanyByVat(vatNumber: string) {
+    const normalizedVat = vatNumber.trim().replace(/\s+/g, ' ');
+    if (!normalizedVat) return;
+
+    this.service
+      .lookupCompanyByVat(normalizedVat, 'trading')
+      .pipe(catchError(() => of(null)))
+      .subscribe((result) => {
+        if (result?.data) {
+          const companyData: CompanyLookupResult = {
+            id: result.data.id,
+            name: result.data.name,
+            vatNumber: result.data.vatNumber,
+            email: result.data.email,
+            addressLine1: result.data.addressLine1,
+            city: result.data.city,
+            country: result.data.country,
+            companyType: result.data.companyType,
+            status: result.data.status,
+          };
+          this.showExistingCompanyModal(companyData);
+        }
+      });
+  }
+
+  private showExistingCompanyModal(company: CompanyLookupResult) {
+    const authData = this.authService.user?.user;
+
+    const userData = {
+      email: authData?.email || '',
+      firstName: authData?.firstName || '',
+      lastName: authData?.lastName || '',
+    };
+
+    const dialogRef = this.dialog.open(ExistingCompanyFoundModalComponent, {
+      width: '100%',
+      maxWidth: '960px',
+      disableClose: true,
+      data: { company, userData },
+    });
+
+    dialogRef.afterClosed().subscribe((result) => {
+      if (result?.action === 'no') {
+        const vatControl = this.getCurrentVatControl();
+        vatControl?.setValue('');
+        this.vatValid.set(false);
+      }
+    });
+  }
+
+  private syncVatControls(existingVat?: string) {
+    const country = this.formGroup.get('vatRegistrationCountry')?.value;
+    const valueToSet = existingVat ?? '';
+
+    if (country === 'Other') {
+      this.formGroup.get('vatNumberOther')?.setValue(valueToSet);
+      this.formGroup.get('vatNumberEuUk')?.setValue(null);
+    } else {
+      this.formGroup.get('vatNumberEuUk')?.setValue(valueToSet);
+      this.formGroup.get('vatNumberOther')?.setValue(null);
+    }
   }
 }

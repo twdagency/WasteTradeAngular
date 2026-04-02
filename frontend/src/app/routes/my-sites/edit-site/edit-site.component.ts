@@ -116,7 +116,6 @@ export class EditSiteComponent implements OnInit, AfterViewInit {
     selfLoadUnLoadCapability: new FormControl<boolean | null>(null, [Validators.required]),
     haveAccessRestrictions: new FormControl<boolean | null>(null, [Validators.required]),
     accessRestrictions: new FormControl<string | null>(null, []),
-    siteSpecificInstructions: new FormControl<string | null>(null, [Validators.maxLength(500)]),
     wasteLicence: new FormControl<boolean | null>(null, [Validators.required]),
     acceptedMaterials: new FormArray<FormControl<string | null>>([], [Validators.required]),
     otherMaterial: new FormControl<string | null>(null, [Validators.maxLength(100)]),
@@ -218,9 +217,16 @@ export class EditSiteComponent implements OnInit, AfterViewInit {
   }
 
   onBack() {
-    if (this.formGroup.pristine) {
-      this.router.navigate([ROUTES_WITH_SLASH.sites]);
+    const currentLocationId = this.location?.id ?? this.route.snapshot.params['id'];
+    const targetRoutes = currentLocationId ? [ROUTES_WITH_SLASH.sites, currentLocationId] : [ROUTES_WITH_SLASH.sites];
 
+    if (this.mode === 'edit' && currentLocationId) {
+      this.router.navigate(targetRoutes);
+      return;
+    }
+
+    if (this.formGroup.pristine) {
+      this.router.navigate(targetRoutes);
       return;
     }
 
@@ -240,7 +246,7 @@ export class EditSiteComponent implements OnInit, AfterViewInit {
       .subscribe((close) => {
         if (!close) return;
 
-        this.router.navigate([ROUTES_WITH_SLASH.sites]);
+        this.router.navigate(targetRoutes);
       });
   }
 

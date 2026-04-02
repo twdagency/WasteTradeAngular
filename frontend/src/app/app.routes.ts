@@ -24,6 +24,11 @@ import { CompanyUserRequestRoleEnum } from './types/requests/company-user-reques
 
 const appRoutes: Routes = [
   {
+    path: '',
+    pathMatch: 'full',
+    loadComponent: () => import('./routes/home/home.component').then((m) => m.HomeComponent),
+  },
+  {
     path: ROUTES.login,
     canActivate: [CanActivateUnAuthPage],
     runGuardsAndResolvers: 'paramsOrQueryParamsChange',
@@ -594,7 +599,7 @@ const appRoutes: Routes = [
       import('./routes/request-success/request-success.component').then((m) => m.RequestSuccessComponent),
     data: { role: 'trader' },
   },
-  { path: '**', pathMatch: 'full', redirectTo: 'login' },
+  { path: '**', pathMatch: 'full', redirectTo: '' },
 ];
 
 export const routes: Routes = [

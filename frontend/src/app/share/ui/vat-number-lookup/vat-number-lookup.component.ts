@@ -16,7 +16,6 @@ export interface CompanyLookupResult {
   id: number;
   name: string;
   vatNumber: string;
-  // Extended properties from API response
   email?: string;
   addressLine1?: string;
   city?: string;
@@ -78,12 +77,10 @@ export class VatNumberLookupComponent implements ControlValueAccessor {
   private registrationService = inject(RegistrationsService);
   private authService = inject(AuthService);
 
-  // ControlValueAccessor properties
   private onChange = (value: string) => {};
   private onTouched = () => {};
 
   constructor() {
-    // Setup validators based on isRequired input
     effect(() => {
       const validators = this.isRequired()
         ? [Validators.required, Validators.maxLength(20)]
@@ -92,15 +89,10 @@ export class VatNumberLookupComponent implements ControlValueAccessor {
       this.vatControl.updateValueAndValidity();
     });
 
-    // Setup VAT lookup on blur with debounce
-    // VAT lookup will be triggered on blur event only
-
-    // Emit value changes to parent
     this.vatControl.valueChanges.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((value) => {
       if (this.isDialogMode()) {
         const control = this.vatControl;
         if (!control.dirty && !control.touched) {
-          // ignore programmatic updates while still pristine in dialog mode
           return;
         }
       }
@@ -110,15 +102,12 @@ export class VatNumberLookupComponent implements ControlValueAccessor {
 
   private normalizeVatNumber(value: string): string {
     if (!value) return '';
-
-    // Trim whitespace and remove duplicate spaces
     return value.trim().replace(/\s+/g, ' ');
   }
 
   private showExistingCompanyModal(company: CompanyLookupResult): void {
     const authData = this.authService.user?.user;
 
-    // Get user data from form controls
     const userData = {
       email: this.emailFormControl()?.value || authData?.email || '',
       firstName: this.firstNameFormControl()?.value || authData?.firstName || '',
@@ -134,17 +123,12 @@ export class VatNumberLookupComponent implements ControlValueAccessor {
 
     dialogRef.afterClosed().subscribe((result) => {
       if (result?.action === 'no') {
-        // Clear VAT number input for user to re-enter
         this.vatControl.setValue('');
         this.onChange('');
-      } else if (result?.action === 'yes') {
-        // Keep the VAT number and proceed to request modal
-        // The modal will handle showing the request modal
       }
     });
   }
 
-  // ControlValueAccessor implementation
   writeValue(value: string): void {
     this.vatControl.setValue(value || '', { emitEvent: false });
   }
@@ -155,9 +139,6 @@ export class VatNumberLookupComponent implements ControlValueAccessor {
 
   registerOnTouched(fn: () => void): void {
     this.onTouched = fn;
-
-    // Also trigger onTouched when the input loses focus
-    // this.vatControl.valueChanges.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => this.onTouched());
   }
 
   setDisabledState(isDisabled: boolean): void {
@@ -168,18 +149,15 @@ export class VatNumberLookupComponent implements ControlValueAccessor {
     }
   }
 
-  // Public method to get form control for validation
   get formControl() {
     return this.vatControl;
   }
 
-  // Handle VAT lookup on input blur
   onVatInputBlur(): void {
     this.onTouched();
     const value = this.vatControl.value;
     const trimmed = (value || '').trim();
 
-    // Only lookup if there's a value
     if (!trimmed) {
       return;
     }
@@ -189,15 +167,12 @@ export class VatNumberLookupComponent implements ControlValueAccessor {
       return;
     }
 
-    // Set loading state
     this.isLoading.set(true);
 
-    // Perform VAT lookup
     this.registrationService
       .lookupCompanyByVat(normalizedVat, this.registrationType())
       .pipe(
-        catchError((error) => {
-          console.warn('VAT lookup failed:', error);
+        catchError(() => {
           this.isLoading.set(false);
           return of(null);
         }),
@@ -205,7 +180,6 @@ export class VatNumberLookupComponent implements ControlValueAccessor {
       .subscribe((result) => {
         this.isLoading.set(false);
         if (result?.data) {
-          // Map the full API response to our CompanyLookupResult interface
           const companyData: CompanyLookupResult = {
             id: result.data.id,
             name: result.data.name,

@@ -2,7 +2,7 @@
   @if (!isDialog) {
     <button mat-flat-button class="px-5 py-2 background-primary text-white d-block d-flex align-items-center mb-4" (click)="onBack()">
       <mat-icon class="d-flex align-items-center">west</mat-icon>
-      <span class="fw-bold">{{ 'GO TO MY LOCATION' | translate }}</span>
+      <span class="fw-bold">{{ 'BACK' | translate }}</span>
     </button>
   }
   <!-- <div class="d-flex justify-content-between align-items-center mt-5 mb-5">
@@ -378,18 +378,6 @@
               </mat-form-field>
             </div>
           }
-          <div class="w-100 mb-4">
-            <mat-label class="fw-bold mb-2">{{ 'SITE-SPECIFIC INSTRUCTIONS' | translate }}</mat-label>
-            <mat-form-field appearance="outline" class="w-100">
-              <input matInput placeholder="Type here" type="text" formControlName="siteSpecificInstructions" />
-              @if (formGroup.get('siteSpecificInstructions')?.hasError('required')) {
-                <mat-error>{{ 'This field is required' | translate }}</mat-error>
-              }
-              @if (formGroup.get('siteSpecificInstructions')?.hasError('maxlength')) {
-                <mat-error>{{ 'Please shorten your input to 500 characters or under.' | translate }}</mat-error>
-              }
-            </mat-form-field>
-          </div>
           <hr style="opacity: 1" />
           <div class="col-12 mb-4">
             <mat-label class="mb-0 fw-bold">{{ 'DO YOU HAVE A LICENCE/PERMIT ON-SITE?*' | translate }}</mat-label>
