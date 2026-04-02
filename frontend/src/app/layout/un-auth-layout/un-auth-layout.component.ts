@@ -14,7 +14,7 @@ import { FooterComponent } from '../footer/footer.component';
 export class UnAuthLayoutComponent {
   private router = inject(Router);
 
-  goLoginPage() {
-    this.router.navigateByUrl(ROUTES_WITH_SLASH.login);
+  goHome() {
+    this.router.navigateByUrl(ROUTES_WITH_SLASH.home);
   }
 }
