@@ -1,15 +1,19 @@
 {
   "kind": "collectionType",
-  "collectionName": "articles",
+  "collectionName": "resources",
   "info": {
-    "singularName": "article",
-    "pluralName": "articles",
-    "displayName": "Article"
+    "singularName": "resource",
+    "pluralName": "resources",
+    "displayName": "Resource"
   },
   "options": {
     "draftAndPublish": false
   },
-  "pluginOptions": {},
+  "pluginOptions": {
+    "i18n": {
+      "localized": false
+    }
+  },
   "attributes": {
     "title": {
       "type": "string",
@@ -26,9 +30,6 @@
     "content": {
       "type": "blocks"
     },
-    "publishedDate": {
-      "type": "date"
-    },
     "featuredImage": {
       "type": "media",
       "multiple": false,
@@ -36,17 +37,19 @@
         "images"
       ]
     },
-    "author": {
-      "type": "relation",
-      "relation": "manyToOne",
-      "target": "api::author.author",
-      "inversedBy": "articles"
-    },
-    "category": {
-      "type": "relation",
-      "relation": "manyToOne",
-      "target": "api::category.category",
-      "inversedBy": "articles"
+    "resourceCategory": {
+      "type": "enumeration",
+      "enum": [
+        "WasteTrade Guides",
+        "Plastics",
+        "Paper",
+        "Metals",
+        "Rubber",
+        "Recycling",
+        "Waste Logistics",
+        "Environmental",
+        "Regulations"
+      ]
     }
   }
 }

@@ -6,7 +6,7 @@ export function apiBaseUrlInterceptor(
   request: HttpRequest<unknown>,
   next: HttpHandlerFn,
 ): Observable<HttpEvent<unknown>> {
-  if (request.url.includes('i18n')) {
+  if (request.url.includes('i18n') || request.url.startsWith('http')) {
     return next(request);
   }
   const apiReq = request.clone({ url: `${environment.apiUrl}${request.url}` });

@@ -1,0 +1,44 @@
+@if (loading()) {
+  <div class="loading-state">
+    <div class="container">
+      <p>Loading vacancy...</p>
+    </div>
+  </div>
+} @else if (notFound()) {
+  <div class="not-found">
+    <div class="container">
+      <h1>Vacancy Not Found</h1>
+      <p>The vacancy you're looking for doesn't exist or has been removed.</p>
+      <a [routerLink]="['/', routes.vacancies]" class="back-link">← Back to Vacancies</a>
+    </div>
+  </div>
+} @else if (job(); as j) {
+  <section class="vacancy-hero">
+    <div class="container">
+      <a [routerLink]="['/', routes.vacancies]" class="breadcrumb">← All Vacancies</a>
+      <h1>{{ j.title }}</h1>
+      <div class="vacancy-meta">
+        @if (j.location) {
+          <span class="meta-item">📍 {{ j.location }}</span>
+        }
+        @if (j.salaryPerYear) {
+          <span class="meta-item">💰 {{ j.salaryPerYear }}</span>
+        }
+        @if (j.type) {
+          <span class="meta-item">⏱ {{ j.type }}</span>
+        }
+        @if (j.employmentType) {
+          <span class="meta-item">📋 {{ j.employmentType }}</span>
+        }
+      </div>
+    </div>
+  </section>
+
+  <section class="vacancy-content">
+    <div class="container">
+      <div class="content-body" [innerHTML]="j.description | strapiBlocks"></div>
+    </div>
+  </section>
+
+  <app-footer />
+}

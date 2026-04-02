@@ -1,0 +1,145 @@
+:host {
+  display: block;
+}
+
+.container {
+  max-width: 860px;
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+.loading-state,
+.not-found {
+  padding: 100px 0;
+  text-align: center;
+
+  h1 {
+    font-size: 2rem;
+    margin-bottom: 12px;
+  }
+
+  p {
+    color: #666;
+    margin-bottom: 24px;
+  }
+}
+
+.back-link {
+  color: #2d8a4e;
+  font-weight: 600;
+  text-decoration: none;
+
+  &:hover {
+    text-decoration: underline;
+  }
+}
+
+.vacancy-hero {
+  background: linear-gradient(135deg, #1a5632 0%, #2d8a4e 100%);
+  color: #fff;
+  padding: 60px 0 48px;
+
+  .breadcrumb {
+    display: inline-block;
+    color: rgba(255, 255, 255, 0.7);
+    text-decoration: none;
+    font-size: 0.875rem;
+    margin-bottom: 20px;
+
+    &:hover {
+      color: #fff;
+    }
+  }
+
+  h1 {
+    font-size: 2.25rem;
+    font-weight: 700;
+    margin: 0 0 20px;
+  }
+}
+
+.vacancy-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+
+  .meta-item {
+    font-size: 0.9375rem;
+    opacity: 0.9;
+  }
+}
+
+.vacancy-content {
+  padding: 48px 0 80px;
+
+  .content-body {
+    font-size: 1.0625rem;
+    line-height: 1.8;
+    color: #333;
+
+    ::ng-deep {
+      h2, h3, h4 {
+        margin: 32px 0 16px;
+        color: #1a5632;
+      }
+
+      h2 {
+        font-size: 1.5rem;
+      }
+
+      h3 {
+        font-size: 1.25rem;
+      }
+
+      p {
+        margin-bottom: 16px;
+      }
+
+      ul, ol {
+        padding-left: 24px;
+        margin-bottom: 16px;
+
+        li {
+          margin-bottom: 8px;
+        }
+      }
+
+      strong {
+        color: #1d1d1b;
+      }
+
+      blockquote {
+        border-left: 4px solid #2d8a4e;
+        padding-left: 20px;
+        margin: 24px 0;
+        font-style: italic;
+        color: #555;
+      }
+
+      img {
+        max-width: 100%;
+        height: auto;
+        border-radius: 8px;
+      }
+
+      figure {
+        margin: 24px 0;
+      }
+    }
+  }
+}
+
+@media (max-width: 768px) {
+  .vacancy-hero {
+    padding: 40px 0 32px;
+
+    h1 {
+      font-size: 1.5rem;
+    }
+  }
+
+  .vacancy-meta {
+    flex-direction: column;
+    gap: 8px;
+  }
+}

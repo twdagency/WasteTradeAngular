@@ -1,0 +1,72 @@
+<section class="vacancies-hero">
+  <div class="container">
+    <h1>WasteTrade Career Opportunities</h1>
+    <p>
+      If you share our passion for sustainability, circular economics and combatting climate change,
+      then you could be the next addition to the WasteTrade team.
+    </p>
+  </div>
+</section>
+
+<section class="vacancies-list">
+  <div class="container">
+    @if (loading()) {
+      <div class="loading-state">
+        <p>Loading vacancies...</p>
+      </div>
+    } @else if (jobs().length === 0) {
+      <div class="empty-state">
+        <h2>No vacancies at the moment</h2>
+        <p>Check back soon for new opportunities.</p>
+      </div>
+    } @else {
+      <div class="jobs-grid">
+        @for (job of jobs(); track job.id) {
+          <a [routerLink]="['/', routes.vacancies, job.slug]" class="job-card">
+            <h3 class="job-card__title">{{ job.title }}</h3>
+            <div class="job-card__meta">
+              @if (job.location) {
+                <span class="job-card__location">
+                  <span class="icon">📍</span> {{ job.location }}
+                </span>
+              }
+              @if (job.salaryPerYear) {
+                <span class="job-card__salary">
+                  <span class="icon">💰</span> {{ job.salaryPerYear }}
+                </span>
+              }
+              @if (job.type) {
+                <span class="job-card__type">
+                  <span class="icon">⏱</span> {{ job.type }}
+                </span>
+              }
+            </div>
+            <span class="job-card__cta">Read More &amp; Apply →</span>
+          </a>
+        }
+      </div>
+
+      @if (totalPages > 1) {
+        <div class="pagination">
+          <button
+            class="pagination__btn"
+            [disabled]="currentPage() === 1"
+            (click)="onPageChange(currentPage() - 1)"
+          >
+            ← Previous
+          </button>
+          <span class="pagination__info">Page {{ currentPage() }} of {{ totalPages }}</span>
+          <button
+            class="pagination__btn"
+            [disabled]="currentPage() === totalPages"
+            (click)="onPageChange(currentPage() + 1)"
+          >
+            Next →
+          </button>
+        </div>
+      }
+    }
+  </div>
+</section>
+
+<app-footer />

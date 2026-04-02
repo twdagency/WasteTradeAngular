@@ -1,0 +1,41 @@
+@if (loading()) {
+  <div class="loading-state">
+    <div class="container">
+      <p>Loading resource...</p>
+    </div>
+  </div>
+} @else if (notFound()) {
+  <div class="not-found">
+    <div class="container">
+      <h1>Resource Not Found</h1>
+      <p>The resource you're looking for doesn't exist or has been removed.</p>
+      <a [routerLink]="['/', routes.resources]" class="back-link">← Back to Resources</a>
+    </div>
+  </div>
+} @else if (resource(); as r) {
+  <section class="resource-header">
+    <div class="container">
+      <a [routerLink]="['/', routes.resources]" class="breadcrumb">← Back to Resources</a>
+      @if (r.resourceCategory) {
+        <span class="resource-category">{{ r.resourceCategory }}</span>
+      }
+      <h1>{{ r.title }}</h1>
+    </div>
+  </section>
+
+  @if (getImageUrl(r.featuredImage)) {
+    <div class="resource-featured-image">
+      <div class="container">
+        <img [src]="getImageUrl(r.featuredImage)" [alt]="r.title" />
+      </div>
+    </div>
+  }
+
+  <section class="resource-body">
+    <div class="container">
+      <div class="content" [innerHTML]="r.content | strapiBlocks"></div>
+    </div>
+  </section>
+
+  <app-footer />
+}
