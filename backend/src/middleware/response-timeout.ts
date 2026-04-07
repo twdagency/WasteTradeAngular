@@ -2,7 +2,7 @@ import { HttpErrors, Middleware } from '@loopback/rest';
 
 const responseTimeoutMiddleware: Middleware = async (middlewareCtx, next) => {
     const TIMEOUT_IN_SECONDS = 300;
-    const NO_TIMEOUT_PATHS = ['/replicate-data', '/salesforce/haulage-loads'];
+    const NO_TIMEOUT_PATHS = ['/replicate-data', '/salesforce/haulage-loads', '/upload-file', '/upload-multiple-files', '/upload-file-haulier'];
 
     if (NO_TIMEOUT_PATHS.includes(middlewareCtx?.request?.path)) {
         return next();

@@ -13,7 +13,12 @@ export class AwsS3Provider implements Provider<AWS.S3> {
     }
 
     value(): AWS.S3 {
-        const opts: AWS.S3.ClientConfiguration = {};
+        const opts: AWS.S3.ClientConfiguration = {
+            httpOptions: {
+                connectTimeout: 10000,
+                timeout: 30000,
+            },
+        };
         if (this.config.endpoint) {
             opts.endpoint = this.config.endpoint;
             opts.s3ForcePathStyle = true;
