@@ -30,7 +30,7 @@ async function uploadImage(filePath, altText) {
     name: path.basename(filePath),
     alternativeText: altText,
   }));
-  const res = await axios.post(`${REMOTE_URL}/api/upload`, form, {
+  const res = await axios.post(`${REMOTE_URL}/upload`, form, {
     headers: {
       ...form.getHeaders(),
       Authorization: `Bearer ${jwt}`,
@@ -39,7 +39,8 @@ async function uploadImage(filePath, altText) {
     maxBodyLength: Infinity,
     timeout: 60000,
   });
-  return res.data[0];
+  const data = Array.isArray(res.data) ? res.data[0] : res.data;
+  return data;
 }
 
 function text(t, opts = {}) {
@@ -65,6 +66,9 @@ function imageBlock(img) {
       ext: img.ext,
       mime: img.mime,
       size: img.size,
+      provider: img.provider || 'local',
+      createdAt: img.createdAt || new Date().toISOString(),
+      updatedAt: img.updatedAt || new Date().toISOString(),
     },
     children: [{ type: 'text', text: '' }],
   };
