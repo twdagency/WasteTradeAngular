@@ -1,27 +1,126 @@
 <app-cms-header />
 
 @if (material(); as m) {
-  <section class="material-header">
-    <div class="container">
-      <a [routerLink]="['/']" class="breadcrumb">← Back to Home</a>
+  <!-- HERO BANNER -->
+  <section class="material-hero">
+    <div class="hero-overlay"></div>
+    <div class="hero-content container">
+      <span class="hero-badge">WasteTrade Materials</span>
       <h1>{{ m.title }}</h1>
+      @if (m.heroSubtitle || m.seoDescription) {
+        <p class="hero-subtitle">{{ m.heroSubtitle || m.seoDescription }}</p>
+      }
+      <button mat-flat-button class="hero-cta" (click)="navigateToSell()">
+        <mat-icon>storefront</mat-icon>
+        Sell {{ m.title.split('(')[0].trim() }} Material
+      </button>
     </div>
   </section>
 
-  <section class="material-body">
-    <div class="container">
-      <div class="content" [innerHTML]="m.content | strapiBlocks"></div>
+  <!-- MAIN CONTENT AREA -->
+  <section class="material-main">
+    <div class="container material-layout">
+      <!-- SIDEBAR -->
+      <aside class="material-sidebar">
+        <div class="sidebar-sticky">
+          <h3 class="sidebar-title">Materials</h3>
+          <ul class="sidebar-nav">
+            @for (link of sectionLinks(); track link.id) {
+              <li>
+                <a (click)="scrollToSection(link.id)" class="sidebar-link">{{ link.label }}</a>
+              </li>
+            }
+          </ul>
+        </div>
+      </aside>
+
+      <!-- CONTENT -->
+      <div class="material-content">
+        <div class="content-blocks" [innerHTML]="m.content | strapiBlocks"></div>
+      </div>
     </div>
   </section>
+
+  <!-- CTA / FORM REPLACEMENT -->
+  <section class="material-cta-section">
+    <div class="container">
+      <div class="cta-card">
+        <span class="cta-eyebrow">{{ ctaBulkLabel() }}</span>
+        <h2>{{ ctaLabel() }}</h2>
+        <p>
+          WasteTrade makes it easier than ever to sell waste commodities for the
+          best prices to the most sustainable reprocessors.
+        </p>
+        <div class="cta-buttons">
+          <button mat-flat-button class="cta-primary" (click)="navigateToSell()">
+            <mat-icon>storefront</mat-icon> Sell Material
+          </button>
+          <button mat-stroked-button class="cta-secondary" (click)="navigateToRegister()">
+            <mat-icon>person_add</mat-icon> Register Free
+          </button>
+        </div>
+      </div>
+
+      <div class="register-card">
+        <h2>Sign up today and turn your materials into maximum profit!</h2>
+        <div class="register-benefits">
+          <div class="benefit">
+            <mat-icon>verified</mat-icon>
+            <span>All buyers fully vetted and verified</span>
+          </div>
+          <div class="benefit">
+            <mat-icon>money_off</mat-icon>
+            <span>No fees, no commissions — completely free to use</span>
+          </div>
+          <div class="benefit">
+            <mat-icon>public</mat-icon>
+            <span>Access our global network of recyclers</span>
+          </div>
+          <div class="benefit">
+            <mat-icon>security</mat-icon>
+            <span>Secure payment processing</span>
+          </div>
+          <div class="benefit">
+            <mat-icon>local_shipping</mat-icon>
+            <span>Full logistics and compliance handled for you</span>
+          </div>
+        </div>
+        <button mat-flat-button class="register-btn" (click)="navigateToRegister()">
+          <mat-icon>person_add</mat-icon> Create Free Account
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ SECTION -->
+  @if (m.faqs?.length) {
+    <section class="material-faq">
+      <div class="container">
+        <h2 class="faq-title">Frequently Asked Questions</h2>
+        <mat-accordion class="faq-accordion">
+          @for (faq of m.faqs; track faq.question) {
+            <mat-expansion-panel>
+              <mat-expansion-panel-header>
+                <mat-panel-title>{{ faq.question }}</mat-panel-title>
+              </mat-expansion-panel-header>
+              <p>{{ faq.answer }}</p>
+            </mat-expansion-panel>
+          }
+        </mat-accordion>
+      </div>
+    </section>
+  }
 } @else if (loading()) {
   <div class="loading-state">
     <div class="container">
+      <div class="loading-spinner"></div>
       <p>Loading material...</p>
     </div>
   </div>
 } @else if (notFound()) {
   <div class="not-found">
     <div class="container">
+      <mat-icon class="not-found-icon">search_off</mat-icon>
       <h1>Material Not Found</h1>
       <p>The material page you're looking for doesn't exist or has been removed.</p>
       <a routerLink="/" class="back-link">← Back to Home</a>

@@ -24,11 +24,21 @@
       "targetField": "title",
       "required": true
     },
+    "heroSubtitle": {
+      "type": "text"
+    },
+    "materialCategory": {
+      "type": "string",
+      "default": "Plastic"
+    },
     "content": {
       "type": "blocks"
     },
     "seoDescription": {
       "type": "text"
+    },
+    "faqs": {
+      "type": "json"
     }
   }
 }

@@ -162,13 +162,21 @@ export interface CmsResource {
   updatedAt: string;
 }
 
+export interface CmsMaterialFaq {
+  question: string;
+  answer: string;
+}
+
 export interface CmsMaterialLandingPage {
   id: number;
   documentId: string;
   title: string;
   slug: string;
+  heroSubtitle: string | null;
+  materialCategory: string | null;
   content: StrapiBlockNode[];
   seoDescription: string | null;
+  faqs: CmsMaterialFaq[] | null;
   createdAt: string;
   updatedAt: string;
 }

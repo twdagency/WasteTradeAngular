@@ -12,16 +12,21 @@ export class StrapiBlocksPipe implements PipeTransform {
 
   transform(blocks: StrapiBlockNode[] | null | undefined): SafeHtml {
     if (!blocks?.length) return '';
+    this.h2Index = 0;
     const html = blocks.map((block) => this.renderBlock(block)).join('');
     return this.sanitizer.bypassSecurityTrustHtml(html);
   }
+
+  private h2Index = 0;
 
   private renderBlock(block: StrapiBlockNode): string {
     switch (block.type) {
       case 'paragraph':
         return `<p>${this.renderInlineNodes(block.children)}</p>`;
-      case 'heading':
-        return `<h${block.level}>${this.renderInlineNodes(block.children)}</h${block.level}>`;
+      case 'heading': {
+        const id = block.level === 2 ? ` id="section-${this.h2Index++}"` : '';
+        return `<h${block.level}${id}>${this.renderInlineNodes(block.children)}</h${block.level}>`;
+      }
       case 'list': {
         const tag = block.format === 'ordered' ? 'ol' : 'ul';
         const items = block.children
