@@ -1,7 +1,15 @@
-<app-common-layout [title]="mode === 'create' ? ('Create Listing' | translate) : ('Edit Listing' | translate)">
+<app-common-layout
+  [title]="
+    mode === 'edit'
+      ? ('Edit Listing' | translate)
+      : type === 'wanted'
+        ? ('Create Wanted Listing' | translate)
+        : ('Create Listing' | translate)
+  "
+>
   @if (type == 'sell') {
     <app-sell-lising-material-form [mode]="mode" [listingId]="listingId"></app-sell-lising-material-form>
   } @else {
-    <app-list-wanted-material-form></app-list-wanted-material-form>
+    <app-list-wanted-material-form [mode]="mode" [listingId]="listingId"></app-list-wanted-material-form>
   }
 </app-common-layout>

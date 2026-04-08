@@ -159,7 +159,7 @@
                 <div class="mb-2 text-uppercase fw-bold">{{ 'ITEM*' | translate }}</div>
                 <mat-form-field appearance="outline" class="w-100">
                   <mat-select formControlName="materialItem" [placeholder]="'Select' | translate">
-                    @if (itemOption().length == 0 && formGroup.get('materialType')?.touched) {
+                    @if (itemOption().length == 0 && formGroup.get('materialType')?.value) {
                       <mat-option value="N/A">{{ 'N/A' | translate }}</mat-option>
                     } @else {
                       @for (item of itemOption(); track $index) {
@@ -176,7 +176,7 @@
                 <div class="mb-2 text-uppercase fw-bold">{{ 'FORM*' | translate }}</div>
                 <mat-form-field appearance="outline" class="w-100">
                   <mat-select formControlName="materialForm" [placeholder]="'Select' | translate">
-                    @if (formOption().length == 0 && formGroup.get('materialType')?.touched) {
+                    @if (formOption().length == 0 && formGroup.get('materialType')?.value) {
                       <mat-option value="N/A">{{ 'N/A' | translate }}</mat-option>
                     } @else {
                       @for (form of formOption(); track $index) {
@@ -193,7 +193,7 @@
                 <div class="mb-2 text-uppercase fw-bold">{{ 'GRADING*' | translate }}</div>
                 <mat-form-field appearance="outline" class="w-100">
                   <mat-select formControlName="materialGrading" [placeholder]="'Select' | translate">
-                    @if (gradingOption().length == 0 && formGroup.get('materialType')?.touched) {
+                    @if (gradingOption().length == 0 && formGroup.get('materialType')?.value) {
                       <mat-option value="N/A">{{ 'N/A' | translate }}</mat-option>
                     } @else {
                       @for (grading of gradingOption(); track $index) {
@@ -357,31 +357,32 @@
           <div class="mb-5">
             <h4 class="fw-bold mb-3">{{ 'Price' | translate }}</h4>
             <div class="border-thin p-4 rounded-4">
-              <div class="col-lg-9 mx-auto mb-5">
-                <mat-label class="fw-bold mb-2 d-block text-uppercase">{{ 'Select currency*' | translate }} </mat-label>
-                <mat-form-field appearance="outline" class="w-100">
-                  <mat-select formControlName="currency" [placeholder]="'Select' | translate">
-                    <mat-option [value]="Currency.gbp">{{ '£/GBP' | translate }}</mat-option>
-                    <mat-option [value]="Currency.usd">{{ '$/USD' | translate }}</mat-option>
-                    <mat-option [value]="Currency.eur">{{ '€/EURO' | translate }}</mat-option>
-                  </mat-select>
-                  @if (formGroup.get('currency')?.hasError('required')) {
-                    <mat-error>{{ 'This is a required field.' | translate }}</mat-error>
-                  }
-                </mat-form-field>
-              </div>
-
-              <div class="col-lg-9 mx-auto mb-5">
-                <mat-label class="mb-2 d-block text-uppercase fw-bold">{{ 'Price per Metric Tonne*' | translate }}</mat-label>
-                <mat-form-field appearance="outline" class="w-100">
-                  <input matInput type="number" [placeholder]="'Select' | translate" formControlName="pricePerMetricTonne" />
-                  @if (formGroup.get('pricePerMetricTonne')?.hasError('required')) {
-                    <mat-error>{{ 'This is a required field.' | translate }}</mat-error>
-                  }
-                  @if (formGroup.get('pricePerMetricTonne')?.hasError('max')) {
-                    <mat-error class="mt-0"> {{ 'Price per Metric Tonne cannot exceed 1,000,000,000.' | translate }} </mat-error>
-                  }
-                </mat-form-field>
+              <div class="row col-lg-9 mx-auto">
+                <div class="col-md-4 col-12 mb-4 mb-md-0">
+                  <mat-label class="fw-bold mb-2 d-block text-uppercase">{{ 'Select currency*' | translate }} </mat-label>
+                  <mat-form-field appearance="outline" class="w-100">
+                    <mat-select formControlName="currency" [placeholder]="'Select' | translate">
+                      <mat-option [value]="Currency.gbp">{{ '£/GBP' | translate }}</mat-option>
+                      <mat-option [value]="Currency.usd">{{ '$/USD' | translate }}</mat-option>
+                      <mat-option [value]="Currency.eur">{{ '€/EURO' | translate }}</mat-option>
+                    </mat-select>
+                    @if (formGroup.get('currency')?.hasError('required')) {
+                      <mat-error>{{ 'This is a required field.' | translate }}</mat-error>
+                    }
+                  </mat-form-field>
+                </div>
+                <div class="col-md-8 col-12">
+                  <mat-label class="mb-2 d-block text-uppercase fw-bold">{{ 'Price per Metric Tonne*' | translate }}</mat-label>
+                  <mat-form-field appearance="outline" class="w-100">
+                    <input matInput type="number" [placeholder]="'Select' | translate" formControlName="pricePerMetricTonne" />
+                    @if (formGroup.get('pricePerMetricTonne')?.hasError('required')) {
+                      <mat-error>{{ 'This is a required field.' | translate }}</mat-error>
+                    }
+                    @if (formGroup.get('pricePerMetricTonne')?.hasError('max')) {
+                      <mat-error class="mt-0"> {{ 'Price per Metric Tonne cannot exceed 1,000,000,000.' | translate }} </mat-error>
+                    }
+                  </mat-form-field>
+                </div>
               </div>
             </div>
           </div>

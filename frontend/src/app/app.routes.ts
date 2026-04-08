@@ -193,8 +193,21 @@ const appRoutes: Routes = [
     children: [
       {
         path: '',
+        pathMatch: 'full',
         data: {
           type: 'wanted',
+          mode: 'create',
+        },
+        loadComponent: () =>
+          import('./routes/create-listing/list-wanted-material-form/list-wanted-material-form.component').then(
+            (m) => m.ListWantedMaterialFormComponent,
+          ),
+      },
+      {
+        path: ':id/edit',
+        data: {
+          type: 'wanted',
+          mode: 'edit',
         },
         loadComponent: () =>
           import('./routes/create-listing/list-wanted-material-form/list-wanted-material-form.component').then(
