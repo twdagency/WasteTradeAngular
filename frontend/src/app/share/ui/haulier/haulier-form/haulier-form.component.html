@@ -578,7 +578,7 @@
       mat-flat-button
       class="w-100 big-btn fw-bold"
       [class.overlay-spinner]="submitting()"
-      [disabled]="(disableButton$ | async) ?? true"
+      [disabled]="submitting()"
       (click)="send()"
     >
       {{ isDialog ? ('SAVE CHANGES' | translate) : ('CREATE HAULIER ACCOUNT' | translate) }}

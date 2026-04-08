@@ -41,7 +41,9 @@ import { ListingService } from 'app/services/listing.service';
 import { UploadService } from 'app/share/services/upload.service';
 import { DialogWrapperComponent } from 'app/share/ui/dialog-wrapper/dialog-wrapper.component';
 import { ResponseGetCompanyLocation } from 'app/types/requests/auth';
+import { scrollToFirstInvalidControl } from 'app/utils/form.utils';
 import { isNil } from 'lodash';
+import moment from 'moment';
 import {
   catchError,
   combineLatest,
@@ -90,6 +92,27 @@ export class SellLisingMaterialFormComponent implements OnInit, OnChanges {
   containerTypeList = containerTypeList;
 
   today = new Date();
+
+  /**
+   * Calendar + model validation: today and future only.
+   * In edit mode, the currently saved start date is allowed even if it is in the past
+   * (so the field stays valid until the user picks a new date).
+   */
+  readonly startDatePickerFilter = (date: Date | null): boolean => {
+    if (!date) return false;
+    const d = new Date(date);
+    d.setHours(0, 0, 0, 0);
+    const t = new Date();
+    t.setHours(0, 0, 0, 0);
+    if (d.getTime() >= t.getTime()) return true;
+    if (this.mode !== 'edit') return false;
+    const current = this.formGroup.get('startDate')?.value as Date | null | undefined;
+    if (!current) return false;
+    const c = new Date(current);
+    c.setHours(0, 0, 0, 0);
+    return d.getTime() === c.getTime();
+  };
+
   @ViewChild('locationSelector') locationSelector!: MatSelect;
 
   maxFileSize = 25 * 1024 * 1024; // 25mb
@@ -376,12 +399,21 @@ export class SellLisingMaterialFormComponent implements OnInit, OnChanges {
         this.specialDataFile.set([]);
         this.galleryImageFile.set([]);
         this.listingDetail.set(null);
+
+        const startDateCtrl = this.formGroup.get('startDate');
+        startDateCtrl?.setValidators([Validators.required, pastDateValidator()]);
+        startDateCtrl?.updateValueAndValidity({ emitEvent: false });
       }
     }
   }
 
   bindFormValue() {
     if (!this.listingDetail()) return;
+
+    if (this.mode === 'edit') {
+      this.formGroup.get('startDate')?.setValidators([Validators.required]);
+    }
+
     this.formGroup.patchValue({
       locationId: this.listingDetail()?.listing?.locationId,
       hasSpecialData: this.specificationData().length > 0,
@@ -521,7 +553,15 @@ export class SellLisingMaterialFormComponent implements OnInit, OnChanges {
   }
 
   send() {
-    if (this.formGroup.invalid) return;
+    if (this.formGroup.invalid) {
+      scrollToFirstInvalidControl(this.formGroup);
+      return;
+    }
+
+    if (!this.fileValid()) {
+      this.snackBar.open(this.translate.transform(localized$('Please upload all required images before submitting.')));
+      return;
+    }
     let {
       containerType,
       totalWeight,
@@ -550,6 +590,7 @@ export class SellLisingMaterialFormComponent implements OnInit, OnChanges {
       totalWeight,
       numberOfLoads,
       weightPerLoad: numberOfLoads > 0 ? Number((this.convertToTon() / numberOfLoads).toFixed(3)) : null,
+      startDate: value.startDate ? moment(value.startDate).format('YYYY-MM-DD') + 'T00:00:00.000Z' : null,
     };
 
     if (!this.itemOption().length) delete payload.materialItem;
@@ -588,7 +629,11 @@ export class SellLisingMaterialFormComponent implements OnInit, OnChanges {
             ? this.translate.transform(localized$('Your listing is under review'))
             : this.translate.transform(localized$('Your listing has been updated successfully'));
         this.snackBar.open(message);
-        this.router.navigateByUrl(ROUTES_WITH_SLASH.buy);
+        if (this.mode === 'edit' && this.listingId != null) {
+          this.router.navigate([ROUTES_WITH_SLASH.listingOfferDetail, this.listingId]);
+        } else {
+          this.router.navigateByUrl(ROUTES_WITH_SLASH.saleListings);
+        }
       });
   }
 
@@ -691,12 +736,12 @@ export class SellLisingMaterialFormComponent implements OnInit, OnChanges {
 
   isSubmitDisabled(): boolean {
     if (this.mode === 'create') {
-      return this.formGroup.invalid || !this.fileValid();
+      return !this.fileValid();
     } else {
       if (this.hasFileChange()) {
-        return this.formGroup.invalid || !this.fileValid();
+        return !this.fileValid();
       } else {
-        return this.formGroup.invalid || this.formGroup.pristine;
+        return this.formGroup.pristine;
       }
     }
   }

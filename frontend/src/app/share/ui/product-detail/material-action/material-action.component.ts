@@ -53,7 +53,6 @@ export class MaterialActionComponent {
   deleting = signal(false);
   fulfilling = signal(false);
   solding = signal(false);
-  showPendingNote = signal(false);
   userId = toSignal(this.auth.user$.pipe(map((user) => user?.userId)));
   isOwnListing = computed(() => this.userId() === this.listingDetail()?.listing.createdByUserId);
 
@@ -83,15 +82,6 @@ export class MaterialActionComponent {
 
     let tooltipMessage = '';
     let action = true;
-
-    if (listing?.state === ListingState.PENDING) {
-      tooltipMessage = this.translate.transform(
-        localized$(
-          'This listing cannot be edited because it is under Admin review. If you need to edit this listing, please contact support@wastetrade.com.',
-        ),
-      );
-      action = false;
-    }
 
     if (listing?.status !== ListingStatus.AVAILABLE && listing?.state === ListingState.APPROVED) {
       tooltipMessage = this.translate.transform(
@@ -133,12 +123,6 @@ export class MaterialActionComponent {
       );
       action = false;
       hardDisabled = true;
-    } else if (listing?.state === ListingState.PENDING) {
-      action = false;
-      hardDisabled = false;
-      tooltip = this.translate.transform(
-        localized$('(*) You cannot delete the listing because it is in the Approval Process'),
-      );
     }
 
     return { tooltip, action, hardDisabled };
@@ -178,10 +162,6 @@ export class MaterialActionComponent {
       return;
     }
 
-    if (!this.canDelete().hardDisabled && !this.canDelete().action) {
-      this.showPendingNote.set(true);
-      return;
-    }
     let message = this.listingDetail()?.listing?.hasPendingOffer
       ? this.translate.transform(
           localized$(

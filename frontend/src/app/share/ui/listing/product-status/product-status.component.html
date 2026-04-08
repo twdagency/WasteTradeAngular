@@ -2,7 +2,13 @@
   <div class="mb-4" style="height: 30px">
     @if (product) {
       <!-- https://app.clickup.com/t/869aknbjc -->
-      @if (product?.listingRenewalPeriod && status() !== ProductStatus.Sold) {
+@if (
+  product?.listingRenewalPeriod &&
+  !listingStartIsFutureDay() &&
+  status() !== ProductStatus.Sold &&
+  (suppressPendingPill() ||
+    (status() !== ProductStatus.Pending && status() !== ProductStatus.Expired))
+) {
         <div class="border rounded rounded-pill mb-2 ongoing h-100 d-flex align-items-center">
           <div class="fw-500 fs-18 w-100 d-flex justify-content-center align-items-center gap-1 item-content">
             <mat-icon class="icon">lens</mat-icon>{{ 'Ongoing' | translate }}

@@ -10,6 +10,7 @@ import { strictEmailValidator } from '@app/validators';
 import { marker as localized$ } from '@colsen1991/ngx-translate-extract-marker';
 import { TranslateModule, TranslatePipe } from '@ngx-translate/core';
 import { CompanyMemberService } from 'app/services/company-member.service';
+import { scrollToFirstInvalidControl } from 'app/utils/form.utils';
 import { CompanyUserRequestRoleEnum } from 'app/types/requests/company-user-request';
 import { finalize } from 'rxjs';
 import { HAULIER_ROLE_OPTIONS, ROLE_OPTIONS } from '../listing/filter/constant';
@@ -55,12 +56,12 @@ export class InviteUserComponent {
       return;
     }
 
-    this.submitting.set(true);
-
     if (this.inviteForm.invalid) {
-      this.inviteForm.markAllAsTouched();
+      scrollToFirstInvalidControl(this.inviteForm);
       return;
     }
+
+    this.submitting.set(true);
 
     const payload = this.inviteUserPayload();
 

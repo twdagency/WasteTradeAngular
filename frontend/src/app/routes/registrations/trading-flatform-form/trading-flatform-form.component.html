@@ -274,7 +274,6 @@
             mat-flat-button
             class="w-100 big-btn fw-bold"
             [class.overlay-spinner]="submitting()"
-            [disabled]="formGroup.invalid"
             (click)="send()"
           >
             {{ 'CREATE ACCOUNT' | translate }}

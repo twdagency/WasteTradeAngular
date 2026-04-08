@@ -16,6 +16,7 @@ import { Company } from 'app/models';
 import { SettingsService } from 'app/services/settings.service';
 import { ConfirmModalComponent } from 'app/share/ui/confirm-modal/confirm-modal.component';
 import { MAP_COMPANY_TYPE_TO_LABEL } from 'app/share/utils/account-setting';
+import { scrollToFirstInvalidControl } from 'app/utils/form.utils';
 import { catchError, EMPTY, finalize } from 'rxjs';
 
 @Component({
@@ -130,9 +131,8 @@ export class EditCompanyInformationFormComponent implements OnInit {
       return;
     }
 
-    this.formGroup.markAllAsTouched();
-
     if (this.formGroup.invalid) {
+      scrollToFirstInvalidControl(this.formGroup);
       return;
     }
 

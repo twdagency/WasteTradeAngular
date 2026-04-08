@@ -91,7 +91,7 @@
       mat-stroked-button
       color="primary"
       class="w-100 py-2 primary-btn submit-btn"
-      [disabled]="inviteForm.invalid || submitting()"
+      [disabled]="submitting()"
       (click)="submit()"
     >
       {{ 'SEND INVITE' | translate }}

@@ -98,7 +98,7 @@
             </mat-form-field>
           </div>
           <div class="w-100 mb-4">
-            <app-telephone-form-control formControlName="phoneNumber"></app-telephone-form-control>
+            <app-telephone-form-control formControlName="phoneNumber" [isRequired]="true"></app-telephone-form-control>
           </div>
         </div>
       </div>
@@ -370,6 +370,12 @@
                 {{ 'No' | translate }}
               </mat-radio-button>
             </mat-radio-group>
+            @if (
+              formGroup.get('haveAccessRestrictions')?.hasError('required') &&
+              (formGroup.get('haveAccessRestrictions')?.touched || formGroup.get('haveAccessRestrictions')?.dirty)
+            ) {
+              <mat-error class="mt-0 mat-error">{{ 'This field is required' | translate }}</mat-error>
+            }
           </div>
           @if (showAccessRestriction()) {
             <div class="col-12 mb-4">
@@ -425,7 +431,7 @@
             type="submit"
             class="w-100 fw-bold"
             [class.overlay-spinner]="submitting()"
-            [disabled]="isSubmitDisabled"
+            [disabled]="submitting()"
             (click)="submit()"
           >
             {{ (mode == 'add' ? 'ADD NEW LOCATION' : 'UPDATE DETAILS') | translate }}
@@ -438,7 +444,7 @@
             type="submit"
             class="w-100 fw-bold"
             [class.overlay-spinner]="submitting()"
-            [disabled]="isSubmitDisabled"
+            [disabled]="submitting()"
             (click)="submit()"
           >
             {{ 'SUBMIT' | translate }}

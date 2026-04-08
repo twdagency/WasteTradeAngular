@@ -88,7 +88,16 @@ export class UploadDocumentsDialogComponent {
   }
 
   onSubmit() {
-    if (!this.isValid() || this.submitting()) return;
+    if (this.submitting()) return;
+
+    if (!this.isValid()) {
+      this.snackBar.open(
+        this.translate.transform(localized$('Please select at least one document type and upload the required files.')),
+        this.translate.transform(localized$('Ok')),
+        { duration: 4000 },
+      );
+      return;
+    }
 
     this.submitting.set(true);
 

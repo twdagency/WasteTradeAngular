@@ -10,6 +10,7 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { marker as localized$ } from '@colsen1991/ngx-translate-extract-marker';
 import { TranslateModule } from '@ngx-translate/core';
 import { IconComponent } from 'app/layout/common/icon/icon.component';
+import { scrollToFirstInvalidControl } from 'app/utils/form.utils';
 import { tap } from 'rxjs';
 
 interface Option {
@@ -118,7 +119,8 @@ export class AdminMemberRequestInforComponent {
   }
 
   confirm(): void {
-    if (!this.requestInfoForm.valid) {
+    if (this.requestInfoForm.invalid) {
+      scrollToFirstInvalidControl(this.requestInfoForm);
       return;
     }
 

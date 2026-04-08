@@ -15,6 +15,7 @@ import { IconComponent } from 'app/layout/common/icon/icon.component';
 import { SettingsService } from 'app/services/settings.service';
 import { ConfirmModalComponent } from 'app/share/ui/confirm-modal/confirm-modal.component';
 import { createMaterialSelectionController } from 'app/share/utils/material-selection';
+import { scrollToFirstInvalidControl } from 'app/utils/form.utils';
 import { catchError, EMPTY, finalize } from 'rxjs';
 
 @Component({
@@ -164,9 +165,8 @@ export class EditMaterialFormComponent implements OnInit {
   }
 
   submit() {
-    this.formGroup.markAllAsTouched();
-
     if (this.formGroup.invalid) {
+      scrollToFirstInvalidControl(this.formGroup);
       return;
     }
 

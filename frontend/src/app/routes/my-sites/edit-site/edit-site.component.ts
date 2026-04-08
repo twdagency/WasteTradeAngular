@@ -42,6 +42,7 @@ import { catchError, EMPTY, finalize, retry } from 'rxjs';
 import { TelephoneFormControlComponent } from '../../../share/ui/telephone-form-control/telephone-form-control.component';
 import { TimeInputFormControlComponent } from '../../../share/ui/time-input-form-control/time-input-form-control.component';
 import { ContainerTypeList } from 'app/models/location.model';
+import { scrollToFirstInvalidControl } from 'app/utils/form.utils';
 
 @Component({
   selector: 'app-edit-site',
@@ -466,17 +467,14 @@ export class EditSiteComponent implements OnInit, AfterViewInit {
 
   get isSubmitDisabled(): boolean {
     return (
-      this.formGroup.invalid ||
-      this.formGroup.pristine ||
       (this.formGroup.value.wasteLicence && this.selectedFiles().length === 0) ||
       !(this.formGroup.dirty || this.isDocumentsChanged(this.wasteCarrierLicenseDocuments, [...this.selectedFiles()]))
     );
   }
 
   submit() {
-    this.formGroup.markAllAsTouched();
-
     if (this.formGroup.invalid) {
+      scrollToFirstInvalidControl(this.formGroup);
       return;
     }
 

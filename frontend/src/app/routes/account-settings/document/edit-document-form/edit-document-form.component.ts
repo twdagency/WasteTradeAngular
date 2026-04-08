@@ -18,6 +18,7 @@ import { AuthService } from 'app/services/auth.service';
 import { SettingsService } from 'app/services/settings.service';
 import { UploadService } from 'app/share/services/upload.service';
 import { ConfirmModalComponent } from 'app/share/ui/confirm-modal/confirm-modal.component';
+import { scrollToFirstInvalidControl } from 'app/utils/form.utils';
 import moment from 'moment';
 import { catchError, concatMap, finalize, of } from 'rxjs';
 
@@ -246,19 +247,15 @@ export class EditDocumentFormComponent implements OnInit {
   }
 
   get isSubmitDisabled() {
-    if (this.formGroup.invalid) {
-      return true;
-    } else {
-      const exitsFile = this.selectedDocumentFile().filter((f) => f.documentType == this.documentType.value);
-      const { wasteLicence } = this.formGroup.value;
-      const validDocument = exitsFile.length > 0;
-      const validLicence = wasteLicence ? this.selectedWasteLicenceFile().length > 0 : true;
-      const hasDocumentChanges = this.isDocumentsChanged(this.companyDocuments, [
-        ...this.selectedDocumentFile(),
-        ...this.selectedWasteLicenceFile(),
-      ]);
-      return !(validDocument && validLicence && hasDocumentChanges);
-    }
+    const exitsFile = this.selectedDocumentFile().filter((f) => f.documentType == this.documentType.value);
+    const { wasteLicence } = this.formGroup.value;
+    const validDocument = exitsFile.length > 0;
+    const validLicence = wasteLicence ? this.selectedWasteLicenceFile().length > 0 : true;
+    const hasDocumentChanges = this.isDocumentsChanged(this.companyDocuments, [
+      ...this.selectedDocumentFile(),
+      ...this.selectedWasteLicenceFile(),
+    ]);
+    return !(validDocument && validLicence && hasDocumentChanges);
   }
 
   close() {
@@ -288,9 +285,8 @@ export class EditDocumentFormComponent implements OnInit {
   }
 
   submit() {
-    this.formGroup.markAllAsTouched();
-
     if (this.formGroup.invalid) {
+      scrollToFirstInvalidControl(this.formGroup);
       return;
     }
 

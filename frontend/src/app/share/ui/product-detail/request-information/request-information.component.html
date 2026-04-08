@@ -37,7 +37,7 @@
     <div class="d-flex justify-content-between align-items-center gap-3 col-md-12 col-12s">
       <button
         mat-flat-button
-        [disabled]="formGroup.invalid || formGroup.pristine"
+        [disabled]="submitting()"
         class="text-uppercase primary-btn w-100 fw-bold py-3"
         [class.overlay-spinner]="submitting()"
         (click)="submit()"

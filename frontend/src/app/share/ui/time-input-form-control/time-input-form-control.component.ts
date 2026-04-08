@@ -1,10 +1,11 @@
-import { Component, forwardRef, Input, OnInit } from '@angular/core';
+import { Component, DoCheck, forwardRef, inject, Injector, Input, OnInit } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import {
   ControlValueAccessor,
   FormControl,
   FormGroup,
   NG_VALUE_ACCESSOR,
+  NgControl,
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
@@ -25,12 +26,15 @@ import { TranslateModule } from '@ngx-translate/core';
     },
   ],
 })
-export class TimeInputFormControlComponent implements OnInit, ControlValueAccessor {
+export class TimeInputFormControlComponent implements OnInit, DoCheck, ControlValueAccessor {
   @Input() minHour = 0;
   @Input() maxHour = 23;
   @Input() minMinute = 0;
   @Input() maxMinute = 59;
   @Input() required: boolean = false;
+
+  private readonly injector = inject(Injector);
+  private ngControl: NgControl | null = null;
 
   private onTouched: () => void = () => {};
   private onChanged: (value: string | null) => void = () => {};
@@ -52,6 +56,8 @@ export class TimeInputFormControlComponent implements OnInit, ControlValueAccess
   }
 
   ngOnInit() {
+    this.ngControl = this.injector.get(NgControl, null);
+
     if (this.required) {
       this.formGroup.get('hour')?.addValidators(Validators.required);
       this.formGroup.get('minute')?.addValidators(Validators.required);
@@ -90,6 +96,12 @@ export class TimeInputFormControlComponent implements OnInit, ControlValueAccess
 
   registerOnTouched(fn: any): void {
     this.onTouched = fn;
+  }
+
+  ngDoCheck() {
+    if (this.ngControl?.control?.touched && !this.formGroup.touched) {
+      this.formGroup.markAllAsTouched();
+    }
   }
 
   markAsTouched() {

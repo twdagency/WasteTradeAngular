@@ -128,9 +128,12 @@ export class ListingOffersDetailComponent {
         value: getMaterialTypeLabel(detail?.listing?.materialType ?? ''),
       },
       {
-        label: this.translate.transform(localized$('Price per Load')),
-        icon: 'sell',
-        value: this.translate.transform(localized$('Inviting Bids')),
+        label: this.translate.transform(localized$('Quantity available')),
+        icon: 'inventory_2',
+        value:
+          detail?.listing.totalWeight != null
+            ? `${this.decimal.transform(detail.listing.totalWeight) ?? '-'} ${this.translate.transform(localized$('MT'))}`
+            : '-',
       },
       {
         label: this.translate.transform(localized$(`No. of Loads`)),

@@ -31,8 +31,7 @@
     <button
       mat-stroked-button
       class="w-100 py-2 primary-btn submit-btn"
-      [disabled]="noteForm.invalid"
-      [disabled]="noteForm.invalid || submitting"
+      [disabled]="submitting"
       (click)="onSave()"
     >
       {{ 'SAVE AND CLOSE' | translate }}

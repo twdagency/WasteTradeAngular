@@ -37,7 +37,7 @@
             <app-product-expiry [listingDetail]="listingDetail" (renewListing)="handleRenewListing($event)" />
             <app-review-status [state]="listingDetail.listing.state"></app-review-status>
           }
-          <app-product-status [product]="listingDetail.listing"></app-product-status>
+          <app-product-status [product]="listingDetail.listing" [suppressPendingPill]="true"></app-product-status>
           <app-material-owner [listingDetail]="listingDetail" />
 
           @if (!isOwnListing()) {

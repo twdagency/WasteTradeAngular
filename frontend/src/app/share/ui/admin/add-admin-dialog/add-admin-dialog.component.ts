@@ -18,6 +18,7 @@ import { AuthService } from 'app/services/auth.service';
 import { TelephoneFormControlComponent } from 'app/share/ui/telephone-form-control/telephone-form-control.component';
 import { strictEmailValidator } from 'app/share/validators/strict-email';
 import { Role } from 'app/types/auth';
+import { scrollToFirstInvalidControl } from 'app/utils/form.utils';
 
 export interface AdminUser {
   id: number;
@@ -127,7 +128,7 @@ export class AddAdminDialogComponent {
 
   onSave() {
     if (this.addAdminForm.invalid) {
-      this.addAdminForm.markAllAsTouched();
+      scrollToFirstInvalidControl(this.addAdminForm);
       return;
     }
 

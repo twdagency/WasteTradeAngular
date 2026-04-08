@@ -19,8 +19,6 @@
         [items]="items()"
         [totalItems]="totalItem()"
         (selectItem)="onSelect($event)"
-        (delete)="deleteItem($event)"
-        [deletable]="true"
       ></app-product-grid>
       <app-pagination [pageNumber]="page()" [totalCount]="totalItem()" (pageChange)="onPageChange($event)"></app-pagination>
     } @else {

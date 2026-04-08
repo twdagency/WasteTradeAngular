@@ -6,7 +6,7 @@ import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
-import { MatRadioChange, MatRadioModule } from '@angular/material/radio';
+import { MatRadioModule } from '@angular/material/radio';
 import { MatSelectModule } from '@angular/material/select';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
@@ -18,7 +18,9 @@ import { TranslateModule, TranslatePipe } from '@ngx-translate/core';
 import { AuthService } from 'app/services/auth.service';
 import { ListingService } from 'app/services/listing.service';
 import { UploadService } from 'app/share/services/upload.service';
-import { addLanguagePrefix } from 'app/utils/language.utils';
+import { ROUTES_WITH_SLASH } from 'app/constants/route.const';
+import { scrollToFirstInvalidControl } from 'app/utils/form.utils';
+import moment from 'moment';
 import { catchError, concatMap, filter, finalize, of, take } from 'rxjs';
 
 @Component({
@@ -48,7 +50,6 @@ export class ListWantedMaterialFormComponent implements OnInit {
   companyId: number | undefined;
   today = new Date();
 
-  onGoingListing = signal<boolean | undefined>(undefined);
   itemOption = signal<{ code: string; name: string }[]>([]);
   formOption = signal<{ code: string; name: string }[]>([]);
   gradingOption = signal<{ code: string; name: string }[]>([]);
@@ -81,10 +82,6 @@ export class ListWantedMaterialFormComponent implements OnInit {
     startDate: new FormControl<Date | null>(null, [Validators.required, pastDateValidator()]),
 
     additionalNotes: new FormControl<string | null>(null, [Validators.maxLength(1000), noForbiddenPatternsValidator()]),
-
-    ongoingListing: new FormControl<string | null>(null, [Validators.required]),
-    listingRenewalPeriod: new FormControl<string | null>(null, [Validators.required]),
-    listingDuration: new FormControl<Date | null>(null),
   });
 
   constructor() {
@@ -103,12 +100,6 @@ export class ListWantedMaterialFormComponent implements OnInit {
         this.additionalInformationLength.set(additionalNotes?.length);
       }
     });
-
-    const currentDate = new Date();
-    const futureDate = new Date(currentDate);
-    futureDate.setDate(currentDate.getDate() + 30);
-
-    this.formGroup.patchValue({ listingDuration: futureDate }, { emitEvent: false });
 
     effect(() => {
       const { materialForm, materialGrading, materialItem } = this.formGroup.controls;
@@ -179,22 +170,6 @@ export class ListWantedMaterialFormComponent implements OnInit {
     }
   }
 
-  ongoingListingChange(event: MatRadioChange) {
-    const { listingDuration, listingRenewalPeriod } = this.formGroup.controls;
-    listingDuration.markAsUntouched();
-    listingRenewalPeriod.markAsUntouched();
-    if (event.value == 'true') {
-      listingDuration.clearValidators();
-      listingRenewalPeriod.setValidators(Validators.required);
-    } else {
-      listingDuration.setValidators([Validators.required, pastDateValidator()]);
-      listingRenewalPeriod.clearValidators();
-    }
-
-    listingDuration.updateValueAndValidity();
-    listingRenewalPeriod.updateValueAndValidity();
-  }
-
   private convertToTon() {
     const { weightUnit, materialWeightWanted } = this.formGroup.value;
     if (!weightUnit || !materialWeightWanted) return null;
@@ -207,15 +182,24 @@ export class ListWantedMaterialFormComponent implements OnInit {
   }
 
   send() {
-    if (this.formGroup.invalid) return;
-    let { weightUnit, materialWeightWanted, ongoingListing, ...value } = this.formGroup.value;
+    if (this.formGroup.invalid) {
+      scrollToFirstInvalidControl(this.formGroup);
+      return;
+    }
+
+    if (!this.selectedFile().length) {
+      this.snackBar.open(this.translate.transform(localized$('Please upload at least one image before submitting.')));
+      return;
+    }
+
+    let { weightUnit, materialWeightWanted, ...value } = this.formGroup.value;
 
     const payload: any = {
       ...value,
       listingType: 'wanted',
       companyId: this.companyId,
       materialWeightWanted: this.convertToTon(),
-      startDate: value.startDate?.toISOString(),
+      startDate: value.startDate ? moment(value.startDate).format('YYYY-MM-DD') + 'T00:00:00.000Z' : null,
     };
 
     if (!this.itemOption().length) {
@@ -229,8 +213,6 @@ export class ListWantedMaterialFormComponent implements OnInit {
     if (!this.gradingOption().length) {
       delete payload.materialGrading;
     }
-
-    ongoingListing == 'true' ? delete payload.listingDuration : delete payload.listingRenewalPeriod;
 
     this.submitting.set(true);
 
@@ -284,7 +266,7 @@ export class ListWantedMaterialFormComponent implements OnInit {
               duration: 3000,
             },
           );
-          this.router.navigate([addLanguagePrefix('/wanted')]);
+          this.router.navigateByUrl(ROUTES_WITH_SLASH.wantedListings);
         }
       });
   }

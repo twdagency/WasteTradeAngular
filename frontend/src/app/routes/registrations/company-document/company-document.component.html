@@ -218,13 +218,10 @@
           </div>
           <div class="col-3">
             <button
-              [disabled]="isSubmitDisabled"
               type="submit"
-              [class.background-primary]="!isSubmitDisabled"
-              [class.text-white]="!isSubmitDisabled"
               [class.overlay-spinner]="submitting()"
               mat-flat-button
-              class="w-100 p-2 fw-bold"
+              class="w-100 p-2 fw-bold background-primary text-white"
               (click)="send('/site-location')"
             >
               {{ 'NEXT' | translate }}

@@ -22,6 +22,7 @@ import { DraftRegisterService } from 'app/services/draft-register.service';
 import { RegistrationsService } from 'app/services/registrations.service';
 import { SeoService } from 'app/services/seo.service';
 import { addLanguagePrefix } from 'app/utils/language.utils';
+import { scrollToFirstInvalidControl } from 'app/utils/form.utils';
 import { catchError, combineLatest, concatMap, filter, finalize, of, switchMap, take } from 'rxjs';
 import { CompanyLookupResult } from 'app/share/ui/vat-number-lookup/vat-number-lookup.component';
 import { ExistingCompanyFoundModalComponent } from 'app/share/ui/vat-number-lookup/existing-company-found-modal/existing-company-found-modal.component';
@@ -170,6 +171,7 @@ export class CompanyInformationSectionComponent implements OnInit, OnDestroy {
 
   submit(navigateTo: string) {
     if (this.formGroup.invalid || !this.companyId) {
+      scrollToFirstInvalidControl(this.formGroup);
       return;
     }
 
@@ -179,7 +181,6 @@ export class CompanyInformationSectionComponent implements OnInit, OnDestroy {
       return;
     }
 
-    this.formGroup.markAllAsTouched();
     const { vatNumberEuUk, vatNumberOther, ...payload }: any = this.formGroup.value;
     payload.vatNumber = currentVatControl?.value ?? '';
 
