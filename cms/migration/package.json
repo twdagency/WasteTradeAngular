@@ -8,7 +8,8 @@
     "migrate:dry-run": "node index.js --dry-run",
     "migrate:sql": "node sql-migrate.js",
     "migrate:sql:dry-run": "node sql-migrate.js --dry-run",
-    "extract": "node sql-migrate.js --extract-only"
+    "extract": "node sql-migrate.js --extract-only",
+    "upload:remote": "node upload-to-remote.js"
   },
   "dependencies": {
     "axios": "^1.7.0",

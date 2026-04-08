@@ -161,3 +161,14 @@ export interface CmsResource {
   createdAt: string;
   updatedAt: string;
 }
+
+export interface CmsMaterialLandingPage {
+  id: number;
+  documentId: string;
+  title: string;
+  slug: string;
+  content: StrapiBlockNode[];
+  seoDescription: string | null;
+  createdAt: string;
+  updatedAt: string;
+}

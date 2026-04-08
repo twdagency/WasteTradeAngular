@@ -11,7 +11,7 @@ import { addLanguagePrefix } from 'app/utils/language.utils';
 interface MaterialLink {
   abbreviation: string;
   name: string;
-  url: string;
+  slug: string;
 }
 
 @Component({
@@ -36,15 +36,16 @@ export class CmsHeaderComponent implements OnDestroy {
   menuOpen = signal(false);
 
   materials: MaterialLink[] = [
-    { abbreviation: 'PET', name: 'Polyethylene Terephthalate', url: 'https://www.wastetrade.com/pet-recycling/' },
-    { abbreviation: 'HDPE', name: 'High-density Polyethylene', url: 'https://www.wastetrade.com/hdpe-recycling/' },
-    { abbreviation: 'PVC', name: 'Polyvinyl Chloride', url: 'https://www.wastetrade.com/pvc-recycling/' },
-    { abbreviation: 'LDPE', name: 'Low-Density Polyethylene', url: 'https://www.wastetrade.com/ldpe-recycling/' },
-    { abbreviation: 'PP', name: 'Polypropylene', url: 'https://www.wastetrade.com/pp-recycling/' },
-    { abbreviation: 'EPS', name: 'Expanded Polystyrene', url: 'https://www.wastetrade.com/eps-recycling/' },
-    { abbreviation: 'PC', name: 'Polycarbonate', url: 'https://www.wastetrade.com/pc-recycling/' },
-    { abbreviation: 'ABS', name: 'Acrylonitrile Butadiene Styrene', url: 'https://www.wastetrade.com/abs-recycling/' },
-    { abbreviation: 'PMMA', name: 'Acrylic', url: 'https://www.wastetrade.com/acrylic-recycling/' },
+    { abbreviation: 'PET', name: 'Polyethylene Terephthalate', slug: 'pet-recycling' },
+    { abbreviation: 'HDPE', name: 'High-density Polyethylene', slug: 'hdpe-recycling' },
+    { abbreviation: 'PVC', name: 'Polyvinyl Chloride', slug: 'pvc-recycling' },
+    { abbreviation: 'LDPE', name: 'Low-Density Polyethylene', slug: 'ldpe-recycling' },
+    { abbreviation: 'PP', name: 'Polypropylene', slug: 'pp-recycling' },
+    { abbreviation: 'EPS', name: 'Expanded Polystyrene', slug: 'eps-recycling' },
+    { abbreviation: 'PC', name: 'Polycarbonate', slug: 'pc-recycling' },
+    { abbreviation: 'ABS', name: 'Acrylonitrile Butadiene Styrene', slug: 'abs-recycling' },
+    { abbreviation: 'PMMA', name: 'Acrylic', slug: 'acrylic-recycling' },
+    { abbreviation: 'Tyres', name: 'Tyres', slug: 'tyres-recycling' },
   ];
 
   constructor() {

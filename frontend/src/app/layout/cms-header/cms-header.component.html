@@ -29,7 +29,7 @@
         <a href="javascript:void(0)">Materials <mat-icon class="dd-arrow">expand_more</mat-icon></a>
         <ul class="dropdown-menu">
           @for (m of materials; track m.abbreviation) {
-            <li><a (click)="closeMenu()" [href]="m.url" target="_blank">{{ m.abbreviation }} — {{ m.name }}</a></li>
+            <li><a (click)="closeMenu()" [routerLink]="['/materials', m.slug]">{{ m.abbreviation }} — {{ m.name }}</a></li>
           }
         </ul>
       </li>

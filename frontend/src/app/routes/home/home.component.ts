@@ -29,7 +29,7 @@ interface MaterialItem {
   abbreviation: string;
   description: string;
   image: string;
-  learnMoreUrl: string;
+  slug: string;
 }
 
 interface FaqItem {
@@ -333,7 +333,7 @@ export class HomeComponent implements OnInit, OnDestroy {
       description:
         'PET is formed when ethylene glycol and terephthalic acid are combined. It is a clear plastic that is both strong and lightweight enough to be popularly used for food and beverage packaging, with close to all single-use plastic drinks bottles being made from PET.',
       image: `${WP}/2022/04/PET-plastic-straps-baled.jpg`,
-      learnMoreUrl: 'https://www.wastetrade.com/pet-recycling/',
+      slug: 'pet-recycling',
     },
     {
       name: 'High-density Polyethylene',
@@ -341,7 +341,7 @@ export class HomeComponent implements OnInit, OnDestroy {
       description:
         'HDPE is made from the monomer ethylene. It is a thermoplastic that becomes softer when heated to be moulded and then hardens when cooled. The material is incredibly versatile as it is lightweight, strong, malleable, impact resistant and long lasting.',
       image: `${WP}/2022/04/hdpe-piping-1.jpg`,
-      learnMoreUrl: 'https://www.wastetrade.com/hdpe-recycling/',
+      slug: 'hdpe-recycling',
     },
     {
       name: 'Polyvinyl Chloride',
@@ -349,7 +349,7 @@ export class HomeComponent implements OnInit, OnDestroy {
       description:
         'PVC is made by combining chlorine and ethylene to form vinyl chloride monomer. PVC is very strong, tough and can be easily shaped, giving it many different uses in construction, automotive and medical applications.',
       image: `${WP}/2022/05/PVC-Plastic-scaled-1-1-2.jpg`,
-      learnMoreUrl: 'https://www.wastetrade.com/pvc-recycling/',
+      slug: 'pvc-recycling',
     },
     {
       name: 'Low-Density Polyethylene',
@@ -357,7 +357,7 @@ export class HomeComponent implements OnInit, OnDestroy {
       description:
         'LDPE is a thermoplastic made from the monomer ethylene. The plastic is lightweight, strong, impact resistant and chemical resistant. LDPE is ideal for manufacturing thin, flexible products such as plastic bags, shrink-wrap and stretch film.',
       image: `${WP}/2022/04/LDPE-on-a-roll-in-a-factory-1.jpg`,
-      learnMoreUrl: 'https://www.wastetrade.com/ldpe-recycling/',
+      slug: 'ldpe-recycling',
     },
     {
       name: 'Polypropylene',
@@ -365,7 +365,7 @@ export class HomeComponent implements OnInit, OnDestroy {
       description:
         'PP is a thermoplastic made from the monomer propylene. PP is tough, lightweight, chemical resistant and moisture resistant. The plastic is used for a wide range of products such as packaging, automotive parts and consumer goods.',
       image: `${WP}/2022/05/PP1-1-1-2.jpg`,
-      learnMoreUrl: 'https://www.wastetrade.com/pp-recycling/',
+      slug: 'pp-recycling',
     },
     {
       name: 'Expanded Polystyrene',
@@ -373,7 +373,7 @@ export class HomeComponent implements OnInit, OnDestroy {
       description:
         'EPS is made from beads of Polystyrene expanded by gas. It is lightweight, tough and good for use as insulation. It is used in packaging material, furniture, sports equipment and construction.',
       image: `${WP}/2022/07/EPS-Preview.jpg`,
-      learnMoreUrl: 'https://www.wastetrade.com/eps-recycling/',
+      slug: 'eps-recycling',
     },
     {
       name: 'Polycarbonate',
@@ -381,7 +381,7 @@ export class HomeComponent implements OnInit, OnDestroy {
       description:
         'PC is an impact resistant thermoplastic with excellent optical clarity. It is widely used in electronics, automotive components, medical devices and safety equipment.',
       image: 'assets/images/product-placeholder-image.png',
-      learnMoreUrl: 'https://www.wastetrade.com/pc-recycling/',
+      slug: 'pc-recycling',
     },
     {
       name: 'Acrylonitrile Butadiene Styrene',
@@ -389,7 +389,7 @@ export class HomeComponent implements OnInit, OnDestroy {
       description:
         'ABS is a polymer made from acrylonitrile, butadiene and styrene. It is stiff, strong, impact resistant and chemical resistant. Used for computer parts, tools, plug socket faces and toys.',
       image: `${WP}/2022/07/ABS-Preview.jpg`,
-      learnMoreUrl: 'https://www.wastetrade.com/abs-recycling/',
+      slug: 'abs-recycling',
     },
     {
       name: 'Acrylic (PMMA)',
@@ -397,7 +397,15 @@ export class HomeComponent implements OnInit, OnDestroy {
       description:
         'Acrylic is a transparent thermoplastic often used as a lightweight, shatter-resistant alternative to glass. Common in signage, displays, aquariums and medical devices.',
       image: 'assets/images/product-placeholder-image.png',
-      learnMoreUrl: 'https://www.wastetrade.com/acrylic-recycling/',
+      slug: 'acrylic-recycling',
+    },
+    {
+      name: 'Tyres',
+      abbreviation: 'Tyres',
+      description:
+        'Tyres are engineered to withstand extreme wear, making them valuable in use but problematic at the end of their life. WasteTrade connects businesses with verified tyre recyclers worldwide.',
+      image: 'assets/images/product-placeholder-image.png',
+      slug: 'tyres-recycling',
     },
   ];
 

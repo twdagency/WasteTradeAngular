@@ -1,0 +1,32 @@
+<app-cms-header />
+
+@if (material(); as m) {
+  <section class="material-header">
+    <div class="container">
+      <a [routerLink]="['/']" class="breadcrumb">← Back to Home</a>
+      <h1>{{ m.title }}</h1>
+    </div>
+  </section>
+
+  <section class="material-body">
+    <div class="container">
+      <div class="content" [innerHTML]="m.content | strapiBlocks"></div>
+    </div>
+  </section>
+} @else if (loading()) {
+  <div class="loading-state">
+    <div class="container">
+      <p>Loading material...</p>
+    </div>
+  </div>
+} @else if (notFound()) {
+  <div class="not-found">
+    <div class="container">
+      <h1>Material Not Found</h1>
+      <p>The material page you're looking for doesn't exist or has been removed.</p>
+      <a routerLink="/" class="back-link">← Back to Home</a>
+    </div>
+  </div>
+}
+
+<app-footer />

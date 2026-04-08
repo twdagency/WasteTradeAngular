@@ -643,6 +643,13 @@ const appRoutes: Routes = [
         (m) => m.ResourceSingleComponent,
       ),
   },
+  {
+    path: `${ROUTES.materials}/:slug`,
+    loadComponent: () =>
+      import('./routes/cms/materials/material-single/material-single.component').then(
+        (m) => m.MaterialSingleComponent,
+      ),
+  },
 
   { path: '**', pathMatch: 'full', redirectTo: '' },
 ];

@@ -4,6 +4,7 @@ import { environment } from '@app/environments';
 import {
   CmsArticle,
   CmsJob,
+  CmsMaterialLandingPage,
   CmsResource,
   StrapiResponse,
   StrapiSingleResponse,
@@ -92,6 +93,28 @@ export class CmsService {
 
     return this.http
       .get<StrapiResponse<CmsResource>>(`${this.baseUrl}/api/resources`, { params })
+      .pipe(map((res) => res.data?.[0] ?? null));
+  }
+
+  // --- Material Landing Pages ---
+
+  getMaterialLandingPages(page = 1, pageSize = 50): Observable<StrapiResponse<CmsMaterialLandingPage>> {
+    const params = new HttpParams()
+      .set('sort', 'title:asc')
+      .set('pagination[page]', page.toString())
+      .set('pagination[pageSize]', pageSize.toString());
+
+    return this.http.get<StrapiResponse<CmsMaterialLandingPage>>(
+      `${this.baseUrl}/api/material-landing-pages`,
+      { params },
+    );
+  }
+
+  getMaterialLandingPageBySlug(slug: string): Observable<CmsMaterialLandingPage | null> {
+    const params = new HttpParams().set('filters[slug][$eq]', slug);
+
+    return this.http
+      .get<StrapiResponse<CmsMaterialLandingPage>>(`${this.baseUrl}/api/material-landing-pages`, { params })
       .pipe(map((res) => res.data?.[0] ?? null));
   }
 

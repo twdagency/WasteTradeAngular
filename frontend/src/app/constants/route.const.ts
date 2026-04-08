@@ -43,6 +43,7 @@ export const ROUTES = {
   vacancies: 'vacancies',
   resources: 'resources',
   news: 'news',
+  materials: 'materials',
 };
 
 const ROUTES_BASE = {
@@ -88,6 +89,7 @@ const ROUTES_BASE = {
   vacancies: '/vacancies',
   resources: '/resources',
   news: '/news',
+  materials: '/materials',
 };
 
 // Create a Proxy to automatically add language prefix to all routes

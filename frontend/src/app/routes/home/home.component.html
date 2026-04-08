@@ -30,7 +30,7 @@
         <a href="javascript:void(0)">Materials <mat-icon class="dd-arrow">expand_more</mat-icon></a>
         <ul class="dropdown-menu">
           @for (m of materials; track m.abbreviation) {
-            <li><a (click)="closeMenu()" [href]="m.learnMoreUrl" target="_blank">{{ m.abbreviation }} — {{ m.name }}</a></li>
+            <li><a (click)="closeMenu()" [routerLink]="['/materials', m.slug]">{{ m.abbreviation }} — {{ m.name }}</a></li>
           }
         </ul>
       </li>
@@ -201,7 +201,7 @@
               <span class="material-badge">{{ m.abbreviation }}</span>
               <h3>{{ m.name }}</h3>
               <p>{{ m.description }}</p>
-              <a [href]="m.learnMoreUrl" target="_blank" class="material-learn-more">
+              <a [routerLink]="['/materials', m.slug]" class="material-learn-more">
                 Learn more about {{ m.abbreviation }} <mat-icon>arrow_forward</mat-icon>
               </a>
             </div>
