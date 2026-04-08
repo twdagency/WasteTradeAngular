@@ -42,9 +42,9 @@
       </button>
       <button
         mat-flat-button
-        [disabled]="formGroup.invalid"
         class="text-uppercase primary-btn w-100 fw-bold py-3"
         [class.overlay-spinner]="submitting()"
+        [disabled]="submitting()"
         (click)="submit()"
       >
         {{ 'CONFIRM' | translate }}

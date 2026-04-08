@@ -2,7 +2,7 @@ import { BindingScope, injectable, service } from '@loopback/core';
 import { repository } from '@loopback/repository';
 import { ListingsRepository, UserRepository } from '../repositories';
 import { Listings } from '../models';
-import { ListingStatus, NotificationType, RenewalPeriod } from '../enum';
+import { ListingStatus, ListingType, NotificationType, RenewalPeriod } from '../enum';
 import { EmailService } from './email.service';
 import { WasteTradeNotificationsService } from './waste-trade-notifications.service';
 import dayjsTz from '../helpers/dayjsTz.helper';
@@ -40,6 +40,17 @@ export class ListingExpiryService {
      * Warning in final 7 days
      */
     calculateExpiryInfo(listing: Listings): ExpiryInfo {
+        if (listing.listingType === ListingType.WANTED) {
+            const placeholder = new Date();
+            placeholder.setFullYear(placeholder.getFullYear() + 50);
+            return {
+                isExpired: false,
+                isNearingExpiry: false,
+                daysUntilExpiry: 99999,
+                expiryDate: placeholder,
+            };
+        }
+
         let expiryDate: Date;
 
         if (listing.endDate) {
@@ -78,6 +89,10 @@ export class ListingExpiryService {
         return activeListings.filter((listing) => {
             // Skip ongoing listings - they should be renewed, not expired
             if (listing.listingRenewalPeriod) {
+                return false;
+            }
+
+            if (listing.listingType === ListingType.WANTED) {
                 return false;
             }
 

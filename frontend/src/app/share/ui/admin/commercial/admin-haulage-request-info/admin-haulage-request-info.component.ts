@@ -9,6 +9,7 @@ import { MatRadioModule } from '@angular/material/radio';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { marker as localized$ } from '@colsen1991/ngx-translate-extract-marker';
 import { TranslateModule } from '@ngx-translate/core';
+import { scrollToFirstInvalidControl } from 'app/utils/form.utils';
 import { startWith } from 'rxjs';
 
 interface Option {
@@ -94,7 +95,7 @@ export class AdminHaulageRequestInfoComponent {
 
   confirm(): void {
     if (this.requestInfoForm.invalid) {
-      this.requestInfoForm.markAllAsTouched();
+      scrollToFirstInvalidControl(this.requestInfoForm);
       return;
     }
 

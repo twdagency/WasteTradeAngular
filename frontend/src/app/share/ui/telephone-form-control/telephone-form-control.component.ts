@@ -1,4 +1,4 @@
-import { Component, forwardRef, Input, OnInit } from '@angular/core';
+import { Component, DoCheck, forwardRef, inject, Injector, Input, OnInit } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import {
   AbstractControl,
@@ -6,6 +6,7 @@ import {
   FormControl,
   NG_VALIDATORS,
   NG_VALUE_ACCESSOR,
+  NgControl,
   ReactiveFormsModule,
   ValidationErrors,
   Validators,
@@ -34,12 +35,15 @@ import { countries } from '../../../statics/country-data';
     },
   ],
 })
-export class TelephoneFormControlComponent implements OnInit, ControlValueAccessor, Validators {
+export class TelephoneFormControlComponent implements OnInit, DoCheck, ControlValueAccessor, Validators {
   @Input() isRequired: boolean = false;
   @Input() label: string = 'TELEPHONE';
   @Input() isHalf: boolean = false;
   @Input() disabled: boolean = false;
   countryList = countries;
+
+  private readonly injector = inject(Injector);
+  private ngControl: NgControl | null = null;
 
   countryCodeControl = new FormControl<any | null>(null);
   telephoneControl = new FormControl<string | null>(null, [Validators.maxLength(15), Validators.pattern(/^\d*$/)]);
@@ -64,6 +68,8 @@ export class TelephoneFormControlComponent implements OnInit, ControlValueAccess
   }
 
   ngOnInit() {
+    this.ngControl = this.injector.get(NgControl, null);
+
     if (this.isRequired) {
       this.countryCodeControl.setValidators(Validators.required);
       this.telephoneControl.addValidators([Validators.required]);
@@ -75,6 +81,13 @@ export class TelephoneFormControlComponent implements OnInit, ControlValueAccess
     if (this.disabled) {
       this.countryCodeControl.disable();
       this.telephoneControl.disable();
+    }
+  }
+
+  ngDoCheck() {
+    if (this.ngControl?.control?.touched) {
+      this.telephoneControl.markAsTouched();
+      this.countryCodeControl.markAsTouched();
     }
   }
 

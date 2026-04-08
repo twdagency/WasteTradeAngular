@@ -48,6 +48,7 @@ import { HaulageService } from 'app/services/haulage.service';
 import { Permission, PermissionService } from 'app/services/permission.service';
 import { RegistrationsService } from 'app/services/registrations.service';
 import { base64ToFile, fileToBase64 } from 'app/share/utils/file';
+import { scrollToFirstInvalidControl } from 'app/utils/form.utils';
 import { checkPasswordStrength, pwdStrengthValidator, strictEmailValidator } from 'app/share/validators/';
 import moment from 'moment';
 import {
@@ -796,7 +797,10 @@ export class HaulierFormComponent implements OnInit, OnDestroy {
   }
 
   send() {
-    this.formGroup.markAllAsTouched();
+    if (this.formGroup.invalid) {
+      scrollToFirstInvalidControl(this.formGroup);
+      return;
+    }
 
     const vatCountry = this.formGroup.get('vatRegistrationCountry')?.value;
     const currentVatControl = this.getCurrentVatControl();
@@ -1118,23 +1122,19 @@ export class HaulierFormComponent implements OnInit, OnDestroy {
   );
 
   readonly disableButton$ = combineLatest([
-    this.formGroup.statusChanges.pipe(startWith(this.formGroup.status)),
     toObservable(this.selectedFiles),
     toObservable(this.submitting),
   ]).pipe(
-    map(([status, selected, submitting]) => {
+    map(([selected, submitting]) => {
       if (submitting) return { disabled: true, hasChanges: false };
 
-      console.log(this.formGroup.errors);
-
-      const formInvalid = status !== 'VALID';
       const licenceMode = this.formGroup.get('licenceMode')?.value;
       const hasSelectedFiles = selected.length > 0;
       const licenceChanged = this.hasLicenceChanged(selected);
 
       if (!this.isDialog) {
-        const disabled = formInvalid || !hasSelectedFiles || !this.fileUploadValid();
-        const hasChanges = this.formGroup.dirty || hasSelectedFiles; // file change = selected > 0
+        const disabled = !hasSelectedFiles || !this.fileUploadValid();
+        const hasChanges = this.formGroup.dirty || hasSelectedFiles;
 
         return { disabled, hasChanges };
       }
@@ -1151,7 +1151,7 @@ export class HaulierFormComponent implements OnInit, OnDestroy {
         return { disabled: true, hasChanges: true };
       }
 
-      return { disabled: formInvalid, hasChanges };
+      return { disabled: false, hasChanges };
     }),
 
     tap((state) => {

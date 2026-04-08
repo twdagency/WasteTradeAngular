@@ -11,6 +11,7 @@ import { Router } from '@angular/router';
 import { marker as localized$ } from '@colsen1991/ngx-translate-extract-marker';
 import { TranslateModule, TranslatePipe } from '@ngx-translate/core';
 import { ROUTES_WITH_SLASH } from 'app/constants/route.const';
+import { scrollToFirstInvalidControl } from 'app/utils/form.utils';
 import { AuthService } from 'app/services/auth.service';
 import { RegistrationsService } from 'app/services/registrations.service';
 import { strictEmailValidator } from 'app/share/validators/strict-email';
@@ -112,7 +113,7 @@ interface RequestToJoinModalData {
             mat-flat-button
             color="primary"
             class="px-4 primary-btn submit-btn"
-            [disabled]="formGroup.invalid || submitting()"
+            [disabled]="submitting()"
             [class.overlay-spinner]="submitting()"
           >
             SEND REQUEST
@@ -184,7 +185,7 @@ export class RequestToJoinModalComponent {
 
   sendRequest(): void {
     if (this.formGroup.invalid || this.submitting()) {
-      this.formGroup.markAllAsTouched();
+      scrollToFirstInvalidControl(this.formGroup);
       return;
     }
 

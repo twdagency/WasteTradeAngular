@@ -14,6 +14,7 @@ import { IconComponent } from 'app/layout/common/icon/icon.component';
 import { AdditionalUrl } from 'app/models';
 import { SettingsService } from 'app/services/settings.service';
 import { ConfirmModalComponent } from 'app/share/ui/confirm-modal/confirm-modal.component';
+import { scrollToFirstInvalidControl } from 'app/utils/form.utils';
 import { catchError, EMPTY, finalize } from 'rxjs';
 
 export const SOCIAL_URL_PATTERN =
@@ -157,9 +158,8 @@ export class EditSocialUrlFormComponent implements OnInit {
       return;
     }
 
-    this.formGroup.markAllAsTouched();
-
     if (this.formGroup.invalid) {
+      scrollToFirstInvalidControl(this.formGroup);
       return;
     }
 

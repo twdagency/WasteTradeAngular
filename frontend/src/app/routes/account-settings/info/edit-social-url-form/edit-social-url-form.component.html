@@ -94,7 +94,7 @@
                 type="button"
                 class="text-uppercase fw-bold"
                 (click)="addUrlGroup()"
-                [disabled]="newUrl.pristine || newUrl.invalid"
+                [disabled]="newUrl.pristine"
               >
                 {{ 'Add Social Link' | translate }}
               </button>
@@ -111,7 +111,7 @@
       </button>
       <button
         mat-flat-button
-        [disabled]="formGroup.invalid || formGroup.pristine"
+        [disabled]="submitting()"
         class="text-uppercase primary-btn fw-bold ms-md-2 col-md-6 col-12 me-2 me-md-0 fs-16"
         [class.overlay-spinner]="submitting()"
         (click)="submit()"

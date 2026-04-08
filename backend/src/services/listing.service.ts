@@ -132,22 +132,25 @@ export class ListingService {
             return isNaN(num) ? undefined : num;
         };
 
-        // Calculate endDate based on Phase 2 requirements:
+        // Calculate endDate based on Phase 2 requirements (sell listings only):
         // - If listingRenewalPeriod is set (ongoing listing), endDate is not set (null)
         // - If no renewal period (non-ongoing), endDate is automatically 90 days from startDate
+        // Wanted listings have no end date — they stay available until fulfilled or manually closed.
         let calculatedEndDate: Date | undefined = undefined;
 
-        if (listingData.endDate) {
-            // Use explicitly provided endDate
-            calculatedEndDate = new Date(listingData.endDate);
-        } else if (listingData.listingDuration) {
-            // Backward compatibility: use listingDuration if provided
-            calculatedEndDate = new Date(listingData.listingDuration);
-        } else if (!listingData.listingRenewalPeriod) {
-            // Phase 2: Non-ongoing listings default to 90 days from startDate
-            const startDate = listingData.startDate ? new Date(listingData.startDate) : new Date();
-            calculatedEndDate = new Date(startDate);
-            calculatedEndDate.setDate(calculatedEndDate.getDate() + 90);
+        if (listingData.listingType !== ListingType.WANTED) {
+            if (listingData.endDate) {
+                // Use explicitly provided endDate
+                calculatedEndDate = new Date(listingData.endDate);
+            } else if (listingData.listingDuration) {
+                // Backward compatibility: use listingDuration if provided
+                calculatedEndDate = new Date(listingData.listingDuration);
+            } else if (!listingData.listingRenewalPeriod) {
+                // Phase 2: Non-ongoing listings default to 90 days from startDate
+                const startDate = listingData.startDate ? new Date(listingData.startDate) : new Date();
+                calculatedEndDate = new Date(startDate);
+                calculatedEndDate.setDate(calculatedEndDate.getDate() + 90);
+            }
         }
         // If listingRenewalPeriod is set, calculatedEndDate remains undefined (ongoing listing)
 
@@ -194,6 +197,13 @@ export class ListingService {
             weightPerLoad = Number((totalWeight / numberOfLoads).toFixed(3));
         }
 
+        // Normalize startDate to midnight UTC to avoid timezone-induced day shifts.
+        // The DB column is "timestamp without time zone", so we must store the calendar
+        // day the user selected, not a timezone-shifted timestamp.
+        const normalizedStartDate = listingData.startDate
+            ? new Date(new Date(listingData.startDate).toISOString().slice(0, 10) + 'T00:00:00.000Z')
+            : undefined;
+
         const sanitizedData = {
             ...listingData,
             // Required numeric fields
@@ -220,6 +230,7 @@ export class ListingService {
             state: ListingState.PENDING,
             // Set calculated endDate
             endDate: calculatedEndDate,
+            startDate: normalizedStartDate,
         };
 
         // Validate required fields after sanitization
@@ -1896,11 +1907,6 @@ export class ListingService {
             throw new HttpErrors[403](messages.forbidden);
         }
 
-        // Pending listings cannot be edited
-        if (existingListing.status === ListingStatus.PENDING || existingListing.state === ListingState.PENDING) {
-            throw new HttpErrors[400](messages.listingNotAvailable);
-        }
-
         // Sold/Expired listings cannot be edited
         if (existingListing.status === ListingStatus.SOLD) {
             throw new HttpErrors[400](messages.listingAlreadySold);
@@ -1937,6 +1943,13 @@ export class ListingService {
         const sanitizedData: any = {
             ...listingData,
         };
+
+        // Normalize startDate to midnight UTC (same as createListing)
+        if (listingData.startDate) {
+            sanitizedData.startDate = new Date(
+                new Date(listingData.startDate).toISOString().slice(0, 10) + 'T00:00:00.000Z',
+            );
+        }
 
         // Sanitize numeric fields if they exist in the update
         if (listingData.locationId !== undefined) sanitizedData.locationId = sanitizeNumber(listingData.locationId);
@@ -1976,7 +1989,10 @@ export class ListingService {
         } else if (listingData.listingDuration) {
             // Backward compatibility
             sanitizedData.endDate = new Date(listingData.listingDuration);
-        } else if (listingData.listingRenewalPeriod !== undefined) {
+        } else if (
+            existingListing.listingType !== ListingType.WANTED &&
+            listingData.listingRenewalPeriod !== undefined
+        ) {
             // If renewal period is being updated
             if (!listingData.listingRenewalPeriod) {
                 // Changed from ongoing to non-ongoing: set 90-day default
@@ -1992,6 +2008,10 @@ export class ListingService {
                 // Changed to ongoing: clear endDate
                 sanitizedData.endDate = null;
             }
+        }
+
+        if (existingListing.listingType === ListingType.WANTED) {
+            sanitizedData.endDate = null;
         }
 
         // When editing, set status back to pending for admin approval
@@ -2052,6 +2072,10 @@ export class ListingService {
         // Cannot renew if sold
         if (listing.status === ListingStatus.SOLD) {
             throw new HttpErrors[400](messages.listingAlreadySold);
+        }
+
+        if (listing.listingType === ListingType.WANTED) {
+            throw new HttpErrors[400]('Wanted listings do not expire and cannot be renewed.');
         }
 
         // Cannot renew if rejected

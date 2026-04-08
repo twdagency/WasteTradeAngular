@@ -10,6 +10,7 @@ import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { marker as localized$ } from '@colsen1991/ngx-translate-extract-marker';
 import { TranslateModule } from '@ngx-translate/core';
 import { AdminListingService } from 'app/services/admin/admin-listing.service';
+import { scrollToFirstInvalidControl } from 'app/utils/form.utils';
 import { tap } from 'rxjs';
 
 interface RejectionReasonOpt {
@@ -91,7 +92,8 @@ export class RejectModalComponent {
   }
 
   confirm(): void {
-    if (!this.rejectForm.valid) {
+    if (this.rejectForm.invalid) {
+      scrollToFirstInvalidControl(this.rejectForm);
       return;
     }
 

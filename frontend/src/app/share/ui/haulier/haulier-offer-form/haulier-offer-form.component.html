@@ -233,7 +233,7 @@
     class="col-md-5 p-4 text-uppercase"
     [class.w-100]="isDialog"
     (click)="submit()"
-    [disabled]="formGroup.invalid || formGroup.pristine"
+    [disabled]="saving() || submitting()"
   >
     {{ isDialog ? 'Save Changes' : ('Submit' | translate) }}
   </button>

@@ -29,6 +29,7 @@ import { RegistrationsService } from 'app/services/registrations.service';
 import { SeoService } from 'app/services/seo.service';
 import { AccountOnboardingStatusComponent } from 'app/share/ui/account-onboarding-status/account-onboarding-status.component';
 import { createMaterialSelectionController } from 'app/share/utils/material-selection';
+import { scrollToFirstInvalidControl } from 'app/utils/form.utils';
 import { addLanguagePrefix } from 'app/utils/language.utils';
 import moment from 'moment';
 import { catchError, combineLatest, filter, finalize, of, take } from 'rxjs';
@@ -405,7 +406,10 @@ export class SiteLocationSectionComponent implements OnInit, OnDestroy {
   }
 
   send(navigateTo: string) {
-    if (this.formGroup.invalid) return;
+    if (this.formGroup.invalid) {
+      scrollToFirstInvalidControl(this.formGroup);
+      return;
+    }
 
     const { toggleAccessRestriction, officeCloseTime, officeOpenTime, ...value } = this.formGroup.value;
     const payload: any = {

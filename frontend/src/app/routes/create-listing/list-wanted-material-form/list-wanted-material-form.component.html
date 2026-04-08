@@ -214,7 +214,7 @@
             </div>
             <div class="col-md-9 col-12 mx-auto">
               <div class="mb-2 fw-bold">{{ 'MATERIAL REQUIRED FROM*' | translate }}</div>
-              <mat-form-field appearance="outline" class="w-100">
+              <mat-form-field appearance="outline" class="w-100" (click)="picker.open()">
                 <input
                   matInput
                   [matDatepicker]="picker"
@@ -265,55 +265,6 @@
             </div>
           </div>
         </div>
-
-        <div class="mb-5">
-          <h6 class="fw-bold mb-2 fs-24" style="max-width: 700px; width: 100%">{{ 'Ongoing Listing' | translate }}</h6>
-          <div class="border-thin px-4 py-5 rounded rounded-4">
-            <div class="col-md-9 col-12 mx-auto mb-5">
-              <mat-radio-group
-                class="col-md-5 col-9 d-flex justify-content-between bold-label"
-                formControlName="ongoingListing"
-                name="ongoingListing"
-                (change)="ongoingListingChange($event)"
-              >
-                <mat-radio-button class="fs-16" value="true">{{ 'Yes' | translate }}</mat-radio-button>
-                <mat-radio-button class="fs-16" value="false">{{ 'No' | translate }}</mat-radio-button>
-              </mat-radio-group>
-            </div>
-
-            @if (formGroup.get('ongoingListing')?.value == 'true') {
-              <div class="col-md-9 col-12 mx-auto">
-                <div class="mb-2 fw-bold">{{ 'RENEWAL PERIOD*' | translate }}</div>
-                <mat-form-field appearance="outline" class="w-100">
-                  <mat-select formControlName="listingRenewalPeriod" placeholder="{{ 'Please Select' | translate }}">
-                    <mat-option class="option-bold-label" value="weekly">{{ 'Weekly' | translate }}</mat-option>
-                    <mat-option class="option-bold-label" value="fortnightly">{{ 'Fortnightly' | translate }}</mat-option>
-                    <mat-option class="option-bold-label" value="monthly">{{ 'Monthly' | translate }}</mat-option>
-                  </mat-select>
-                  @if (formGroup.get('listingRenewalPeriod')?.hasError('required')) {
-                    <mat-error class="mt-0">{{ 'This field is required' | translate }}</mat-error>
-                  }
-                </mat-form-field>
-              </div>
-            }
-            @if (formGroup.get('ongoingListing')?.value == 'false') {
-              <div class="col-md-9 col-12 mx-auto">
-                <div class="mb-2 fw-bold">{{ 'SELECT END DATE*' | translate }}</div>
-                <mat-form-field appearance="outline" class="w-100">
-                  <input matInput [matDatepicker]="picker1" formControlName="listingDuration" readonly [min]="today" class="fw-bold" />
-                  <mat-datepicker-toggle matIconSuffix [for]="picker1"></mat-datepicker-toggle>
-                  <mat-datepicker #picker1></mat-datepicker>
-                  @if (formGroup.get('listingDuration')?.hasError('required')) {
-                    <mat-error class="mt-0">{{ 'This field is required' | translate }}</mat-error>
-                  }
-                  @if (formGroup.get('listingDuration')?.hasError('past')) {
-                    <mat-error class="mt-0">{{ 'Please enter a date in the future.' | translate }}</mat-error>
-                  }
-                </mat-form-field>
-              </div>
-            }
-          </div>
-        </div>
       </form>
     </div>
     <div class="d-flex justify-content-center mt-5">
@@ -322,7 +273,7 @@
         type="submit"
         class="w-50 fw-bold"
         [class.overlay-spinner]="submitting()"
-        [disabled]="formGroup.invalid || !selectedFile().length"
+        [disabled]="submitting()"
         (click)="send()"
       >
         {{ 'SUBMIT LISTING' | translate }}

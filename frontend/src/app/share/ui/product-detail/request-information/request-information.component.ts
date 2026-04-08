@@ -11,6 +11,7 @@ import { marker as localized$ } from '@colsen1991/ngx-translate-extract-marker';
 import { TranslateModule, TranslatePipe } from '@ngx-translate/core';
 import { IconComponent } from 'app/layout/common/icon/icon.component';
 import { ListingService } from 'app/services/listing.service';
+import { scrollToFirstInvalidControl } from 'app/utils/form.utils';
 import { catchError, finalize, of } from 'rxjs';
 
 @Component({
@@ -55,9 +56,8 @@ export class RequestInformationComponent implements OnInit {
   }
 
   submit() {
-    this.formGroup.markAllAsTouched();
-
     if (this.formGroup.invalid) {
+      scrollToFirstInvalidControl(this.formGroup);
       return;
     }
     this.submitting.set(true);

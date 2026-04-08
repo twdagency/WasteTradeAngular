@@ -15,6 +15,7 @@ import { TranslateModule, TranslatePipe } from '@ngx-translate/core';
 import { IconComponent } from 'app/layout/common/icon/icon.component';
 import { User } from 'app/models';
 import { SettingsService } from 'app/services/settings.service';
+import { scrollToFirstInvalidControl } from 'app/utils/form.utils';
 import { ConfirmModalComponent } from 'app/share/ui/confirm-modal/confirm-modal.component';
 import { catchError, EMPTY, finalize } from 'rxjs';
 
@@ -118,9 +119,8 @@ export class EditProfileFormComponent implements OnInit {
       return;
     }
 
-    this.formGroup.markAllAsTouched();
-
     if (this.formGroup.invalid) {
+      scrollToFirstInvalidControl(this.formGroup);
       return;
     }
 

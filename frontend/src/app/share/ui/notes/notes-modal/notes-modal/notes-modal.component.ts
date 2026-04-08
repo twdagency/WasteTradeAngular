@@ -8,6 +8,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { marker as localized$ } from '@colsen1991/ngx-translate-extract-marker';
 import { TranslateModule, TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { SpinnerComponent } from 'app/share/ui/spinner/spinner.component';
+import { scrollToFirstInvalidControl } from 'app/utils/form.utils';
 import moment from 'moment';
 import { finalize } from 'rxjs';
 import { NotesService } from '../../service/notes.service';
@@ -82,7 +83,11 @@ export class NotesModalComponent {
   }
 
   onSave(): void {
-    if (this.noteForm.invalid || this.submitting) return;
+    if (this.noteForm.invalid) {
+      scrollToFirstInvalidControl(this.noteForm);
+      return;
+    }
+    if (this.submitting) return;
     this.submitting = true;
     this.notesService
       .saveAdminNote({

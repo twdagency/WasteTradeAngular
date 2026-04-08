@@ -10,6 +10,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { marker as localized$ } from '@colsen1991/ngx-translate-extract-marker';
 import { TranslateModule, TranslatePipe } from '@ngx-translate/core';
 import { ListingService } from 'app/services/listing.service';
+import { scrollToFirstInvalidControl } from 'app/utils/form.utils';
 import { catchError, EMPTY, finalize } from 'rxjs';
 
 enum RENEWAL_PERIOD {
@@ -74,7 +75,10 @@ export class RenewListingComponent implements OnInit {
   }
 
   submit() {
-    if (this.formGroup.invalid) return;
+    if (this.formGroup.invalid) {
+      scrollToFirstInvalidControl(this.formGroup);
+      return;
+    }
 
     const payload = this.formGroup.value;
     this.submitting.set(true);

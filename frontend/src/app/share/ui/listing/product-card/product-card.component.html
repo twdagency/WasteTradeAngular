@@ -76,13 +76,9 @@
           @if (deletable && isOwnListing()) {
             <div
               [matTooltip]="
-                product.hasPendingOffer
-                  ? ('You can’t delete this listing because there is an existing offer on it.' | translate)
-                  : product.state === ListingState.PENDING
-                    ? (' (*) You cannot delete the listing because it is in the Approval Process' | translate)
-                    : ''
+                product.hasPendingOffer ? ('You can’t delete this listing because there is an existing offer on it.' | translate) : ''
               "
-              [matTooltipDisabled]="!product.hasPendingOffer && product.state !== ListingState.PENDING"
+              [matTooltipDisabled]="!product.hasPendingOffer"
               [matTooltipPosition]="'above'"
               class="ms-auto"
               style="width: fit-content"
@@ -91,8 +87,8 @@
                 type="button"
                 class="delete-button"
                 (click)="onDelete($event)"
-                [disabled]="product.hasPendingOffer || product.state === ListingState.PENDING"
-                [class.button-disabled]="product.hasPendingOffer || product.state === ListingState.PENDING"
+                [disabled]="product.hasPendingOffer"
+                [class.button-disabled]="product.hasPendingOffer"
               >
                 <img src="assets/images/icons/mdOutlineDelete.svg" alt="Delete" />
               </button>

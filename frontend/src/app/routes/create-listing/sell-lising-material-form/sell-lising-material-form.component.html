@@ -396,8 +396,9 @@
                     matInput
                     readonly
                     [matDatepicker]="startDate"
+                    [matDatepickerFilter]="startDatePickerFilter"
                     formControlName="startDate"
-                    [min]="today"
+                    [min]="mode === 'create' ? today : null"
                     (click)="startDate.open()"
                   />
                   <mat-datepicker-toggle matIconSuffix [for]="startDate"></mat-datepicker-toggle>
@@ -503,7 +504,7 @@
         type="submit"
         class="w-100 submit-button text-uppercase"
         [class.overlay-spinner]="submitting()"
-        [disabled]="isSubmitDisabled()"
+        [disabled]="submitting()"
         (click)="send()"
       >
         {{ 'Submit' | translate }}

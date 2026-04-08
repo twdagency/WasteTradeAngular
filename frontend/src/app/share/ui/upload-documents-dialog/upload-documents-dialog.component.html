@@ -98,7 +98,7 @@
     <button
       mat-flat-button
       class="action-button text-uppercase fw-bold"
-      [disabled]="!isValid() || submitting()"
+      [disabled]="submitting()"
       [class.overlay-spinner]="submitting()"
       (click)="onSubmit()"
     >

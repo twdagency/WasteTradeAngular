@@ -39,6 +39,7 @@ import { AuthService } from 'app/services/auth.service';
 import { HaulageService } from 'app/services/haulage.service';
 import { OfferService } from 'app/services/offer.service';
 import { getListingTitle } from 'app/share/utils/offer';
+import { scrollToFirstInvalidControl } from 'app/utils/form.utils';
 import { catchError, combineLatest, debounceTime, distinctUntilChanged, EMPTY, finalize, map, startWith } from 'rxjs';
 
 export interface HaulierUIItem {
@@ -429,7 +430,10 @@ export class HaulierOfferFormComponent implements OnInit {
   }
 
   submit() {
-    if (this.formGroup.invalid) return;
+    if (this.formGroup.invalid) {
+      scrollToFirstInvalidControl(this.formGroup);
+      return;
+    }
     let payload: any = this.formGroup.value;
 
     delete payload.numOfLoads;

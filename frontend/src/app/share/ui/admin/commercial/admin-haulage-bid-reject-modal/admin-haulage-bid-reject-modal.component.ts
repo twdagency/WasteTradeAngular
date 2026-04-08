@@ -9,6 +9,7 @@ import { MatRadioModule } from '@angular/material/radio';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { marker as localized$ } from '@colsen1991/ngx-translate-extract-marker';
 import { TranslateModule } from '@ngx-translate/core';
+import { scrollToFirstInvalidControl } from 'app/utils/form.utils';
 import { tap } from 'rxjs';
 
 interface RejectionReasonOpt {
@@ -88,7 +89,8 @@ export class AdminHaulageBidRejectModalComponent {
   }
 
   confirm(): void {
-    if (!this.rejectForm.valid) {
+    if (this.rejectForm.invalid) {
+      scrollToFirstInvalidControl(this.rejectForm);
       return;
     }
 

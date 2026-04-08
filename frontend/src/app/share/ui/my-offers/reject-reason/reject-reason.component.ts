@@ -12,6 +12,7 @@ import { MatDialogRef } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { TranslateModule } from '@ngx-translate/core';
+import { scrollToFirstInvalidControl } from 'app/utils/form.utils';
 
 @Component({
   selector: 'app-reject-reason',
@@ -67,9 +68,11 @@ export class RejectReasonComponent {
   ngOnInit(): void {}
 
   onSubmit(): void {
-    if (this.rejectForm.valid) {
-      this.dialogRef.close(this.rejectForm.value.reason);
+    if (this.rejectForm.invalid) {
+      scrollToFirstInvalidControl(this.rejectForm);
+      return;
     }
+    this.dialogRef.close(this.rejectForm.value.reason);
   }
 
   onCancel(): void {

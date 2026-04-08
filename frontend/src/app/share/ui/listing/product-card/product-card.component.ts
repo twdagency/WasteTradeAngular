@@ -6,7 +6,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { FallbackImageDirective } from '@app/directives';
 import { mapCountryCodeToName } from '@app/statics';
 import { TranslateModule } from '@ngx-translate/core';
-import { ListingImageType, ListingMaterial, ListingState } from 'app/models';
+import { ListingImageType, ListingMaterial } from 'app/models';
 import { AuthService } from 'app/services/auth.service';
 import { getListingTitle } from 'app/share/utils/offer';
 import { map } from 'rxjs';
@@ -33,7 +33,6 @@ export class ProductCardComponent {
 
   auth = inject(AuthService);
 
-  ListingState = ListingState;
   mapCountryCodeToName = mapCountryCodeToName;
   getListingTitle = getListingTitle;
   userId = toSignal(this.auth.user$.pipe(map((user) => user?.userId)));

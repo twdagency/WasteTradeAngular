@@ -32,6 +32,7 @@ import { DraftRegisterService } from 'app/services/draft-register.service';
 import { RegistrationsService } from 'app/services/registrations.service';
 import { SeoService } from 'app/services/seo.service';
 import { UploadService } from 'app/share/services/upload.service';
+import { scrollToFirstInvalidControl } from 'app/utils/form.utils';
 import { addLanguagePrefix } from 'app/utils/language.utils';
 import moment from 'moment';
 import { catchError, combineLatest, concatMap, filter, finalize, of, take } from 'rxjs';
@@ -339,10 +340,7 @@ export class CompanyDocumentComponent implements OnInit, OnDestroy {
   }
 
   get isSubmitDisabled() {
-    if (this.formGroup.invalid) {
-      return true;
-    } else {
-      const { environmentalPermit, wasteExemption, other, uploadLater, wasteLicence } = this.formGroup.value;
+    const { environmentalPermit, wasteExemption, other, uploadLater, wasteLicence } = this.formGroup.value;
 
       // Check if any document type is selected
       const hasSelectedDocumentType = environmentalPermit || wasteExemption || other || uploadLater;
@@ -378,7 +376,6 @@ export class CompanyDocumentComponent implements OnInit, OnDestroy {
       const validLicence = wasteLicence ? this.selectedWasteLicenceFile().length > 0 : true;
 
       return !(validDocuments && validLicence);
-    }
   }
 
   onDocumentTypeChange(type: string, checked: boolean) {
@@ -422,7 +419,10 @@ export class CompanyDocumentComponent implements OnInit, OnDestroy {
   }
 
   send(navigateTo: string) {
-    this.formGroup.markAllAsTouched();
+    if (this.formGroup.invalid) {
+      scrollToFirstInvalidControl(this.formGroup);
+      return;
+    }
     const { boxClearingAgent, wasteLicence, uploadLater } = this.formGroup.value;
 
     const isUploadLater = uploadLater;

@@ -25,6 +25,7 @@ import { DraftRegisterService } from 'app/services/draft-register.service';
 import { RegistrationsService } from 'app/services/registrations.service';
 import { SeoService } from 'app/services/seo.service';
 import { createMaterialSelectionController } from 'app/share/utils/material-selection';
+import { scrollToFirstInvalidControl } from 'app/utils/form.utils';
 import { addLanguagePrefix } from 'app/utils/language.utils';
 import { catchError, concatMap, finalize, of } from 'rxjs';
 
@@ -286,10 +287,10 @@ export class TradingFlatformFormComponent implements OnInit, OnDestroy {
 
   send() {
     if (this.formGroup.invalid) {
+      scrollToFirstInvalidControl(this.formGroup);
       return;
     }
 
-    this.formGroup.markAllAsTouched();
     const {
       favoriteMaterials,
       companyInterest,
