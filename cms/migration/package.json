@@ -5,11 +5,15 @@
   "type": "module",
   "scripts": {
     "migrate": "node index.js",
-    "migrate:dry-run": "node index.js --dry-run"
+    "migrate:dry-run": "node index.js --dry-run",
+    "migrate:sql": "node sql-migrate.js",
+    "migrate:sql:dry-run": "node sql-migrate.js --dry-run",
+    "extract": "node sql-migrate.js --extract-only"
   },
   "dependencies": {
     "axios": "^1.7.0",
     "dotenv": "^16.4.0",
-    "form-data": "^4.0.0"
+    "form-data": "^4.0.0",
+    "mysql2": "^3.11.0"
   }
 }
