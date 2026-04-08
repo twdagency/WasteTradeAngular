@@ -4,7 +4,6 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { Subscription } from 'rxjs';
 import { AuthService } from 'app/services/auth.service';
-import { HeaderComponent } from 'app/layout/header/header.component';
 import { LanguageSelectorComponent } from 'app/layout/common/language-selector/language-selector.component';
 import { ROUTES_WITH_SLASH } from 'app/constants/route.const';
 import { addLanguagePrefix } from 'app/utils/language.utils';
@@ -22,7 +21,6 @@ interface MaterialLink {
     RouterModule,
     MatIconModule,
     MatButtonModule,
-    HeaderComponent,
     LanguageSelectorComponent,
   ],
   templateUrl: './cms-header.component.html',
@@ -74,5 +72,9 @@ export class CmsHeaderComponent implements OnDestroy {
 
   navigateToRegister(): void {
     this.router.navigateByUrl(addLanguagePrefix('/create-account'));
+  }
+
+  navigateToDashboard(): void {
+    this.router.navigateByUrl(ROUTES_WITH_SLASH.buy);
   }
 }
