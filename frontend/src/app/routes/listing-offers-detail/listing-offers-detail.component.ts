@@ -82,6 +82,20 @@ export class ListingOffersDetailComponent {
 
   getListingTitle = getListingTitle;
 
+  private formatWantedFrequencyLabel(period: string | null | undefined): string {
+    const p = period != null ? String(period).trim().toLowerCase() : '';
+    if (p === 'weekly') {
+      return this.translate.transform(localized$('Weekly'));
+    }
+    if (p === 'fortnightly') {
+      return this.translate.transform(localized$('Fortnightly'));
+    }
+    if (p === 'monthly') {
+      return this.translate.transform(localized$('Monthly'));
+    }
+    return this.translate.transform(localized$('One-time'));
+  }
+
   images: string[] = [];
   featureImage: string = '';
   descriptionItems = computed(() => {
@@ -108,6 +122,11 @@ export class ListingOffersDetailComponent {
           label: this.translate.transform(localized$(`Packaging`)),
           customIcon: '/assets/images/icons/cube.svg',
           value: `${detail?.listing?.materialPacking ? mapCodeToPackaging[detail?.listing?.materialPacking] : '-'}`,
+        },
+        {
+          label: this.translate.transform(localized$('Frequency')),
+          icon: 'schedule',
+          value: this.formatWantedFrequencyLabel(detail?.listing?.listingRenewalPeriod),
         },
         {
           label: this.translate.transform(localized$(`Description`)),

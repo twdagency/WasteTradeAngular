@@ -362,15 +362,6 @@ export class ListingService {
     }
 
     private validateListingDetails(data: CreateListing): void {
-        if (!data.capacityPerMonth && data.listingType === ListingType.WANTED) {
-            throw new HttpErrors[422](messages.missingCapacityPerMonth);
-        }
-        if (
-            (typeof data.capacityPerMonth !== 'number' || data.capacityPerMonth <= 0) &&
-            data.listingType === ListingType.WANTED
-        ) {
-            throw new HttpErrors[422](messages.invalidCapacityPerMonth);
-        }
         if (!data.materialFlowIndex && data.listingType === ListingType.WANTED) {
             throw new HttpErrors[422](messages.missingMaterialFlowIndex);
         }
@@ -894,16 +885,15 @@ export class ListingService {
 
         // Add wantedStatus for wanted listings to show material requirement status
 
-        const processedListings = await Promise.all(
-            listings.map(async (listing: any) => {
-                // Convert currency for listing data if applicable
-                const convertedListing =
-                    listing.pricePerMetricTonne && listing.currency
-                        ? await this.exchangeRateService.convertListingToBaseCurrency({
-                              pricePerMetricTonne: Number(listing.pricePerMetricTonne),
-                              currency: listing.currency,
-                          })
-                        : listing;
+        const processedListings = listings.map((listing: any) => {
+                // Keep guide/listing price in the currency stored on the listing (no GBP conversion).
+                const priceOverlay: Record<string, unknown> = {};
+                if (listing.pricePerMetricTonne != null) {
+                    priceOverlay.pricePerMetricTonne = Number(listing.pricePerMetricTonne);
+                }
+                if (listing.currency) {
+                    priceOverlay.currency = String(listing.currency).toLowerCase();
+                }
 
                 // Build location details if available
                 const locationDetails =
@@ -935,7 +925,7 @@ export class ListingService {
                 if (listing.listingType === ListingType.WANTED) {
                     return {
                         ...listing,
-                        ...convertedListing,
+                        ...priceOverlay,
                         locationDetails, // Add location details for wanted listings too
                         expiryInfo, // Add expiry information
                         wantedStatus: getMaterialRequirementStatus(
@@ -948,12 +938,11 @@ export class ListingService {
                 }
                 return {
                     ...listing,
-                    ...convertedListing,
+                    ...priceOverlay,
                     locationDetails, // Add location details for sell listings
                     expiryInfo, // Add expiry information
                 };
-            }),
-        );
+            });
 
         return {
             totalCount: countResult[0].count,
@@ -1002,21 +991,11 @@ export class ListingService {
         });
         const hasPendingOffer = pendingOffersCount.count > 0;
 
-        // Convert currency for listing data if applicable
-        const convertedListing =
-            listing.pricePerMetricTonne && listing.currency
-                ? await this.exchangeRateService.convertListingToBaseCurrency({
-                      pricePerMetricTonne: Number(listing.pricePerMetricTonne),
-                      currency: listing.currency,
-                  })
-                : {};
-
-        // Add wantedStatus for wanted listings to show material requirement status
+        // Listing price is returned in the currency stored on the listing (no GBP conversion).
         const processedListing =
             listing.listingType === ListingType.WANTED
                 ? {
                       ...listing,
-                      ...convertedListing,
                       wantedStatus: getMaterialRequirementStatus(
                           listing.status || 'available',
                           listing.state || 'active',
@@ -1024,10 +1003,7 @@ export class ListingService {
                           listing.rejectionReason || null,
                       ),
                   }
-                : {
-                      ...listing,
-                      ...convertedListing,
-                  };
+                : { ...listing };
 
         const listingWithDocuments = {
             ...processedListing,
@@ -1726,8 +1702,7 @@ export class ListingService {
             this.listingRepository.dataSource.execute(countQuery),
         ]);
 
-        const listingsWithDetails = await Promise.all(
-            listings.map(async (row: any) => {
+        const listingsWithDetails = listings.map((row: any) => {
                 const {
                     number_of_offers,
                     best_offer,
@@ -1737,14 +1712,13 @@ export class ListingService {
                     ...restRow
                 } = row;
 
-                // Convert currency for listing data if applicable
-                const convertedListing =
-                    price_per_metric_tonne && row.currency
-                        ? await this.exchangeRateService.convertListingToBaseCurrency({
-                              pricePerMetricTonne: Number(price_per_metric_tonne),
-                              currency: row.currency,
-                          })
-                        : {};
+                const listingPriceOverlay: Record<string, unknown> = {};
+                if (price_per_metric_tonne != null) {
+                    listingPriceOverlay.pricePerMetricTonne = Number(price_per_metric_tonne);
+                }
+                if (row.currency) {
+                    listingPriceOverlay.currency = String(row.currency).toLowerCase();
+                }
 
                 const assignAdminData = row.assign_admin
                     ? typeof row.assign_admin === 'string'
@@ -1769,7 +1743,7 @@ export class ListingService {
 
                 const baseResult = {
                     ...restRow,
-                    ...convertedListing,
+                    ...listingPriceOverlay,
                     numberOfOffers: parseInt(number_of_offers) || 0,
                     bestOffer: best_offer,
                     bestOfferCurrency: best_offer_currency,
@@ -1822,8 +1796,7 @@ export class ListingService {
                 }
 
                 return baseResult;
-            }),
-        );
+            });
 
         return {
             totalCount: countResult[0].total,

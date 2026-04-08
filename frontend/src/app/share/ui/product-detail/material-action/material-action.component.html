@@ -60,20 +60,34 @@
 
     <ng-container [ngTemplateOutlet]="removeSection"> </ng-container>
   } @else {
-    <div class="d-flex flex-column align-items-center">
-      @if (canFulfill()) {
-        <button
-          mat-flat-button
-          class="text-uppercase w-100 py-4 mb-3 background-dark text-white fw-bold fs-16"
-          [class.overlay-spinner]="fulfilling()"
-          (click)="onFulfill()"
-        >
-          {{ 'Fulfil' | translate }}
-        </button>
-      }
+    <span [matTooltip]="canEdit().tooltip" [matTooltipDisabled]="canEdit().action" class="w-100 d-block">
+      <button
+        mat-stroked-button
+        class="text-uppercase w-100 py-4 mb-3 outline-primary-btn fw-bold fs-16"
+        type="button"
+        (click)="editListing()"
+        [class.edit-button-disabled]="!canEdit().action"
+        [disabled]="!canEdit().action"
+      >
+        {{ 'Edit listing' | translate }}
+      </button>
+    </span>
 
-      <ng-container [ngTemplateOutlet]="removeSection"> </ng-container>
-    </div>
+    <span [matTooltip]="canFulfill().tooltip" [matTooltipDisabled]="canFulfill().action" class="w-100 d-block">
+      <button
+        mat-flat-button
+        class="text-uppercase w-100 py-4 mb-3 background-dark text-white fw-bold fs-16"
+        type="button"
+        [class.overlay-spinner]="fulfilling()"
+        [class.button-disabled]="!canFulfill().action"
+        (click)="onFulfill()"
+        [disabled]="!canFulfill().action"
+      >
+        {{ 'Fulfil' | translate }}
+      </button>
+    </span>
+
+    <ng-container [ngTemplateOutlet]="removeSection"> </ng-container>
   }
 } @else if (isSeller) {
   @if (listingDetail()?.listing?.status !== 'sold') {

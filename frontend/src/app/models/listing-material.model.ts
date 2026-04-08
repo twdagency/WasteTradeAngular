@@ -34,10 +34,13 @@ export interface ListingMaterialPayload {
   materialFlowIndex: string;
   additionalNotes: string;
   startDate: string;
-  capacityPerMonth: number;
+  capacityPerMonth?: number;
   materialWeightWanted: number;
   wasteStoration: string;
-  listingRenewalPeriod: string;
+  /** Recurring wanted frequency (weekly / fortnightly / monthly); omit for one-time. */
+  listingRenewalPeriod?: string;
+  currency?: Currency | null;
+  pricePerMetricTonne?: number | null;
   listingDuration: string;
   documents: any[];
 }

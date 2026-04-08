@@ -41,6 +41,11 @@ export class MaterialActionComponent {
   @Output() refresh = new EventEmitter<void>();
   listingDetail = input<ListingMaterialDetail | undefined>();
 
+  /** API may send listing type with varying casing. */
+  private normalizedListingType(listing: { listingType?: string } | undefined): string {
+    return listing?.listingType != null ? String(listing.listingType).toLowerCase() : '';
+  }
+
   dialog = inject(MatDialog);
   router = inject(Router);
   listingService = inject(ListingService);
@@ -79,11 +84,24 @@ export class MaterialActionComponent {
 
   canEdit = computed(() => {
     const listing = this.listingDetail()?.listing;
+    if (!listing) {
+      return { tooltip: '', action: false };
+    }
+
+    if (this.normalizedListingType(listing) === ListingType.WANTED) {
+      const fulfilled = listing.status === ListingStatus.SOLD;
+      return {
+        tooltip: fulfilled
+          ? this.translate.transform(localized$('This listing cannot be edited because it has been fulfilled.'))
+          : '',
+        action: !fulfilled,
+      };
+    }
 
     let tooltipMessage = '';
     let action = true;
 
-    if (listing?.status !== ListingStatus.AVAILABLE && listing?.state === ListingState.APPROVED) {
+    if (listing.status !== ListingStatus.AVAILABLE && listing.state === ListingState.APPROVED) {
       tooltipMessage = this.translate.transform(
         localized$(
           'This listing cannot be edited because it is no longer active. If you need to edit this listing, please contact support@wastetrade.com.',
@@ -92,7 +110,7 @@ export class MaterialActionComponent {
       action = false;
     }
 
-    if (listing?.hasPendingOffer) {
+    if (listing.hasPendingOffer) {
       tooltipMessage = this.translate.transform(
         localized$(
           'This listing cannot be edited because it has received an offer. If you need to edit this listing, please contact support@wastetrade.com.',
@@ -107,7 +125,26 @@ export class MaterialActionComponent {
   });
 
   canFulfill = computed(() => {
-    return this.listingDetail()?.listing.status === ListingStatus.AVAILABLE;
+    const listing = this.listingDetail()?.listing;
+    if (listing?.listingType !== ListingType.WANTED) {
+      return { tooltip: '', action: false };
+    }
+    let tooltipMessage = '';
+    if (listing.state !== ListingState.APPROVED) {
+      tooltipMessage = this.translate.transform(
+        localized$('Only approved listings can be marked as fulfilled.'),
+      );
+    } else if (listing.status !== ListingStatus.AVAILABLE) {
+      tooltipMessage = this.translate.transform(
+        localized$(
+          'This listing cannot be marked as fulfilled as it is no longer active. If you need help, contact support@wastetrade.com',
+        ),
+      );
+    }
+    return {
+      tooltip: tooltipMessage,
+      action: listing.status === ListingStatus.AVAILABLE && listing.state === ListingState.APPROVED,
+    };
   });
 
   canDelete = computed(() => {
@@ -222,39 +259,60 @@ export class MaterialActionComponent {
       });
   }
 
-  onEditListing() {}
-
   onFulfill() {
     const listingId = this.listingDetail()?.listing?.id;
 
     if (isNil(listingId)) {
       return;
     }
-    this.fulfilling.set(true);
 
-    this.listingService
-      .sold(listingId)
-      .pipe(
-        takeUntilDestroyed(this.destroyRef),
-        finalize(() => {
-          this.fulfilling.set(false);
-        }),
-        catchError((err) => {
-          if (err?.error?.error?.statusCode == 403) {
-            this.snackBar.open(
-              this.translate.transform(localized$('You do not have permission to mark fulfill this listing.')),
-            );
-          } else {
-            this.snackBar.open(
-              this.translate.transform(localized$('Failed to mark fulfill the listing. Please try again later.')),
-            );
-          }
-          return EMPTY;
-        }),
-      )
-      .subscribe(() => {
-        this.snackBar.open(this.translate.transform(localized$('Your listing has been successfully fulfilled.')));
-        this.refresh.emit();
+    this.dialog
+      .open(ProductConfirmModalComponent, {
+        maxWidth: '960px',
+        width: '100%',
+        panelClass: 'px-3',
+        data: {
+          title: this.translate.transform(
+            localized$('Are you sure you want to mark this listing as fulfilled? This action cannot be undone.'),
+          ),
+          confirmLabel: 'Confirm',
+        },
+      })
+      .afterClosed()
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe((confirmed) => {
+        if (!confirmed) return;
+
+        this.fulfilling.set(true);
+
+        this.listingService
+          .sold(listingId)
+          .pipe(
+            takeUntilDestroyed(this.destroyRef),
+            finalize(() => {
+              this.fulfilling.set(false);
+            }),
+            catchError((err) => {
+              if (err?.error?.error?.statusCode == 403) {
+                this.snackBar.open(
+                  this.translate.transform(localized$('You do not have permission to mark fulfill this listing.')),
+                );
+              } else {
+                this.snackBar.open(
+                  this.translate.transform(
+                    localized$(
+                      'We couldn’t complete this action right now. Please try again. If the problem persists, contact support.',
+                    ),
+                  ),
+                );
+              }
+              return EMPTY;
+            }),
+          )
+          .subscribe(() => {
+            this.snackBar.open(this.translate.transform(localized$('Your listing has been successfully fulfilled.')));
+            this.refresh.emit();
+          });
       });
   }
 
@@ -316,8 +374,16 @@ export class MaterialActionComponent {
   }
 
   editListing() {
-    if (this.listingDetail()?.listing.listingType == 'sell') {
-      this.router.navigateByUrl(`${ROUTES_WITH_SLASH.sell}/${this.listingDetail()?.listing?.id}/edit`);
+    const listing = this.listingDetail()?.listing;
+    if (!listing) return;
+    const id = listing.id;
+    if (isNil(id)) return;
+
+    const lt = this.normalizedListingType(listing);
+    if (lt === ListingType.SELL) {
+      this.router.navigateByUrl(`${ROUTES_WITH_SLASH.sell}/${id}/edit`);
+    } else if (lt === ListingType.WANTED) {
+      this.router.navigateByUrl(`${ROUTES_WITH_SLASH.createWantedListing}/${id}/edit`);
     }
   }
 }
