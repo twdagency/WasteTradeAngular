@@ -1,5 +1,5 @@
 @if (product) {
-  <div class="card border-thin rounded-4 shadow-sm product-card" role="button">
+  <div class="card rounded-4 shadow-sm product-card" [ngClass]="statusBorderClass" role="button">
     <div class="card-body p-3">
       <div class="row g-3">
         <div class="col-12 col-md-6">
@@ -29,37 +29,29 @@
             <mat-icon class="text-muted flex-shrink-0">star_outline</mat-icon>
           </div>
 
-          <div class="d-flex align-items-center mb-3">
-            <div class="me-3 flex-shrink-0">
-              <mat-icon
-                class="primary background-on-primary rounded-circle d-flex justify-content-center align-items-center flex-shrink-0"
-                style="width: 28px; font-size: 24px; height: 28px"
-                >location_on</mat-icon
-              >
-            </div>
-            <div class="flex-grow-1">
-              <small class="d-block fs-16">{{ 'Material Location' | translate }}</small>
-              <div class="fw-bold fs-16">{{ mapCountryCodeToName[product.country] || product.location_other }}</div>
-            </div>
-          </div>
-
-          <div class="d-flex flex-column gap-3 mb-3">
-            <div class="d-flex align-items-center">
-              <div class="me-3 flex-shrink-0">
-                <img
-                  src="assets/images/kettlebell.svg"
-                  appFallbackImage
-                  loading="lazy"
-                  style="width: 28px; height: 28px"
-                  alt="Quantity icon"
-                />
+          <div class="product-card-detail-panel" [ngClass]="statusVisualKey">
+            <div class="d-flex align-items-center mb-3">
+              <div class="listing-icon-shell me-3">
+                <mat-icon class="listing-detail-icon">location_on</mat-icon>
               </div>
               <div class="flex-grow-1">
-                <div class="d-block fs-16">{{ 'Average Weight per Load' | translate }}</div>
-                <div class="fw-bold fs-16">
-                  @if (product.materialWeightPerUnit || product.materialWeightWanted) {
-                    {{ product.materialWeightPerUnit ?? product.materialWeightWanted | number: '1.0-2' }} {{ 'MT' | translate }}
-                  }
+                <small class="d-block fs-16">{{ 'Material Location' | translate }}</small>
+                <div class="fw-bold fs-16">{{ mapCountryCodeToName[product.country] || product.location_other }}</div>
+              </div>
+            </div>
+
+            <div class="d-flex flex-column gap-3 mb-3">
+              <div class="d-flex align-items-center">
+                <div class="listing-icon-shell me-3">
+                  <mat-icon class="listing-detail-icon">scale</mat-icon>
+                </div>
+                <div class="flex-grow-1">
+                  <div class="d-block fs-16">{{ 'Quantity available' | translate }}</div>
+                  <div class="fw-bold fs-16">
+                    @if (quantityAvailableMt != null) {
+                      {{ quantityAvailableMt | number: '1.0-2' }} {{ 'MT' | translate }}
+                    }
+                  </div>
                 </div>
               </div>
             </div>

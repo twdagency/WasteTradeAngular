@@ -1,6 +1,6 @@
 @import 'variables';
 
-$lg-break-point: 1400px;
+$lg-break-point: 1200px;
 
 .sidebar-wrapper {
   position: fixed;
@@ -29,9 +29,15 @@ $lg-break-point: 1400px;
   }
 
   @media screen and (min-width: $lg-break-point) {
-    transform: translateX(0) !important;
-    position: static;
-    min-height: 60vh;
+    transform: none !important;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: auto;
+    bottom: 0;
+    width: 250px;
+    height: 100vh;
+    align-items: stretch;
 
     &::before {
       display: none;
@@ -59,13 +65,38 @@ $lg-break-point: 1400px;
 
 .sidebar {
   background-color: #f6f6f6;
-  position: absolute;
+  position: fixed;
   width: 250px;
   left: 0;
   top: 0;
   bottom: 0;
   overflow: auto;
   z-index: 20;
+
+  // Firefox
+  scrollbar-width: thin;
+  scrollbar-color: rgba($primary, 0.4) transparent;
+
+  // Chrome, Safari, Edge
+  &::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: transparent;
+    margin: 12px 0;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background-color: rgba($primary, 0.35);
+    border-radius: 999px;
+    border: 2px solid transparent;
+    background-clip: padding-box;
+  }
+
+  &::-webkit-scrollbar-thumb:hover {
+    background-color: rgba($primary, 0.55);
+  }
 
   @media screen and (min-width: $lg-break-point) {
     position: static;
@@ -76,20 +107,21 @@ $lg-break-point: 1400px;
 
 .menu-item {
   position: relative;
-  padding: 10px 16px;
+  padding: 10px;
+  height: 53px;
+  margin: 10px 0;
   color: $black;
   text-decoration: none;
   cursor: pointer;
-  height: 58px;
 
   &::after {
     content: '';
     display: block;
     position: absolute;
-    bottom: 0px;
+    bottom: -14px;
     left: 16px;
     right: 16px;
-    border: 1px solid #a6a6a6;
+    // border: 1px solid #a6a6a6;
   }
 
   &.dashboard {
@@ -106,9 +138,14 @@ $lg-break-point: 1400px;
     }
   }
 
-  &.active-link {
-    border-left: 2.5px solid $primary;
+  &.active-link,
+  &:hover {
+    border-left: 5px solid $primary;
     background-color: #ebfff7;
+  }
+
+  &.has-children.active-link {
+    border-left: none;
   }
 
   @media screen and (min-width: 992px) {
@@ -125,8 +162,7 @@ $lg-break-point: 1400px;
 }
 
 .child-menu-item {
-  margin-bottom: 0;
-  margin-top: 0;
+  margin: 0;
   padding-left: 70px;
 
   &.disabled {

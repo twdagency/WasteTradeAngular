@@ -1,7 +1,5 @@
 @import 'variables';
 
-$lg: 1400px;
-
 :host {
   display: flex;
   min-height: 100vh;
@@ -12,9 +10,31 @@ $lg: 1400px;
   }
 }
 
-.wrapper {
-  @media screen and (min-width: $lg) {
+.wrapper{
+
+  --layout-banner-height: 0px;
+  --layout-mobile-header-height: 0px;
+  --layout-header-row-offset: var(--layout-banner-height);
+  margin-top: var(--layout-banner-height);
+
+  @media screen and (min-width: 1200px) {
     display: flex;
+    --layout-mobile-header-height: 0px;
+    --layout-header-row-offset: 0px;
+  }
+
+  &:has(app-account-status-warning .warning-bar) {
+    --layout-banner-height: 58px;
+    --layout-header-row-offset: var(--layout-banner-height);
+  }
+}
+
+app-account-status-warning {
+  display: none;
+  // margin-bottom: 16px;
+
+  &.has-banner {
+    display: block;
   }
 }
 
@@ -23,21 +43,35 @@ $lg: 1400px;
   margin: 0 auto;
   padding: 0 13px;
 
-  @media screen and (min-width: 768px) {
+  @media screen and (min-width: md) {
     padding: 0 20px;
+  }
+
+  @media screen and (min-width: lg) {
+    max-width: calc(100% - 276px);
+  }
+}
+
+@media screen and (min-width: 1200px) {
+  .layout-header-row {
+    position: sticky;
+    top: var(--layout-header-row-offset, 0px);
+    z-index: 18;
+    background-color: #fff;
+    padding: 10px 0;
   }
 }
 
 .title {
   font-size: 32px;
 
-  @media screen and (min-width: $lg) {
+  @media screen and (min-width: 1440px) {
     font-size: 40px;
   }
 }
 
 .right-box {
-  gap: 25px;
+  gap: 32px;
 }
 
 .icon-wrapper {
@@ -70,6 +104,15 @@ app-header,
   display: flex;
 }
 
+app-header {
+  @media screen and (min-width: 1200px) {
+    flex: 0 0 250px;
+    min-height: 100vh;
+  }
+}
+
+
+
 .content-wrapper {
   margin: 20px 0;
 
@@ -82,13 +125,17 @@ app-header,
 .header-desktop {
   display: none;
 
-  @media screen and (min-width: $lg) {
+  @media screen and (min-width: 1200px) {
     display: flex;
   }
 }
 
-.safe-width {
-  @media screen and (min-width: $lg) {
-    width: calc(100% - 250px) !important;
-  }
-}
+// .safe-width {
+//   @media screen and (min-width: 1200px) {
+//     width: calc(100% - 250px) !important;
+//   }
+// }
+
+
+
+

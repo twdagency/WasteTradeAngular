@@ -1,33 +1,48 @@
+@import 'variables';
+
 $header-compact-height: 70px;
 $layout-lg: 1400px;
 
 :host {
   display: block;
-  position: sticky;
+  // position: sticky;
   top: $header-compact-height;
   z-index: 15;
 
-  @media screen and (min-width: $layout-lg) {
-    top: 0;
-  }
+  // @media screen and (min-width: $layout-lg) {
+  //   top: 0;
+  // }
+}
+
+:host(:not(.has-banner)) {
+  display: none;
 }
 
 .warning-bar {
-  padding: 10px 16px;
+  height: 58px;
+  position: fixed;
+  top: 0;
+  width: 100%;
+  padding: 12px 16px;
   display: flex;
   justify-content: center;
   align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
   font-weight: 500;
   line-height: 22px;
   color: #1d1d1b;
-  flex-wrap: wrap;
-  box-sizing: border-box;
   background-color: #feeed7;
-  box-shadow: 0 2px 4px rgb(0 0 0 / 8%);
+  z-index: 18;
+
+  @media screen and (min-width: 1200px) {
+    width: calc(100% - 250px) !important;
+    
+  }
 }
 
 mat-icon {
-  margin-right: 20px;
+  margin-right: 12px;
   font-size: 29px;
   width: 29px;
   height: 29px;

@@ -1,44 +1,46 @@
-@switch (status()?.bannerType) {
-  @case (BannerType.INCOMPLETE_ONBOARDING) {
-    <div class="warning-bar suspended-suspend background-on-error">
-      <mat-icon style="color: #e84f63">info</mat-icon>
-      <span (click)="openCompanyInformation()" class="text-decoration-underline fw-bold cursor-pointer pe-1">COMPLETE ACCOUNT</span>
-      {{ 'to be able to sell and buy material seamlessly' | translate }}
-    </div>
-  }
-  @case (BannerType.VERIFICATION_PENDING) {
-    <div class="warning-bar status-pending">
-      <mat-icon style="color: #f9a52b">info</mat-icon>
-      {{ 'Your account is being verified' | translate }}
-    </div>
-  }
-  @case (BannerType.VERIFICATION_FAILED) {
-    <div class="warning-bar rejected-pending background-on-error">
-      <mat-icon style="color: #e84f63">info</mat-icon>
-      {{ 'Verification failed, please contact the WasteTrade team at' | translate }}
-      <a class="ps-2" href="mailto:info@wastetrade.com">info&#64;wastetrade.com</a>
-    </div>
-  }
-  @case (BannerType.MISSING_DOCUMENTS) {
-    <div class="warning-bar suspended-suspend background-on-error">
-      <mat-icon style="color: #e84f63">info</mat-icon>
-      <span (click)="openUploadDocumentsDialog()" class="text-decoration-underline fw-bold cursor-pointer pe-1">
-        {{ 'Upload Your Documents' | translate }}</span
-      >
-      {{ 'to complete your account verification' | translate }}
-    </div>
-  }
-  @case (BannerType.DOCUMENT_EXPIRING) {
-    <div class="warning-bar rejected-pending background-on-error">
-      <mat-icon style="color: #e84f63">info</mat-icon>
-      {{ 'Your document' | translate }}
-      <strong class="d-inline-block px-1">{{ documentDetails()?.name }}</strong>
-      {{ 'is due to expire on' | translate }}
-      <strong class="d-inline-block" style="padding-left: 4px">{{ documentDetails()?.expiryDate }}</strong>
-      {{ ', please upload an updated copy ' | translate }}
-      <span (click)="onUpdateDocument()" class="d-inline-block text-decoration-underline fw-bold cursor-pointer px-2">
-        UPDATE DOCUMENTS</span
-      >
-    </div>
+@if (hasBanner()) {
+  @switch (status()?.bannerType) {
+    @case (BannerType.INCOMPLETE_ONBOARDING) {
+      <div class="warning-bar suspended-suspend background-on-error">
+        <mat-icon style="color: #e84f63">info</mat-icon>
+        <span (click)="openCompanyInformation()" class="text-decoration-underline fw-bold cursor-pointer pe-1">COMPLETE ACCOUNT</span>
+        {{ 'to be able to sell and buy material seamlessly' | translate }}
+      </div>
+    }
+    @case (BannerType.VERIFICATION_PENDING) {
+      <div class="warning-bar status-pending">
+        <mat-icon style="color: #f9a52b">info</mat-icon>
+        {{ 'Your account is being verified' | translate }}
+      </div>
+    }
+    @case (BannerType.VERIFICATION_FAILED) {
+      <div class="warning-bar rejected-pending background-on-error">
+        <mat-icon style="color: #e84f63">info</mat-icon>
+        {{ 'Verification failed, please contact the WasteTrade team at' | translate }}
+        <a class="ps-2" href="mailto:info@wastetrade.com">info&#64;wastetrade.com</a>
+      </div>
+    }
+    @case (BannerType.MISSING_DOCUMENTS) {
+      <div class="warning-bar suspended-suspend background-on-error">
+        <mat-icon style="color: #e84f63">info</mat-icon>
+        <span (click)="openUploadDocumentsDialog()" class="text-decoration-underline fw-bold cursor-pointer pe-1">
+          {{ 'Upload Your Documents' | translate }}</span
+        >
+        {{ 'to complete your account verification' | translate }}
+      </div>
+    }
+    @case (BannerType.DOCUMENT_EXPIRING) {
+      <div class="warning-bar rejected-pending background-on-error">
+        <mat-icon style="color: #e84f63">info</mat-icon>
+        {{ 'Your document' | translate }}
+        <strong class="d-inline-block px-1">{{ documentDetails()?.name }}</strong>
+        {{ 'is due to expire on' | translate }}
+        <strong class="d-inline-block" style="padding-left: 4px">{{ documentDetails()?.expiryDate }}</strong>
+        {{ ', please upload an updated copy ' | translate }}
+        <span (click)="onUpdateDocument()" class="d-inline-block text-decoration-underline fw-bold cursor-pointer px-2">
+          UPDATE DOCUMENTS</span
+        >
+      </div>
+    }
   }
 }
