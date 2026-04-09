@@ -75,6 +75,8 @@ export interface ListingMaterial extends ListingMaterialPayload {
   description: string;
   quantity: number | null;
   remainingQuantity: number | null;
+  /** Total material weight in metric tonnes (sell); from DB when present. */
+  totalWeight?: number | null;
   materialWeightPerUnit: number | null;
   materialRemainInCountry: boolean;
   currency: Currency | null;

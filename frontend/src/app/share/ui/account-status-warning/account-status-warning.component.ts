@@ -1,4 +1,4 @@
-import { Component, computed, inject } from '@angular/core';
+import { Component, HostBinding, computed, inject } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { MatDialog } from '@angular/material/dialog';
 import { MatIcon } from '@angular/material/icon';
@@ -22,6 +22,20 @@ export class AccountStatusWarningComponent {
   router = inject(Router);
   private dialog = inject(MatDialog);
   BannerType = BannerType;
+  readonly hasBanner = computed(() => {
+    const status = this.status();
+    if (!status) {
+      return false;
+    }
+
+    // Some API responses may omit showBanner while still providing a bannerType.
+    return status.showBanner ?? !!status.bannerType;
+  });
+
+  @HostBinding('class.has-banner')
+  get displayBanner(): boolean {
+    return this.hasBanner();
+  }
   status = toSignal(
     this.authService.user$.pipe(
       filter((user) => !!user),

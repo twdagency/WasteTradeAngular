@@ -794,6 +794,7 @@ export class ListingService {
                 l.remaining_quantity as "remainingQuantity",
                 l.material_flow_index as "materialFlowIndex",
                 l.material_weight_per_unit as "materialWeightPerUnit",
+                l.total_weight as "totalWeight",
                 l.material_remain_in_country as "materialRemainInCountry",
                 l.currency,
                 l.additional_notes as "additionalNotes",

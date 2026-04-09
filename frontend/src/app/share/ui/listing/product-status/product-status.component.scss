@@ -1,8 +1,10 @@
 @import 'variables';
 
 .available {
-  border-color: $primary;
+  box-shadow: inset 0 0 0 0.25px $primary !important;
   background-color: $info;
+  padding: 15px 5px !important;
+  border: none !important;
 
   .icon {
     color: $primary;
@@ -10,8 +12,10 @@
 }
 
 .required {
-  border-color: #3d3d3d;
+  box-shadow: inset 0 0 0 0.25px #3d3d3d !important;
   background-color: #dadada;
+  padding: 15px 5px !important;
+  border: none !important;
 
   .icon {
     color: #3d3d3d;
@@ -19,44 +23,50 @@
 }
 
 .sold {
-  border-color: #3d3d3d;
-  background-color: #dadada;
-  color: #9e9e9e;
-  padding: 7px 5px !important;
-
-  .item-content {
-    flex-wrap: nowrap;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-  }
-
-  .reset-date {
-    color: #939797;
-  }
-}
-
-.pending {
-  border-color: #f5d19a;
-  background-color: #feedd8;
-  color: #f9a52a;
-  padding: 7px 5px !important;
-}
-
-.expired {
-  border-color: #e84f63;
+  box-shadow: inset 0 0 0 0.25px #e84f63 !important;
+  color: #3d3d3d;
+  padding: 15px 5px !important;
   background-color: #fbdfe3;
+  border: none !important;
+  
 
   .icon {
     color: #e84f63;
   }
 }
 
-.ongoing {
-  border-color: #4f7ae8;
-  background-color: #dfe7fb;
+.pending {
+  box-shadow: inset 0 0 0 0.25px #f9a52a !important;
+  background-color: #feedd8;
+  border: none !important;
+  color: #3d3d3d;
+  padding: 15px 5px !important;
 
   .icon {
-    color: #4f7ae8;
+    color: #f9a52a;
   }
 }
+
+.expired {
+  box-shadow: inset 0 0 0 0.25px #3d3d3d !important;
+  background-color: #dadada;
+  border: none !important;
+  // color: #9e9e9e;
+  color: #3d3d3d;
+
+  .icon {
+    color: #3d3d3d;
+  }
+}
+
+.ongoing {
+  box-shadow: inset 0 0 0 0.25px $primary !important;
+  background-color: $info;
+  padding: 15px 5px !important;
+  border: none !important;
+
+  .icon {
+    color: $primary;
+  }
+}
+
